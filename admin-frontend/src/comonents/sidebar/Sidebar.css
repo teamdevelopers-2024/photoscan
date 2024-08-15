@@ -1,0 +1,38 @@
+.left-component{
+    width: 15%;
+    height:98%;
+    padding-top: 10px;
+    text-decoration: none;
+}
+.left-component-content{
+    margin: 10px;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    color: #292f46;
+    font-family: Andale Mono, monospace;
+    font-weight: bold;
+    text-decoration: none;
+}
+.active{
+    background-color: aquamarine;
+}
+.l-c-icon{
+    height: 30px;
+    width: 30px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+.left-component a {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Maintain the original text color */
+  }
+  
+  .left-component a:hover {
+    color: #000; /* Optionally change color on hover */
+  }
+  .list-1{
+    margin-left: 20px;
+    border-radius: 10px;
+  }

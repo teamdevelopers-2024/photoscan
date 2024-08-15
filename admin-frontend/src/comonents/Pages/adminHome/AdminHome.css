@@ -1,0 +1,11 @@
+.bodymain{
+    width: 100%;
+    height: 89.7vh;
+    display: flex;
+}
+.main-main{
+    width: 85%;
+    height: 100%;
+    border-radius: 20px;
+    background-color: rgb(237, 238, 239);
+}
