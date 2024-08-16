@@ -1,28 +1,32 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Adminlogin from "../comonents/Pages/admimLogin/Adminlogin";
-import AdminHome from "../comonents/Pages/adminHome/AdminHome";
-import AdminUser from "../comonents/Pages/adminUsers/AdminUser";
-import AdminAgent from "../comonents/Pages/adminAgent/AdminAgent";
-import AdminProperty from "../comonents/Pages/adminProperty/AdminProperty";
-import AdminOrder from "../comonents/Pages/adminOrder/AdminOrder";
 import Protectedroute from "./Secureroutes";
+
+const Adminlogin = lazy(() => import("../components/Pages/admimLogin/Adminlogin"));
+const AdminHome = lazy(() => import("../components/Pages/adminHome/AdminHome"));
+const AdminUser = lazy(() => import("../components/Pages/adminUsers/AdminUser"));
+const AdminAgent = lazy(() => import("../components/Pages/adminAgent/AdminAgent"));
+const AdminProperty = lazy(() => import("../components/Pages/adminProperty/AdminProperty"));
+const AdminOrder = lazy(() => import("../components/Pages/adminOrder/AdminOrder"));
 
 function Layoutroutes() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Adminlogin />} />
-        <Route element={<Protectedroute />}>
-          <Route path="/admin/home" element={<AdminHome />} />
-          <Route path="/admin/user" element={<AdminUser />} />
-          <Route path="/admin/agent" element={<AdminAgent />} />
-          <Route path="/admin/property" element={<AdminProperty />} />
-          <Route path="/admin/order" element={<AdminOrder />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Adminlogin />} />
+          <Route element={<Protectedroute />}>
+            <Route path="/admin/home" element={<AdminHome />} />
+            <Route path="/admin/user" element={<AdminUser />} />
+            <Route path="/admin/agent" element={<AdminAgent />} />
+            <Route path="/admin/property" element={<AdminProperty />} />
+            <Route path="/admin/order" element={<AdminOrder />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </Router>
   );
 }
 
 export default Layoutroutes;
+    

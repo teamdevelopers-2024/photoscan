@@ -26,28 +26,55 @@ function Adminlogin() {
       const handleEmailChange = (e) => setEmail(e.target.value);
       const handlePasswordChange = (e) => setPassword(e.target.value);
     
-      const handleSubmit = (e) => {
-        checkadmin(email,password).then((data)=>{
-          
-        if (data.error===false){
-          navigate('/admin/home')
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.onmouseenter = Swal.stopTimer;
-                  toast.onmouseleave = Swal.resumeTimer;
-                }
-              });
-              Toast.fire({
-                icon: "success",
-                title: "Signed in successfully"
-              });
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+      
+        const emailValidation = validateEmail(email);
+      
+        if (emailValidation) {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "error",
+            title: "Invalid Email Format"
+          });
+          return;
         }
-        }).catch((error)=>{
+      
+        try {
+          const data = await checkadmin(email, password);
+          console.log(data);
+      
+          if (data.error === false) {
+            navigate('/admin/home');
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: "success",
+              title: "Signed in successfully"
+            });
+          } else {
+            throw new Error('Invalid credentials');
+          }
+        } catch (error) {
           const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -63,32 +90,9 @@ function Adminlogin() {
             icon: "error",
             title: "Invalid credentials"
           });
-        })
-        
-        
-        e.preventDefault();
-    
-        const emailValidation = validateEmail(email);
-    
-        if (emailValidation) {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.onmouseenter = Swal.stopTimer;
-                  toast.onmouseleave = Swal.resumeTimer;
-                }
-              });
-              Toast.fire({
-                icon: "error",
-                title: "Invalid Email Format"
-              });
-          return;
         }
       };
+      
     return (
         <>
         <Lheader/>
