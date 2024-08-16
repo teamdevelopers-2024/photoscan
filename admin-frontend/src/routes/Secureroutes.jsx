@@ -26,10 +26,13 @@ const ProtectedRoute = ({ children }) => {
       setLoading(false);
     }
   };
+
   if (loading) {
      return <div>loading ...</div>;
   }
+
   return isAdmin ? <Outlet /> : <Navigate to="/" />;
-};
+
+}
 
 export default ProtectedRoute;
