@@ -9,6 +9,7 @@
     justify-content: left;
     width: 30%;
     height: 72px;
+    align-items: center;
 }
 .m-con{
     display: flex;
@@ -24,7 +25,7 @@
     height: 72px;
 }
 .logo{
-    height: 60px;
+    height: 40px;
     width: 180px;
 }
 .img{
