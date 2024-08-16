@@ -57,7 +57,7 @@ function Sidebar() {
           key={item.path}
           className="list-1"
           style={{
-            backgroundColor: activeButton === index ? "#ccc7c4" : "",
+            backgroundColor: activeButton === index ? "#4B49AC" : "",
           }}
         >
           <Link to={item.path} onClick={() => handleClick(index)}>

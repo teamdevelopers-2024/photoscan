@@ -1,6 +1,6 @@
 import React from 'react'
 import './Header.css'
-import image from '../../assets/images/logo.jpeg'
+import image from '../../assets/images/logo.png'
 import icon1 from '../../assets/images/bell_3387325.png'
 import icon2 from '../../assets/images/person_13924070.png'
 import icon3 from '../../assets/images/log-out_10024508.png'
@@ -36,10 +36,6 @@ function Header() {
         <div className="m-con">
         <div className="search-container">
       <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search..."></input>
-        <span className="search-icon"><img style={{width:20,height:20}} className='logo' src={icon4} alt="" /></span>
       </div>
       <ul>
       </ul>

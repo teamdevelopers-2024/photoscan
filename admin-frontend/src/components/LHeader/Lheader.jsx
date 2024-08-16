@@ -1,6 +1,6 @@
 import React from 'react'
 import './Lheader.css'
-import image from '../../assets/images/logo.jpeg'
+import image from '../../assets/images/logo.png'
 function Lheader() {
   return (
     <>

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Protectedroute from "./Secureroutes";
 
 const Adminlogin = lazy(() => import("../components/Pages/admimLogin/Adminlogin"));
-const AdminHome = lazy(() => import("../components/Pages/adminAgent/AdminAgent"));
+const AdminHome = lazy(() => import("../components/Pages/adminHome/AdminHome"));
 const AdminUser = lazy(() => import("../components/Pages/adminUsers/AdminUser"));
 const AdminAgent = lazy(() => import("../components/Pages/adminAgent/AdminAgent"));
 const AdminProperty = lazy(() => import("../components/Pages/adminProperty/AdminProperty"));
