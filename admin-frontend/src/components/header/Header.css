@@ -7,16 +7,16 @@
 .l-con{
     display: flex;
     justify-content: left;
-    width: 30%;
+    width: 10%;
     height: 72px;
     align-items: center;
 }
 .m-con{
     display: flex;
-    justify-content: center;
-    width: 30%;
+    justify-content: left;
+    width: 45%;
     height: 72px;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 .r-con{
     display: flex;

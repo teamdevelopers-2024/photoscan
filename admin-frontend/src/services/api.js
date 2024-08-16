@@ -15,4 +15,22 @@ const checkadmin = async (email, password) => {
   }
 };
 
-export default checkadmin;
+
+const getUsers = async (limit , page)=>{
+  console.log(limit , page)
+  console.log('i can see the call')
+  try {
+    const response = await axios.get(`http://localhost:4000/admin/getUsers?page=${page}&limit=${limit}`); 
+    console.log(response.data);
+    
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export default {
+  checkadmin,
+  getUsers
+};
