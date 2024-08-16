@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-
+  product = {
+    title: 'product name',
+    image: 'product-1.png',
+    price: 2499,
+    rating: 4
+  }
 }
