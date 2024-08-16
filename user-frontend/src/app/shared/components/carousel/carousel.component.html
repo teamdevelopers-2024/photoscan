@@ -1,24 +1,26 @@
-<div class="inherit w-full overflow-hidden mx-auto">
-  <div class="flex transition-transform duration-500 ease-in-out" [style.transform]="'translateX(' + (-currentIndex * 100) + '%)'">
-    <div *ngFor="let image of images" class="flex-shrink-0 w-full h-full">
-      <img [src]="image" alt="Carousel image" class="w-full h-full object-cover">
+<div class="relative min-w-full min-h-full overflow-hidden mx-auto">
+    <div class="flex transition-transform duration-500 ease-in-out"
+        [style.transform]="'translateX(' + (-currentIndex * 100) + '%)'">
+        <div *ngFor="let image of images" class="flex-shrink-0 w-full h-full">
+            <img [src]="image" alt="Carousel image" class="w-full h-full object-cover">
+        </div>
     </div>
-  </div>
 
-  <!-- Controls -->
-  <button (click)="prevSlide()" class="absolute top-1/2 transform -translate-y-1/2 bg-black/50 text-white border-none p-2 cursor-pointer text-2xl left-2 sm:p-1 sm:text-xl xs:text-lg xs:p-1">
-    ‹
-  </button>
-  <button (click)="nextSlide()" class="absolute top-1/2 transform -translate-y-1/2 bg-black/50 text-white border-none p-2 cursor-pointer text-2xl right-2 sm:p-1 sm:text-xl xs:text-lg xs:p-1">
-    ›
-  </button>
+    <!-- Controls -->
+    <button (click)="prevSlide()"
+        class="absolute top-1/2 transform -translate-y-1/2  text-white border-none p-2 cursor-pointer text-3xl left-2 sm:p-1 sm:text-xl xs:text-lg xs:p-1">
+        ‹
+    </button>
+    <button (click)="nextSlide()"
+        class="absolute top-1/2 transform -translate-y-1/2  text-white border-none p-2 cursor-pointer text-3xl right-2 sm:p-1 sm:text-xl xs:text-lg xs:p-1">
+        ›
+    </button>
 
-  <!-- Slide indicators -->
-  <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex justify-center gap-2 z-10 sm:bottom-1 xs:gap-1">
-    <span *ngFor="let image of images; let i = index"
-          class="h-3 w-3 mx-1 rounded-full cursor-pointer transition-colors duration-300 ease-in-out"
-          [ngClass]="{'bg-gray-600': i === currentIndex, 'bg-gray-300': i !== currentIndex}"
-          (click)="goToSlide(i)">
-    </span>
-  </div>
+    <!-- Slide indicators -->
+    <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex justify-center gap-2 z-10 sm:bottom-1 xs:gap-1 mr-1">
+        <span *ngFor="let image of images; let i = index"
+            class="h-3 w-3 mx-1 rounded-full cursor-pointer transition-colors duration-300 ease-in-out"
+            [ngClass]="{'bg-[#c79b68]': i === currentIndex, 'bg-gray-300': i !== currentIndex}" (click)="goToSlide(i)">
+        </span>
+    </div>
 </div>
