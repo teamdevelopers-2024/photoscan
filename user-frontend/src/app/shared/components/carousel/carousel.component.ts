@@ -7,10 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CarouselComponent implements OnInit {
   images: string[] = [
-    'images/34.jpg',
-    'images/32.jpg',
-    'images/31.jpg',
-    'images/35.jpg'
+    'images/Frame-1.png',
+    'images/Frame-1.png',
+    'images/Frame-1.png',
   ];
 
   currentIndex: number = 0;
@@ -23,7 +22,7 @@ export class CarouselComponent implements OnInit {
   startAutoSlide() {
     this.autoSlideInterval = setInterval(() => {
       this.nextSlide();
-    }, 6000); // Auto-slide every 3 seconds
+    }, 5000);
   }
 
   stopAutoSlide() {
@@ -33,11 +32,13 @@ export class CarouselComponent implements OnInit {
   }
 
   prevSlide() {
-    this.currentIndex = (this.currentIndex === this.images.length - 1) ? 0 : this.currentIndex + 1;
+    this.currentIndex =
+      this.currentIndex === this.images.length - 1 ? 0 : this.currentIndex + 1;
   }
 
   nextSlide() {
-    this.currentIndex = (this.currentIndex === 0) ? this.images.length - 1 : this.currentIndex - 1;
+    this.currentIndex =
+      this.currentIndex === 0 ? this.images.length - 1 : this.currentIndex - 1;
   }
 
   goToSlide(index: number) {

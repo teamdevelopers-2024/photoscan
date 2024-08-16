@@ -1,15 +1,15 @@
-<header class="flex justify-between shadow-2xl">
-    <div class="w-[16rem]">
+<header class="flex justify-between shadow-2xl w-full">
+    <div class="w-[10rem] md:w-[16rem]">
         <img class="p-3 ml-5" src="photoscanlogo.png" alt="logo">
     </div>
 
-    <div class=" text-[#666666] text-sm font-[600] p-6 tracking-tight">
+    <div class="hidden md:grid text-[#666666] text-sm font-[600] p-6 tracking-tight">
         <ul class="flex justify-center items-center gap-5">
             <li class="cursor-pointer hover:text-[#4d4d4d]" *ngFor="let menu of menus">{{menu | uppercase}}</li>
         </ul>
     </div>
 
-    <div class="flex justify-center items-center gap-5 w-[16rem] p-5 text-[1.2rem]">
+    <div class="hidden md:flex justify-center items-center gap-5 w-[16rem] p-5 text-[1.2rem]">
         <i class="fa-regular fa-user hover:text-[1.4rem] transition-all duration-300 cursor-pointer"></i>
         <i class="fa-solid fa-bag-shopping hover:text-[1.4rem] transition-all duration-300 cursor-pointer"></i>
         <i class="fa-solid fa-cart-shopping hover:text-[1.4rem] transition-all duration-300 cursor-pointer"></i>

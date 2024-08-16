@@ -1,8 +1,38 @@
-<div>
-    <app-carousel />
-    <div class="m-4 p-2">
-        <app-card [product]="product" />
+<div class="grid place-items-center">
+    <div class="pt-12 md:pt-24 w-[90%]">
+        <app-carousel />
     </div>
-    
-</div>
 
+    <div class="pt-12 md:pt-24">
+        <div class="flex flex-col text-center">
+            <div class="mb-4 font-bold text-[#5D5565] text-xl">Featured Products</div>
+            <hr class="border-t-2 w-14 border-gray-800 mb-10 mx-auto">
+        </div>
+
+        <div class="flex gap-4">
+            <span class="my-auto">
+                <button class="flex flex-col items-center justify-center border border-gray-500 p-2">
+                    <span class="block">P</span>
+                    <span class="block">R</span>
+                    <span class="block">E</span>
+                    <span class="block">V</span>
+                </button>
+            </span>
+
+            <div class="flex gap-3 max-w-4xl">
+                <ng-container *ngFor="let product of products">
+                    <app-card class="w-[12rem]" [product]="product" />
+                </ng-container>
+            </div>
+            
+            <span class="my-auto">
+                <button class="flex flex-col items-center justify-center border border-gray-500 p-2">
+                    <span class="block">N</span>
+                    <span class="block">E</span>
+                    <span class="block">X</span>
+                    <span class="block">T</span>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>

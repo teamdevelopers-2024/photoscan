@@ -17,10 +17,12 @@
     </button>
 
     <!-- Slide indicators -->
-    <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex justify-center gap-2 z-10 sm:bottom-1 xs:gap-1 mr-1">
+    <div
+        class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex justify-center gap-2 z-10 sm:bottom-1 xs:gap-1">
         <span *ngFor="let image of images; let i = index"
             class="h-3 w-3 mx-1 rounded-full cursor-pointer transition-colors duration-300 ease-in-out"
             [ngClass]="{'bg-[#c79b68]': i === currentIndex, 'bg-gray-300': i !== currentIndex}" (click)="goToSlide(i)">
         </span>
+          
     </div>
 </div>
