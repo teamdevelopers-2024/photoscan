@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './Header.css'
 import image from '../../assets/images/logo.png'
 import icon1 from '../../assets/images/bell_3387325.png'
 import icon2 from '../../assets/images/person_13924070.png'
 import icon3 from '../../assets/images/log-out_10024508.png'
 import icon4 from '../../assets/images/icons8-search-50.png'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 function Header() {
   const navigate = useNavigate();
+  const location = useLocation()
+  const [path , setPath] = useState('')
   const logout=()=>{
     navigate('/')
     const Toast = Swal.mixin({
@@ -27,6 +29,17 @@ function Header() {
       title: "Loged Out Successfully"
     });
   }
+  useEffect(()=>{
+    const pathMapping = {
+      '/admin/home': 'Dashboard',
+      '/admin/user': 'User',
+      '/admin/agent': 'Agent',
+      '/admin/property': 'Property',
+      '/admin/order': 'Order',
+    };
+    
+    setPath(pathMapping[location.pathname] || '');
+  },[])
   return (
     <>
     <div className="nav">
@@ -34,6 +47,7 @@ function Header() {
             <img className='logo' src={image} alt="" />
         </div>
         <div className="m-con">
+        <p className="text-2xl font-bold text-gray-800">{path}</p>
         <div className="search-container">
       <div className="search-bar">
       </div>

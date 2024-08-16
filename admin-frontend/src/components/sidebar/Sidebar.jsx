@@ -16,6 +16,7 @@ function Sidebar() {
     const currentPath = navigation.findIndex((item) => item.path === location.pathname);
     setActiveButton(currentPath);
   }, [location.pathname]);
+  console.log(location.pathname)
 
   const handleClick = (index) => {
     setActiveButton(index);

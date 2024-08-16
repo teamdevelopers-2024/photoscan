@@ -3,7 +3,7 @@ import './Adminlogin.css';
 import { useNavigate } from 'react-router-dom';
 import Lheader from '../../LHeader/Lheader';
 import Swal from 'sweetalert2';
-import checkadmin from '../../../services/api';
+import api from '../../../services/api';
 
 
 function Adminlogin() {
@@ -51,7 +51,7 @@ function Adminlogin() {
         }
       
         try {
-          const data = await checkadmin(email, password);
+          const data = await api.checkadmin(email, password);
           console.log(data);
       
           if (data.error === false) {

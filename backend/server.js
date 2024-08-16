@@ -4,7 +4,8 @@ import "dotenv/config"
 import session from 'express-session'
 import cookieParser from 'cookie-parser'
 import AdminRouter from './routes/adminRouter.js'
-
+import connectDb from './database/connection.js'
+import UserRouter from './routes/userRouter.js'
 
 const app = express()
 const port = process.env.port || 5000
@@ -20,6 +21,7 @@ app.use(session({
         maxAge: 1 * 60 * 60 * 1000
     }
 }))
+connectDb()
 
 app.use(express.urlencoded({extended:true}))
 
@@ -38,6 +40,7 @@ const corsOptions = {
   app.use(express.json())
 
   app.use('/admin',AdminRouter)
+  app.use('/user',UserRouter)
 
 
   app.listen(port , ()=>{

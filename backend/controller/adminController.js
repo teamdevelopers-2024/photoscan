@@ -1,3 +1,5 @@
+import UserDb from "../model/userModel.js";
+
 
 
 const login = async (req,res)=>{
@@ -31,6 +33,13 @@ const login = async (req,res)=>{
 }
 
 
+
+
+
+
+
+
+
 const status = async (req, res) => {
     console.log("isAdmin", req.session.isAdmin);
     if (req.session.isAdmin) {
@@ -42,7 +51,50 @@ const status = async (req, res) => {
   };
 
 
+
+const getUsers = async (req, res) => {
+  try {
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+
+    const startIndex = (page - 1) * limit;
+
+    // Fetch users with pagination
+    const users = await UserDb.find().skip(startIndex).limit(limit);
+    const totalUsers = await UserDb.countDocuments(); 
+
+    if (!users.length) {
+      return res.status(200).json({
+        error: false,
+        users: [],
+        message: "No users found",
+      });
+    }
+
+    res.status(200).json({
+      error: false,
+      message: "Users fetched successfully",
+      users: users,
+      totalPages: Math.ceil(totalUsers / limit),
+      currentPage: page,
+      totalUsers: totalUsers,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: true,
+      message: "Internal server error",
+      error,
+    });
+  }
+};
+
+
+
 export default {
     login,
-    status
+    status,
+    getUsers
 }
