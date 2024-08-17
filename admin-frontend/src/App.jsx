@@ -7,7 +7,10 @@ function App() {
 
   return (
     <>
-      <Layoutroutes/>
+    <div className="main-page">
+    <Layoutroutes/>
+    </div>
+      
     </>
   )
 }
