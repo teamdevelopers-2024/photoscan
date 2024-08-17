@@ -8,8 +8,20 @@
     display: flex;
     justify-content: center;
 }
-.main-table{
+.main-table {
     width: 90%;
+    overflow: auto;
+}
+
+
+.main-table::-webkit-scrollbar {
+    width: 4px;  
+}
+
+
+.main-table::-webkit-scrollbar-thumb {
+    background-color: #000000;  
+    border-radius: 10px;  
 }
 
 table {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Sidebar.css";
 import dash from "../../assets/images/dashboard_2329087.png";
 import user from "../../assets/images/person_13924070.png";
@@ -12,11 +12,10 @@ function Sidebar() {
   const location = useLocation();
 
   // Set the active button based on the current path
-  React.useEffect(() => {
+  useEffect(() => {
     const currentPath = navigation.findIndex((item) => item.path === location.pathname);
     setActiveButton(currentPath);
   }, [location.pathname]);
-  console.log(location.pathname)
 
   const handleClick = (index) => {
     setActiveButton(index);
@@ -56,12 +55,9 @@ function Sidebar() {
         <div
           key={item.path}
           className="list-1"
-          style={{
-            backgroundColor: activeButton === index ? "" : "",
-          }}
         >
           <Link to={item.path} onClick={() => handleClick(index)}>
-            <div className="left-component-content">
+            <div className={`left-component-content ${activeButton === index ? 'active' : ''}`}>
               <img className="l-c-icon" src={item.img} alt={item.display} />
               <p>{item.display}</p>
             </div>
