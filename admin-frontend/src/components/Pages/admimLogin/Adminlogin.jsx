@@ -11,6 +11,7 @@ function Adminlogin() {
       const [email, setEmail] = useState('');
       const [password, setPassword] = useState('');
       const navigate = useNavigate();
+      const [animate, setAnimate] = useState(false);
     
       // Regular expression for email validation (enhanced)
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -92,6 +93,11 @@ function Adminlogin() {
           });
         }
       };
+      const handleClick = () => {
+        setAnimate(true);
+    
+        // Reset animation state after it completes (assuming animation is 1s long)
+      };
       
     return (
         <>
@@ -105,7 +111,16 @@ function Adminlogin() {
                     Login to access your dashboard and start managing your tasks.
                 </p>
             </div>
-            <div className="container">
+            {animate===false&&(
+               <button className="login-btn " onClick={handleClick}>
+               <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 265 63.6">
+                   <rect width="265" height="63.6"/>
+               </svg>
+               <span>Login</span>
+           </button>
+            )}
+           
+            <div className={`container ${animate ? 'animate' : ''}`}>
                 <h1>Admin Login</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="form-control">
