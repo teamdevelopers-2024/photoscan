@@ -14,6 +14,8 @@ function AdminExpense() {
                 <MainExpense/>
             </div>
           </div>
+
+          
         </>
       )
 }
