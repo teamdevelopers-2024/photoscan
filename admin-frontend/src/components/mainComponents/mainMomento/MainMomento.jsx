@@ -1,8 +1,8 @@
 import React from 'react'
-import './MainProperty.css'
+import './MainMomento.css'
 import PropertyDetailsModal from '../../modal/Modal';
 
-function MainProperty() {
+function MainMomento() {
   const users = [
     { id: 1, name: 'John Doe', email: 'john@example.com' },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
@@ -61,4 +61,4 @@ return (
 )
 }
 
-export default MainProperty
+export default MainMomento

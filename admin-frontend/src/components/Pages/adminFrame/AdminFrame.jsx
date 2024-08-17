@@ -1,21 +1,21 @@
 import React from 'react'
-import './AdminProperty.css'
+import './AdminFrame.css'
 import Header from '../../header/Header'
 import Sidebar from '../../sidebar/Sidebar'
-import MainProperty from '../../mainComponents/mainProperty/MainProperty'
+import MainFrame from '../../mainComponents/mainFrame/MainFrame'
 
-function AdminProperty() {
+function AdminFrame() {
   return (
     <>
     <Header/>
     <div className="bodymain">
         <Sidebar/>
         <div className="main-main">
-            <MainProperty/>
+            <MainFrame/>
         </div>
       </div>
     </>
   )
 }
 
-export default AdminProperty
+export default AdminFrame

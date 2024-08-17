@@ -1,8 +1,8 @@
 import React from 'react'
-import './MainAgent.css'
+import './MainFrame.css'
 import PropertyDetailsModal from '../../modal/Modal';
 
-function MainAgent() {
+function MainFrame() {
   const users = [
     { id: 1, name: 'John Doe', email: 'john@example.com' },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
@@ -51,4 +51,4 @@ return (
 )
 }
 
-export default MainAgent
+export default MainFrame
