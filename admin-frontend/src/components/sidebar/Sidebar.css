@@ -3,10 +3,11 @@
   height: 98%;
   padding-bottom: 10px;
   text-decoration: none;
-  display: flex; /* Create a flex container */
-  flex-direction: column; /* Arrange items vertically */
-  justify-content: flex-end; /* Align items to the bottom */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
+
 .left-component-content {
   margin: 10px;
   height: 50px;
@@ -17,13 +18,20 @@
   font-family: Andale Mono, monospace;
   font-weight: bold;
   text-decoration: none;
-  transition: width 0.3s ease-in-out; /* Add transition for smooth animation */
+  transition: width 0.3s ease-in-out; /* Smooth transition for width */
+}
+
+.left-component-content p {
+  margin-bottom: 8px;
 }
 
 .left-component-content:hover {
-  width: 100%;
+  width: 100%; /* Expand to 100% on hover */
 }
 
+.left-component-content.active {
+  width: 100%; /* Keep width 100% if active */
+}
 
 .l-c-icon{
     height: 30px;

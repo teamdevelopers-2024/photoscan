@@ -8,13 +8,25 @@
     display: flex;
     justify-content: center;
 }
-.main-table{
+.main-table {
     width: 90%;
-    overflow: scroll;
+    overflow: auto;
+}
+
+
+.main-table::-webkit-scrollbar {
+    width: 4px;  
+}
+
+
+.main-table::-webkit-scrollbar-thumb {
+    background-color: #000000;  
+    border-radius: 10px;  
 }
 
 table {
-    width: 100%;
+    width: 90%;
+    
     border-collapse: collapse;
 }
 

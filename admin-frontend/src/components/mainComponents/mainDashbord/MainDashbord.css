@@ -5,7 +5,22 @@
     height: 93%;
     border-radius: 10px;
     display: block;
+    overflow: auto;
 }
+
+
+
+
+.dash-main::-webkit-scrollbar {
+    width: 4px;  
+}
+
+.dash-main::-webkit-scrollbar-thumb {
+    background-color: #000000;  
+    border-radius: 10px;  
+}
+
+
 .dash-main-head{
     height: 20%;
     width: 100%;
@@ -19,13 +34,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
+    margin-top: 50px;
 }
 .dash-main-body{
     display: flex;
     justify-content: center;
     width: 100%;
     height: 82%;
+    margin-top: 150px;
 }
 .dash-main-body-sgraph {
     width: 50%;
