@@ -1,21 +1,22 @@
 import React from 'react'
-import './AdminAgent.css'
+import './AdminMomento.css'
 import Header from '../../header/Header'
 import Sidebar from '../../sidebar/Sidebar'
-import MainAgent from '../../mainComponents/mainAgent/MainAgent'
+import MainMomento from '../../mainComponents/mainMomento/MainMomento'
 
-function AdminAgent() {
+
+function AdminMomento() {
   return (
     <>
     <Header/>
     <div className="bodymain">
         <Sidebar/>
         <div className="main-main">
-            <MainAgent/>
+            <MainMomento/>
         </div>
       </div>
     </>
   )
 }
 
-export default AdminAgent
+export default AdminMomento
