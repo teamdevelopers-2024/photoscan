@@ -33,9 +33,11 @@ function Header() {
     const pathMapping = {
       '/admin/home': 'Dashboard',
       '/admin/user': 'User',
-      '/admin/agent': 'Agent',
-      '/admin/property': 'Property',
+      '/admin/frame': 'Frames',
+      '/admin/momento': 'Momento',
       '/admin/order': 'Order',
+      '/admin/expense': 'Expense Tracker',
+      '/admin/banner': 'Banner Management',
     };
     
     setPath(pathMapping[location.pathname] || '');

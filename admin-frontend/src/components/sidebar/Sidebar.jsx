@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./Sidebar.css";
 import dash from "../../assets/images/dashboard_2329087.png";
 import user from "../../assets/images/person_13924070.png";
-import agent from "../../assets/images/customer-service_2706907.png";
-import property from "../../assets/images/godown_17082603.png";
+import frame from "../../assets/images/frame.png";
+import momento from "../../assets/images/trophy.png";
+import expense from "../../assets/images/expence.png";
+import banner from "../../assets/images/banner.png";
 import order from "../../assets/images/shopping-bag_1008010.png";
 import { Link, useLocation } from "react-router-dom";
 
@@ -33,19 +35,29 @@ function Sidebar() {
       img: user,
     },
     {
-      path: "/admin/agent",
-      display: "Agent",
-      img: agent,
+      path: "/admin/frame",
+      display: "Frames",
+      img: frame,
     },
     {
-      path: "/admin/property",
-      display: "Property",
-      img: property,
+      path: "/admin/momento",
+      display: "Momento",
+      img: momento,
     },
     {
       path: "/admin/order",
       display: "Order",
       img: order,
+    },
+    {
+      path: "/admin/expense",
+      display: "Expense",
+      img: expense,
+    },
+    {
+      path: "/admin/banner",
+      display: "Banner",
+      img: banner,
     },
   ];
 
