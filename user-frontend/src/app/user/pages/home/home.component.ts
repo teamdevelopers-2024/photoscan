@@ -37,6 +37,12 @@ export class HomeComponent {
       price: 2499,
       rating: 1,
     },
+    {
+      title: 'product name',
+      image: 'product-5.png',
+      price: 2499,
+      rating: 1,
+    },
   ];
 
   currentIndex: number = 0;
