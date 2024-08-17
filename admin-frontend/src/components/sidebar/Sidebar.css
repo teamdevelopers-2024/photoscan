@@ -1,22 +1,30 @@
-.left-component{
-    width: 15%;
-    height:98%;
-    padding-top: 10px;
-    text-decoration: none;
+.left-component {
+  width: 15%;
+  height: 98%;
+  padding-bottom: 10px;
+  text-decoration: none;
+  display: flex; /* Create a flex container */
+  flex-direction: column; /* Arrange items vertically */
+  justify-content: flex-end; /* Align items to the bottom */
 }
-.left-component-content{
-    margin: 10px;
-    height: 50px;
-    width: 100%;
-    display: flex;
-    color: #292f46;
-    font-family: Andale Mono, monospace;
-    font-weight: bold;
-    text-decoration: none;
+.left-component-content {
+  margin: 10px;
+  height: 50px;
+  width: 20%;
+  overflow: hidden;
+  display: flex;
+  color: #292f46;
+  font-family: Andale Mono, monospace;
+  font-weight: bold;
+  text-decoration: none;
+  transition: width 0.3s ease-in-out; /* Add transition for smooth animation */
 }
-.active{
-    background-color: aquamarine;
+
+.left-component-content:hover {
+  width: 100%;
 }
+
+
 .l-c-icon{
     height: 30px;
     width: 30px;
