@@ -1,8 +1,8 @@
 .dash-main{
     margin: 10px;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.388);
     width: 98%;
-    height: 96%;
+    height: 93%;
     border-radius: 10px;
     display: block;
 }
