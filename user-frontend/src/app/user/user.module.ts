@@ -9,6 +9,8 @@ import { FooterComponent } from '../shared/components/footer/footer.component';
 import { CarouselComponent } from '../shared/components/carousel/carousel.component';
 import { MasterComponent } from './master/master.component';
 import { CardComponent } from '../shared/components/card/card.component';
+import { LoginComponent } from './pages/login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -18,8 +20,9 @@ import { CardComponent } from '../shared/components/card/card.component';
     FooterComponent,
     CarouselComponent,
     MasterComponent,
-    CardComponent
+    CardComponent,
+    LoginComponent
   ],
-  imports: [CommonModule, UserRoutingModule],
+  imports: [CommonModule, UserRoutingModule, ReactiveFormsModule],
 })
 export class UserModule {}

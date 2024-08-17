@@ -1,0 +1,37 @@
+<div class="flex justify-between items-center bg-[#f6f6f6] h-[89vh] z-0">
+    <div>
+        <!-- text here -->
+    </div>
+
+    <div>
+        <div class="flex flex-col text-center bg-white shadow-sm mr-28">
+            <h2 class="font-semibold text-[#61594f] text-lg mt-12">
+                REGISTERED CUSTOMERS
+            </h2>
+            <p class="text-[#b7adb1] text-sm font-[500] pt-9 mb-5">
+                If you have an account with us, Please login!
+            </p>
+            <form class="px-7" [formGroup]="loginForm">
+                <div class="mb-5">
+                    <input
+                        class="placeholder:text-[#b7adb1] focus:outline-none focus:ring-0 text-sm font-[500] bg-[#f6f6f6] border-none w-[30rem] h-11"
+                        type="email" placeholder="Email here..." formControlName="email" />
+                </div>
+
+                <div class="mb-5">
+                    <input
+                        class="placeholder:text-[#b7adb1] focus:outline-none focus:ring-0 text-sm font-[500] bg-[#f6f6f6] border-none w-[30rem] h-11"
+                        type="password" placeholder="Password" formControlName="password" />
+                </div>
+            </form>
+            <div class="mb-12">
+                <p class="text-[#d7ac6f] mb-8 hover:text-[#eea43c] cursor-pointer">
+                    Forget your password?
+                </p>
+                <button class="bg-[#c87065] text-white w-32 h-12 hover:bg-[#e17061] transition" [disabled]="!loginForm.valid" (click)="onSubmit()">
+                    LOGIN
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
