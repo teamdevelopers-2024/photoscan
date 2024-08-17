@@ -7,6 +7,9 @@ module.exports = {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
       },
+      scrollBehavior: {
+        smooth: 'smooth',
+      }
     },
   },
   plugins: [require("flowbite/plugin")],

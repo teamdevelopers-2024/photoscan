@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
   menus: string[] = ["Home", "Products", "About Us", "Contact Us"];
+ 
 }

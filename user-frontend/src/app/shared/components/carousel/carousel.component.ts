@@ -9,7 +9,7 @@ export class CarouselComponent implements OnInit {
   images: string[] = [
     'images/Frame-1.png',
     'images/Frame-1.png',
-    'images/Frame-1.png'
+    'images/Frame-1.png',
   ];
  
 
@@ -23,7 +23,7 @@ export class CarouselComponent implements OnInit {
   startAutoSlide() {
     this.autoSlideInterval = setInterval(() => {
       this.nextSlide();
-    }, 5000); 
+    }, 5000);
   }
 
   stopAutoSlide() {
@@ -33,11 +33,13 @@ export class CarouselComponent implements OnInit {
   }
 
   prevSlide() {
-    this.currentIndex = (this.currentIndex === this.images.length - 1) ? 0 : this.currentIndex + 1;
+    this.currentIndex =
+      this.currentIndex === this.images.length - 1 ? 0 : this.currentIndex + 1;
   }
 
   nextSlide() {
-    this.currentIndex = (this.currentIndex === 0) ? this.images.length - 1 : this.currentIndex - 1;
+    this.currentIndex =
+      this.currentIndex === 0 ? this.images.length - 1 : this.currentIndex - 1;
   }
 
   goToSlide(index: number) {

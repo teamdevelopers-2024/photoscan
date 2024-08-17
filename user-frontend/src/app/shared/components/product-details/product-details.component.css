@@ -1,0 +1,23 @@
+.carousel-container {
+    max-width: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  
+  .carousel {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .slide {
+    min-width: calc(25% - 1rem); /* 4 items per row */
+    transition: transform 0.5s ease;
+  }
+  
+  .carousel-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+  
