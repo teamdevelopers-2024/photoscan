@@ -1,0 +1,32 @@
+<div class="fixed inset-0 flex justify-end items-center  z-50" >
+  <div class="absolute top-0  right-0 h-full w-full  bg-gray-800 bg-opacity-35 backdrop-blur-sm"  (click)="closeOverlay()"></div>
+  <div class=" w-[45%] h-[95%]  mr-2 rounded-lg  pt-5 bg-white z-10">
+    <div class="overflow-auto  h-[80%] custom-scrollbar">
+        <div class="h-1/4 flex flex-row justify-between items-center lg:mb-2" *ngFor=" let product of products">
+            <div class="flex">
+                <img  class=" aspect-square w-1/4 rounded-md ml-7" src="{{product.image}}" alt="">
+                <div class=" flex flex-col items-start pl-7 pt-2">
+                    <label class=" text-black text-[15px] font-bold lg:pb-2">{{product.name}}</label>
+                    <label class="text-[13px] lg:pb-2">Price :{{product.price | currency:'INR'}}</label>
+                    <label  class="text-[13px] ">Qty : {{product.qty}}</label>
+                </div>
+            </div>
+            <div class=" flex items-center  mr-6">
+                <i class="fas fa-xmark"></i>
+            </div>
+        </div>    
+    </div>
+    <div class="flex justify-end m-3 font-bold mr-20 mb-3">
+        Total :{{123 | currency:"INR"}}
+    </div>
+    <div class="flex justify-between">
+        <button class="bg-[#d9d9d9] rounded-lg w-32 h-10 text-base font-bold text-[#666666] ml-20 hover:text-[#343333]">
+          VIEW  CART
+        </button>
+        <button class="bg-[#d9d9d9] rounded-lg w-32 h-10 text-base  font-bold text-[#666666] mr-20 hover:text-[#343333]">
+            CHECKOUT
+        </button>
+    </div>
+
+  </div>
+</div>

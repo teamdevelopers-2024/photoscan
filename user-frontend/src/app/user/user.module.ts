@@ -10,7 +10,8 @@ import { CarouselComponent } from '../shared/components/carousel/carousel.compon
 import { MasterComponent } from './master/master.component';
 import { CardComponent } from '../shared/components/card/card.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
-import { ProductDetailsComponent } from '../shared/components/product-details/product-details.component';
+import { ProductDetailsComponent } from '../user/pages/product-details/product-details.component';
+import { OverlayCartComponent } from '../shared/components/overlay-cart/overlay-cart.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { ProductDetailsComponent } from '../shared/components/product-details/pr
     CarouselComponent,
     MasterComponent,
     CardComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    OverlayCartComponent
     
   ],
   imports: [CommonModule, UserRoutingModule, SlickCarouselModule],

@@ -1,4 +1,4 @@
-<header class="flex justify-between shadow-2xl w-full">
+<header class="flex justify-between shadow-2xl w-screen">
     <div class="w-[10rem] md:w-[16rem]">
         <img class="p-3 ml-5" src="photoscanlogo.png" alt="logo">
     </div>
@@ -12,6 +12,9 @@
     <div class="hidden md:flex justify-center items-center gap-5 w-[16rem] p-5 text-[1.2rem]">
         <i class="fa-regular fa-user hover:text-[1.4rem] transition-all duration-300 cursor-pointer"></i>
         <i class="fa-solid fa-bag-shopping hover:text-[1.4rem] transition-all duration-300 cursor-pointer"></i>
-        <i class="fa-solid fa-cart-shopping hover:text-[1.4rem] transition-all duration-300 cursor-pointer"></i>
+        <i class="fa-solid fa-cart-shopping hover:text-[1.4rem] transition-all duration-300 cursor-pointer" (click)="showOverlay()"></i>
     </div>
+    
 </header>
+
+<app-overlay-cart *ngIf="isOverlayVisible"  (closeOverlayEvent)="closeOverlay($event)"/>

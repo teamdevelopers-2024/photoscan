@@ -8,7 +8,6 @@ import { AfterViewInit, Component } from '@angular/core';
 })
 export class ProductDetailsComponent{
   number :number=0;
-
   increment(){
     this.number=this.number+1
   }
@@ -52,5 +51,7 @@ nextSlide() {
     this.currentSlide++;
   }
 }
+
+
   
 }
