@@ -48,7 +48,7 @@ function MainDashbord() {
             <img style={{width:50 ,height:55 ,paddingRight:15}} src={usersImage} alt="" />
               <div>
               
-                <p style={{ fontSize: 26, padding:0, margin:0 }}>Customers</p>
+                <p className="" style={{ fontSize: 26, padding:0, margin:0 }}>Customers</p>
                 <p style={{ fontSize: 26,paddingLeft:20 ,margin:0 }}>73</p>
               </div>
             </div>
