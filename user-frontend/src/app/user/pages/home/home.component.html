@@ -9,7 +9,7 @@
             <hr class="border-t-2 w-14 border-gray-800 mb-10 mx-auto">
         </div>
 
-        <div class="flex gap-4">
+        <div class="flex gap-4 max-w-2xl justify-between">
             <span class="my-auto">
                 <button class="flex flex-col items-center justify-center border border-gray-500 p-2">
                     <span class="block">P</span>
@@ -19,12 +19,14 @@
                 </button>
             </span>
 
-            <div class="flex gap-3 max-w-4xl">
-                <ng-container *ngFor="let product of products">
-                    <app-card class="w-[12rem]" [product]="product" />
-                </ng-container>
+            <div class="flex gap-3 max-w-full overflow-x-auto">
+                <div class="flex gap-3 w-[calc(25%*4)] overflow-x-auto">
+                    <ng-container *ngFor="let product of products">
+                        <app-card class="min-w-[25%]" [product]="product"></app-card>
+                    </ng-container>
+                </div>
             </div>
-            
+
             <span class="my-auto">
                 <button class="flex flex-col items-center justify-center border border-gray-500 p-2">
                     <span class="block">N</span>

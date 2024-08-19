@@ -5,7 +5,7 @@ function Lheader() {
   return (
     <>
     <div className="nav1">
-        <div className="l-con">
+        <div className="l-con ">
             <img className='logo' src={image} alt="" />
         </div>
         <div className="m-con">
