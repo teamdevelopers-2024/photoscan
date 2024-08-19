@@ -11,6 +11,7 @@ import { MasterComponent } from './master/master.component';
 import { CardComponent } from '../shared/components/card/card.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SignupComponent } from './pages/signup/signup.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CarouselComponent,
     MasterComponent,
     CardComponent,
-    LoginComponent
+    LoginComponent,
+    SignupComponent
   ],
   imports: [CommonModule, UserRoutingModule, ReactiveFormsModule],
 })

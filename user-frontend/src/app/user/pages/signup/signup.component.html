@@ -1,0 +1,95 @@
+<div class="flex justify-between items-center bg-white md:bg-[#f6f6f6] h-[89vh]">
+    <div class="hidden lg:block">
+        <!-- text here -->
+    </div>
+
+    <div class="w-[100vw] md:w-auto mx-auto lg:mx-0 mt-5">
+        <div class="flex flex-col text-center bg-white shadow-sm lg:mr-28">
+            <h2 class="font-semibold text-[#61594f] text-base md:text-lg mt-5 md:mt-12">
+                NON REGISTERED CUSTOMERS
+            </h2>
+            <p class="text-[#b7adb1] text-xs md:text-sm font-[500] px-5 pt-9 mb-5">
+                If you don't have an account with us, Please signup!
+            </p>
+            <form class="px-7" [formGroup]="signupForm">
+                <div class="mb-5">
+                    <input
+                        class="placeholder:text-[#b7adb1] focus:outline-none focus:ring-0 md:text-sm text-xs font-[500] bg-[#f6f6f6] border-none w-[16rem] md:w-[30rem] h-11"
+                        type="text" placeholder="Name here..." formControlName="name" />
+                    @if (getControl('name')?.errors && getControl('name')?.touched) {
+                    <div class="text-red-500 text-xs tracking-tight flex justify-start ml-1">
+                        field is required
+                    </div>
+                    }
+                </div>
+
+                <div class="mb-5">
+                    <input
+                        class="placeholder:text-[#b7adb1] focus:outline-none focus:ring-0 text-sm font-[500] bg-[#f6f6f6] border-none w-[16rem] md:w-[30rem] h-11"
+                        type="email" placeholder="Email here..." formControlName="email" />
+                    @if (getControl('email')?.errors && getControl('email')?.touched) {
+                    @if (getControl('email')?.errors?.['pattern']) {
+                    <div class="text-red-500 text-xs tracking-tight flex justify-start ml-1">
+                        provide a valid email
+                    </div>
+                    } @else {
+                    <div class="text-red-500 text-xs tracking-tight flex justify-start ml-1">
+                        field is required
+                    </div>
+                    }
+                    }
+                </div>
+
+                <div class="mb-5">                    
+                    <input
+                        class="placeholder:text-[#b7adb1] focus:outline-none focus:ring-0 text-sm font-[500] bg-[#f6f6f6] border-none w-[16rem] md:w-[30rem] h-11"
+                        type="text" placeholder="Phone No." formControlName="phoneNumber" />
+                    @if (getControl('phoneNumber')?.errors && getControl('phoneNumber')?.touched) {
+                    @if (getControl('phoneNumber')?.errors?.['pattern']) {
+                    <div class="text-red-500 text-xs tracking-tight flex justify-start ml-1">
+                        provide a valid phone number
+                    </div>
+                    } @else {
+                    <div class="text-red-500 text-xs tracking-tight flex justify-start ml-1">
+                        field is required
+                    </div>
+                    }
+                    }
+                </div>
+
+                <div class="mb-5">
+                    <input
+                        class="placeholder:text-[#b7adb1] focus:outline-none focus:ring-0 text-sm font-[500] bg-[#f6f6f6] border-none w-[16rem] md:w-[30rem] h-11"
+                        type="password" placeholder="Password" formControlName="password" />
+                    @if (getControl('password')?.errors && getControl('password')?.touched) {
+                    @if (getControl('password')?.errors?.['pattern']) {
+                    <div class="text-red-500 text-xs tracking-tight flex justify-start ml-1">
+                        provide a valid password
+                    </div>
+                    } @else {
+                    <div class="text-red-500 text-xs tracking-tight flex justify-start ml-1">
+                        field is required
+                    </div>
+                    }
+                    }
+                </div>
+
+                <div class="mb-5">
+                    <input
+                        class="placeholder:text-[#b7adb1] focus:outline-none focus:ring-0 text-sm font-[500] bg-[#f6f6f6] border-none w-[16rem] md:w-[30rem] h-11"
+                        type="password" placeholder="Confirm Password" formControlName="confirmPassword" />
+                    @if (signupForm.errors?.['passwordMissMatch'] && getControl('confirmPassword')?.touched) {
+                        <div class="text-red-500 text-xs tracking-tight flex justify-start ml-1">
+                            both password should be the same
+                        </div>
+                    }
+                </div>
+            </form>
+            <div class="md:my-8 my-4">
+                <button class="bg-[#c87065] text-sm md:text-base text-white w-32 h-10 md:h-12 hover:bg-[#e17061] transition" (click)="onSubmit()">
+                    SIGN UP
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
