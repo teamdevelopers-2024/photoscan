@@ -79,11 +79,12 @@ h1 {
 }
 
 .form-control input {
-    width: 92%;
+    width: 100%;
     padding: 12px;
     border: 2px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
+    margin: 0px;
     transition: border 0.3s ease;
 }
 
@@ -94,7 +95,7 @@ h1 {
 
 /* Button styles */
 .btn {
-    width: 100%;
+    width:100%;
     padding: 12px;
     background-color: #6f55f2;
     color: white;
