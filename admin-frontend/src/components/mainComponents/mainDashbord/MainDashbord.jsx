@@ -42,48 +42,38 @@ function MainDashbord() {
   return (
     <>
       <div className="dash-main">
-        <div className="dash-main-head">
-        <div className="dash-amin-head-1">
-            <div className="dash-admin-user dash-card">
-            <img style={{width:50 ,height:55 ,paddingRight:15}} src={usersImage} alt="" />
-              <div>
-              
-                <p className="" style={{ fontSize: 26, padding:0, margin:0 }}>Customers</p>
-                <p style={{ fontSize: 26,paddingLeft:20 ,margin:0 }}>73</p>
+        <div className="flex justify-center items-center h-60">
+          <div className="flex flex-col md:flex-row justify-center items-center space-y-5 md:space-y-0 md:space-x-10 w-full max-w-5xl">
+            <div className="w-80 h-44 relative njammlecard">
+              <div className="w-full h-full bg-[#7978E9] rounded-xl shadow" />
+              <div className="absolute left-[33px] bottom-[20px] text-white text-4xl font-semibold font-['Josefin Sans']">
+                Customers
+              </div>
+              <div className="absolute left-[100px] top-[29px] text-white text-5xl font-semibold font-['Josefin Sans']">
+                749
               </div>
             </div>
-          </div>
-          <div className="dash-amin-head-1">
-            <div className="dash-admin-sales dash-card">
-            <img style={{width:50 ,height:55 ,paddingRight:15}} src={salesImage} alt="" />
-              <div>
-              
-                <p style={{ fontSize: 26, padding:0, margin:0 }}>Orders</p>
-                <p style={{ fontSize: 26,padding:0 ,margin:0 }}>1735</p>
+            <div className="w-80 h-44 relative njammlecard">
+              <div className="w-full h-full bg-[#7DA0FA] rounded-xl shadow" />
+              <div className="absolute left-[29px] bottom-[20px] text-white text-4xl font-semibold font-['Josefin Sans']">
+                Orders
+              </div>
+              <div className="absolute left-[100px] top-[30px] text-white text-5xl font-semibold font-['Josefin Sans']">
+                835
               </div>
             </div>
-          </div>
-          <div className="dash-amin-head-1">
-            <div className="dash-admin-sales dash-card">
-            <img style={{width:50 ,height:55 ,paddingRight:15}} src={frameImage} alt="" />
-              <div>
-              
-                <p style={{ fontSize: 26, padding:0, margin:0 }}>Frames</p>
-                <p style={{ fontSize: 26,padding:0 ,margin:0 }}>1735</p>
+            <div className="w-80 h-44 relative njammlecard">
+              <div className="w-full h-full bg-[#F3797E] rounded-xl shadow" />
+              <div className="absolute left-[21px] bottom-[20px] text-white text-4xl font-semibold font-['Josefin Sans']">
+                Sales
               </div>
-            </div>
-          </div>
-          <div className="dash-amin-head-1">
-            <div className="dash-admin-agents dash-card">
-            <img style={{width:50 ,height:55 ,paddingRight:15}} src={momentoImage} alt="" />
-              <div >
-              
-                <p style={{ fontSize: 26, padding:0, margin:0 }}>Momentos</p>
-                <p style={{ fontSize: 26,paddingLeft:20 ,margin:0 }}>835</p>
+              <div className="absolute left-[87px] top-[37px] text-white text-5xl font-semibold font-['Josefin Sans']">
+                8,256
               </div>
             </div>
           </div>
         </div>
+
         <div className="dash-main-body">
           <div className="dash-main-body-sgraph">
             <div className="graph">
