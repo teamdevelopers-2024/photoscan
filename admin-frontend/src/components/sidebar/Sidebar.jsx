@@ -30,32 +30,32 @@ function Sidebar() {
       img: dash,
     },
     {
-      path: "/admin/user",
+      path: "/admin/home/user",
       display: "User",
       img: user,
     },
     {
-      path: "/admin/frame",
+      path: "/admin/home/frame",
       display: "Frames",
       img: frame,
     },
     {
-      path: "/admin/momento",
+      path: "/admin/home/momento",
       display: "Momento",
       img: momento,
     },
     {
-      path: "/admin/order",
+      path: "/admin/home/order",
       display: "Order",
       img: order,
     },
     {
-      path: "/admin/expense",
+      path: "/admin/home/expense",
       display: "Expense",
       img: expense,
     },
     {
-      path: "/admin/banner",
+      path: "/admin/home/banner",
       display: "Banner",
       img: banner,
     },

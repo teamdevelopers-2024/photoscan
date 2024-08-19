@@ -1,37 +1,37 @@
-import React, { Suspense, lazy } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Protectedroute from "./Secureroutes";
-import './Loading.css'
+import './Loading.css';
 
-const Adminlogin = lazy(() => import("../components/Pages/admimLogin/Adminlogin"));
-const AdminHome = lazy(() => import("../components/Pages/adminHome/AdminHome"));
-const AdminUser = lazy(() => import("../components/Pages/adminUsers/AdminUser"));
-const AdminFrame = lazy(() => import("../components/Pages/adminFrame/AdminFrame"));
-const AdminMomento = lazy(() => import("../components/Pages/adminMomento/AdminMomento"));
-const AdminOrder = lazy(() => import("../components/Pages/adminOrder/AdminOrder"));
-const AdminBanner = lazy(() => import("../components/Pages/adminBanner/AdminBanner"));
-const AdminExpense = lazy(() => import("../components/Pages/adminExpense/AdminExpense"));
+import Adminlogin from "../components/Pages/admimLogin/Adminlogin";
+import AdminHome from "../components/Pages/adminHome/AdminHome";
+import AdminUser from "../components/mainComponents/mainUser/MainUser";
+import AdminDashbord from "../components/mainComponents/mainDashbord/MainDashbord";
+import AdminFrame from "../components/mainComponents/mainFrame/MainFrame";
+import AdminMomento from "../components/mainComponents/mainMomento/MainMomento";
+import AdminOrder from "../components/mainComponents/mainOrder/MainOrder";
+import AdminBanner from "../components/mainComponents/mainBanner/MainBanner";
+import AdminExpense from "../components/mainComponents/mainExpense/MainExpense";
 
 function Layoutroutes() {
   return (
     <Router>
-      <Suspense fallback={<div className="loading-screen">Loading...</div>}>
-        <Routes>
-          <Route path="/" element={<Adminlogin />} />
-          <Route element={<Protectedroute />}>
-            <Route path="/admin/home" element={<AdminHome />} />
-            <Route path="/admin/user" element={<AdminUser />} />
-            <Route path="/admin/frame" element={<AdminFrame />} />
-            <Route path="/admin/momento" element={<AdminMomento />} />
-            <Route path="/admin/order" element={<AdminOrder />} />
-            <Route path="/admin/expense" element={<AdminExpense />} />
-            <Route path="/admin/banner" element={<AdminBanner />} />
+      <Routes>
+        <Route path="/" element={<Adminlogin />} />
+        <Route element={<Protectedroute />}>
+          <Route path="/admin/home" element={<AdminHome />} >
+            <Route index element={<AdminDashbord />} />
+            <Route path="user" element={<AdminUser />} />
+            <Route path="frame" element={<AdminFrame />} />
+            <Route path="momento" element={<AdminMomento />} />
+            <Route path="order" element={<AdminOrder />} />
+            <Route path="expense" element={<AdminExpense />} />
+            <Route path="banner" element={<AdminBanner />} />
           </Route>
-        </Routes>
-      </Suspense>
+        </Route>
+      </Routes>
     </Router>
   );
 }
 
 export default Layoutroutes;
-    

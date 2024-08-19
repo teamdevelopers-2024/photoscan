@@ -8,7 +8,7 @@
 .l-con{
     display: flex;
     justify-content: left;
-    width: 10%;
+    width: 11%;
     height: 72px;
     align-items: center;
     animation: moveRight 1s ;

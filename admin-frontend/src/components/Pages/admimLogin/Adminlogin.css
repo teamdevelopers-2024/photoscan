@@ -24,7 +24,7 @@
     font-family: Brush Script MT, Brush Script Std, cursive;
 }
 /* Initial state */
-.container {
+.container1 {
     width: 0px;
     padding: 0px;
     background-color: white;
@@ -61,7 +61,7 @@
 
 
 
-.container:hover {
+.container1:hover {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
@@ -182,4 +182,3 @@ h1 {
     transform: scale(1.01);
     background-color: #090a0a;
 }
-
