@@ -21,7 +21,7 @@ function MainExpense() {
     <>
       <div className="user-main">
         <div className="main-table">
-          <div style={{ width: 825, height: 120, position: "relative" }}>
+          {/* <div style={{ width: 825, height: 120, position: "relative" }}>
             <div
               style={{
                 width: 255,
@@ -400,9 +400,54 @@ function MainExpense() {
                     ></div>
                   </div>
                 </div>
+                
               </div>
             </div>
-          </div>
+          </div> */}
+
+<div className="w-96 h-28 relative">
+    <div className="w-64 h-28 left-0 top-0 absolute">
+        <div className="w-64 h-28 left-0 top-0 absolute bg-white rounded-3xl" />
+        <div className="w-44 h-16 left-[41px] top-[25px] absolute">
+            <div className="w-24 h-14 left-[85px] top-[7px] absolute">
+                <div className="left-0 top-[26px] absolute text-neutral-800 text-2xl font-semibold font-['Inter']">₹ 5,600</div>
+                <div className="left-0 top-0 absolute text-slate-400 text-base font-normal font-['Inter']">Income</div>
+            </div>
+            <div className="w-16 h-16 left-0 top-0 absolute">
+                <div className="w-16 h-16 left-0 top-0 absolute bg-violet-100 rounded-full" />
+                <div className="w-7 h-7 left-[20px] top-[20px] absolute">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div className="w-64 h-28 left-[285px] top-0 absolute">
+        <div className="w-64 h-28 left-0 top-0 absolute bg-white rounded-3xl" />
+        <div className="w-24 h-14 left-[126px] top-[32px] absolute">
+            <div className="left-0 top-[26px] absolute text-neutral-800 text-2xl font-semibold font-['Inter']">₹ 3,400</div>
+            <div className="left-0 top-0 absolute text-slate-400 text-base font-normal font-['Inter']">Expense</div>
+        </div>
+        <div className="w-16 h-16 left-[41px] top-[25px] absolute">
+            <div className="w-16 h-16 left-0 top-0 absolute bg-rose-100 rounded-full" />
+            <div className="w-7 h-7 left-[20px] top-[20px] absolute">
+                <div className="w-7 h-7 left-[1.76px] top-0 absolute">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div className="w-64 h-28 left-[570px] top-0 absolute">
+        <div className="w-64 h-28 left-0 top-0 absolute bg-white rounded-3xl" />
+        <div className="w-44 h-16 left-[39px] top-[25px] absolute">
+            <div className="w-24 h-14 left-[85px] top-[7px] absolute">
+                <div className="left-0 top-[26px] absolute text-neutral-800 text-2xl font-semibold font-['Inter']">₹ 2,200</div>
+                <div className="left-[4px] top-0 absolute text-slate-400 text-base font-normal font-['Inter']">Profit</div>
+            </div>
+            <div className="w-16 h-16 left-0 top-0 absolute">
+                <div className="w-16 h-16 left-0 top-0 absolute bg-sky-100 rounded-full" />
+                <div className="w-7 h-7 left-[20px] top-[20px] absolute" />
+            </div>
+        </div>
+    </div>
+</div>
           <table>
             <thead>
               <tr>
