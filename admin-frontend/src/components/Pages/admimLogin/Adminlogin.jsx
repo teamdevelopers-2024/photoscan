@@ -120,8 +120,8 @@ function Adminlogin() {
            </button>
             )}
            
-            <div className={`container ${animate ? 'animate' : ''}`}>
-                <h1>Admin Login</h1>
+            <div className={`container1 ${animate ? 'animate' : ''}`}>
+            <h1 className='text-4xl font-bold mb-5'>Admin Login</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="form-control">
                         <input

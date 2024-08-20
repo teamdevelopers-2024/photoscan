@@ -2,7 +2,7 @@ import React from 'react'
 import './AdminHome.css'
 import Header from '../../header/Header'
 import Sidebar from '../../sidebar/Sidebar'
-import MainDashbord from '../../mainComponents/mainDashbord/MainDashbord'
+import { Outlet } from 'react-router-dom'
 
 function AdminHome() {
   return (
@@ -11,7 +11,7 @@ function AdminHome() {
     <div className="bodymain">
         <Sidebar/>
         <div className="main-main">
-            <MainDashbord/>
+            <Outlet/>
         </div>
       </div>
     </>

@@ -1,7 +1,7 @@
 
 .main-page {
-    height: auto;
-    width: auto;
+    height: 100vh;
+    width: 100%;
     background-image: url('./assets/images/image.jpg'); /* Replace with the path to your image */
     background-size: 100% 100%; /* Ensures the image covers the entire area */
     background-position: center; /* Centers the image */
