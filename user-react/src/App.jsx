@@ -3,6 +3,7 @@ import './App.css'
 import Header from './Header/Header'
 import Footer from './Footer/footer'
 import Carousel from './components/Carousel/Carousel'
+import OnlinePurchase from './components/onlinePurchase/OnlinePurchase'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -11,6 +12,7 @@ function App() {
     <>
       <Header/>
       <Carousel />
+      <OnlinePurchase/>
       <Footer/>
     </>
   )
