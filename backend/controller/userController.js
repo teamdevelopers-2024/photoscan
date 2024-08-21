@@ -32,7 +32,7 @@ const login = async (req,res)=>{
 
 const register = async (req,res)=>{
     try {
-        const { email, password, userName, confirmPassword ,phoneNumber} = req.body;
+        const { email, password, name, confirmPassword ,phoneNumber} = req.body;
         console.log('coming here')
         const errors = await registerValidation(req.body)
         if (errors.length > 0) {
@@ -43,7 +43,7 @@ const register = async (req,res)=>{
           const result = await isEmailisExist(email, "user");
 
           if (result) {
-            return res.status(409).json({ error: "User already exists" });
+            return res.status(409).json({ error: true ,field:'email' , message:"User already exists"});
           }
 
 
@@ -53,7 +53,7 @@ const register = async (req,res)=>{
           const newUser = new UserDb({
             email,
             password: hashedpassword, // Note: you should hash the password before saving it
-            userName,
+            name,
             phoneNumber:phoneNumber
           });
 

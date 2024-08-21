@@ -1,14 +1,17 @@
 import React from 'react';
 import logo from '../../../admin-frontend/src/assets/images/logo.png';
 import sideImage from '../assets/WhatsApp Image 2024-08-21 at 16.59.30_7503ed8e.jpg';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Login() {
+  const navigate = useNavigate()
     return (
       <div className="flex min-h-screen">
         {/* Left side - Image and Content */}
         <div className="hidden md:flex md:w-1/2 text-white flex-col justify-center items-center p-8 relative" style={{ backgroundImage: `url(${sideImage})`, backgroundSize: 'cover', backgroundPosition: 'center',  }}>
   {/* Background overlay */}
-  <div className="absolute inset-0 bg-black opacity-20"></div>
+  <div className="absolute inset-0 bg-black opacity-50"></div>
 
   <div className="relative z-10 text-center">
     <h1 className="text-4xl font-bold">Welcome to Our Platform</h1>
@@ -28,7 +31,7 @@ export default function Login() {
               Sign in to your account
             </h2>
           </div>
-
+ 
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <form action="#" method="POST" className="space-y-6">
               <div>
@@ -42,7 +45,7 @@ export default function Login() {
                     type="email"
                     required
                     autoComplete="email"
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
                   />
                 </div>
               </div>
@@ -58,7 +61,7 @@ export default function Login() {
                     type="password"
                     required
                     autoComplete="current-password"
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
                   />
                 </div>
               </div>
@@ -66,7 +69,7 @@ export default function Login() {
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Sign in
                 </button>
@@ -75,7 +78,7 @@ export default function Login() {
 
             <p className="mt-6 text-center text-sm text-gray-600">
               Not a member?{' '}
-              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+              <a onClick={()=> navigate('/register')} className="font-medium cursor-pointer text-indigo-600 hover:text-indigo-500">
                 Register here
               </a>
             </p>
