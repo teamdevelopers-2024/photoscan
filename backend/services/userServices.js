@@ -1,5 +1,7 @@
 import validator from 'validator';
 import UserDb from '../model/userModel.js';
+import OtpDb from '../model/otpModel.js';
+
 
 export async function loginValidation(email, password , res) {
 
@@ -77,4 +79,18 @@ export async function isEmailisExist( email  ){
     } catch (error) {
         console.log(error)
     }
+}
+
+
+
+export async function isverifyOtp(email) {
+    try{
+        console.log(email);
+        const result=await OtpDb.findOne({userEmail:email})
+        return result
+    }
+    catch(error){
+        console.log(error);
+    }
+    
 }
