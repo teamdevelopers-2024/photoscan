@@ -172,8 +172,6 @@ export default function Register() {
                 </div>
                 {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
               </div>
-
-
               <div>
                 <label
                   htmlFor="phonenumber"
