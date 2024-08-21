@@ -1,11 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaUser, FaShoppingBag, FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
 import logo from '../../../admin-frontend/src/assets/images/logo.png';
+import CartDropdown from '../components/cartDropdown/CardDropdown';
 
 const Header = () => {
   const menus = ["Home", "Products", "About Us", "Contact Us"];
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleCartDropdown = () => setIsCartDropdownOpen(!isCartDropdownOpen);
+
+  // const cartDropdownRef = useRef(null);
+
+  useEffect(() => {
+    // const handleClickOutside = (event) => {
+    //   if (cartDropdownRef.current && !cartDropdownRef.current.contains(event.target)) {
+    //     setIsCartDropdownOpen(false);
+    //   }
+    // };
+
+    // document.addEventListener('mousedown', handleClickOutside);
+    // return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <header className="relative flex justify-between items-center shadow-2xl w-full p-2 md:p-4 bg-white">
@@ -26,7 +43,19 @@ const Header = () => {
       <div className="hidden md:flex justify-center items-center gap-4 md:gap-5 w-[12rem] md:w-[16rem] p-2 md:p-4 text-[1rem] md:text-[1.2rem]">
         <FaUser className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
         <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-        <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+
+        {/* Cart Icon with Dropdown */}
+        <div
+          className="relative h-auto"
+          onClick={toggleCartDropdown}
+        >
+          <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+          
+          {/* Dropdown Menu */}
+          {isCartDropdownOpen && (
+            <CartDropdown />
+          )}
+        </div>
       </div>
 
       <button
@@ -60,7 +89,12 @@ const Header = () => {
           <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
             <FaUser className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
             <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-            <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+            <div
+              className="relative"
+              onClick={toggleCartDropdown}
+            >
+              <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+            </div>
           </div>
         </div>
       </div>

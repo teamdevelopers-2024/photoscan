@@ -1,0 +1,13 @@
+.slider-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .slider-buttons button {
+    background-color: rgb(217, 217, 217,1);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
