@@ -16,6 +16,10 @@ import mongoose from 'mongoose';
             default:true
         },
         phoneNumber:String,
+        verificationStatus:{
+            type:Boolean,
+            default:false
+        }
     });
 
 const UserDb = mongoose.model('User', userSchema);

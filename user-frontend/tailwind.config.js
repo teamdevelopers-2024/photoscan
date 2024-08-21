@@ -1,13 +1,14 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [ "./src/**/*.{html,ts}",
-    "./node_modules/flowbite/**/*.js"],
+ 
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ["Inter", "sans-serif"],
-      },
-    },
+    extend: {},
   },
-  plugins: [require("flowbite/plugin")],
+  plugins: [
+    require('@tailwindcss/forms')
+  ],
 };
