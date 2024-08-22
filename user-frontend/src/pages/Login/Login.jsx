@@ -23,9 +23,10 @@ export default function Login() {
         <div className="w-full md:w-1/2 flex flex-col justify-center p-8 bg-white">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <img
+              onClick={()=> navigate('/')}
               alt="Your Company"
               src={logo}
-              className="mx-auto h-12 w-auto"
+              className="mx-auto cursor-pointer h-12 w-auto"
             />
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
               Sign in to your account
