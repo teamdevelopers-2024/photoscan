@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../../../admin-frontend/src/assets/images/logo.png";
-import sideImage from "../assets/WhatsApp Image 2024-08-21 at 19.12.44_2cf4a973.jpg";
-import api from "../services/api";
-import { findErrorField } from "../services/findErrorField";
-import OtpModal from "../components/otpModal/otpModal";
+import logo from "../../assets/images/logo.png";
+import sideImage from "../../assets/WhatsApp Image 2024-08-21 at 19.12.44_2cf4a973.jpg";
+import api from "../../services/api";
+import { findErrorField } from "../../services/findErrorField";
+import OtpModal from "../../components/otpModal/otpModal";
+import { CheckCircleIcon } from '@heroicons/react/solid';
 export default function Register() {
   const navigate = useNavigate();
 
@@ -17,6 +18,8 @@ export default function Register() {
   const [otpModal, setOtpModal] = useState(false)
   // State for validation messages
   const [errors, setErrors] = useState({});
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isVerify, setIsVerify] = useState(false)
 
   // Handle input changes
   const handleNameChange = (e) => setName(e.target.value);
@@ -25,7 +28,16 @@ export default function Register() {
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
 
-  // Validation function
+  useEffect(() => {
+    if (!email.trim() || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+      setIsButtonDisabled(true)
+    }
+    else {
+      setIsButtonDisabled(false);
+    }
+
+  }, [email])
+
   const validateForm = () => {
     const errors = {};
 
@@ -94,11 +106,33 @@ export default function Register() {
 
   const isOpen = () => setOtpModal(true)
   const onClose = () => setOtpModal(false)
+  const onSumbitSuccess = async(otp) => {
+    const result = await api.verifyOtp(email,otp)
+    console.log(result)
+    if(!result.error){
+      setIsVerify(true)
+      setOtpModal(false)
+    }
+  }
+
+
+  const handleVerifySubmit = async ()=>{
+    try {
+      const result = await api.getOtp(email)
+      if(!result.error){
+        setOtpModal(true)
+      }else {
+        alert('faild to sent otp')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <>
       {otpModal &&
-        <OtpModal isOpen={isOpen} onClose={onClose} />
+        <OtpModal isOpen={isOpen} onSubmit={onSumbitSuccess} onClose={onClose} />
       }
       <div className="flex min-h-screen">
         {/* Left side - Image */}
@@ -161,14 +195,30 @@ export default function Register() {
                     value={email}
                     onChange={handleEmailChange}
                     autoComplete="email"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm sm:leading-6"
+                    disabled={isVerify} // Add this line to disable the input when isVerify is true
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 ${isVerify ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-2 focus:ring-inset focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)]'} sm:text-sm sm:leading-6`}
                   />
-                  <button
-                    type="button"
-                    className="bg-[rgb(211,184,130)] text-white px-4 py-1.5 rounded-md shadow-sm hover:bg-[#d3b882] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[rgb(211,184,130)] sm:text-sm"
-                  >
-                    Verify
-                  </button>
+
+                  <div>
+                    <button
+                      onClick={handleVerifySubmit}
+                      disabled={isButtonDisabled}
+                      type="button"
+                      className={`text-white px-4 py-1.5 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[rgb(211,184,130)] sm:text-sm ${isVerify
+                        ? 'bg-white h-10' // Green color for verified
+                        : `bg-[rgb(211,184,130)] ${isButtonDisabled ? 'opacity-50' : 'opacity-100'}`
+                        }`}
+                    >
+                      {isVerify ? (
+                        <div className="flex items-center">
+                          <CheckCircleIcon className="w-5 h-5 text-green-600 inline mr-2" />
+                          <p className="text-green-500">Verified</p>
+                        </div>
+                      ) : (
+                        'Verify'
+                      )}
+                    </button>
+                  </div>
                 </div>
                 {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
               </div>
@@ -250,7 +300,7 @@ export default function Register() {
               <a
                 href="#"
                 onClick={() => navigate("/login")}
-                className="font-semibold leading-6 text-[rgb(211,184,130)] hover:text-[rgb(163,123,77)]"
+                className="font-semibold leading-6 cursor-pointer text-[rgb(211,184,130)] hover:text-[rgb(163,123,77)]"
               >
                 Login here
               </a>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { XIcon } from '@heroicons/react/solid';
 
-const OtpModal = ({ isOpen, onClose, onResendOtp }) => {
+const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [timer, setTimer] = useState(60);
@@ -55,6 +55,11 @@ const OtpModal = ({ isOpen, onClose, onResendOtp }) => {
     setIsTimerActive(true); // Start the timer
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(otp.join('')); // Pass the OTP as a single string
+  };
+
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
@@ -75,7 +80,7 @@ const OtpModal = ({ isOpen, onClose, onResendOtp }) => {
 
         <h2 className="text-2xl font-bold mb-4 text-center">Enter OTP</h2>
         <p className="text-center text-lg mb-6">Please enter the 6-digit OTP sent to your email.</p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="flex space-x-4 justify-center mb-9">
             {otp.map((value, index) => (
               <input
