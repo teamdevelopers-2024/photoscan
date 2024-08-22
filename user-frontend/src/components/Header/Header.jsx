@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaUser, FaShoppingBag, FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
-import logo from '../../../admin-frontend/src/assets/images/logo.png';
-import CartDropdown from '../components/cartDropdown/CardDropdown';
+import logo from "../../assets/images/logo.png";
+import CartDropdown from '../cartDropdown/CardDropdown'
 
 const Header = () => {
   const menus = ["Home", "Products", "About Us", "Contact Us"];

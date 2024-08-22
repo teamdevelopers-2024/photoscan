@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "../Login/Login";
-import Register from "../Register/Register";
-import HomePage from "../HomePage/HomePage";
+import Login from "../pages/Login/Login";
+import Register from "../pages/Register/Register";
+import HomePage from "../pages/HomePage/HomePage";
 
 export default function Layoutroutes(){
     return(
