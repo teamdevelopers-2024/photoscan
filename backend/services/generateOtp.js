@@ -27,10 +27,10 @@ export const sendOPTVerificationEmail = async (email) => {
             to: email,
             subject: "Verify Your Email",
             html: `
-                <div style="background-color: #0b2c3d; padding: 20px; text-align: center; font-family: Arial, sans-serif; color: #222;">
+                <div style="background-color: #fff; padding: 20px; text-align: center; font-family: Arial, sans-serif; color: #222;">
                     <img src="cid:logo" alt="Your Logo" style="max-width: 150px; margin-bottom: 20px;">
-                    <h1 style="color: #fff;">Email Verification</h1>
-                    <p style="font-size: 16px; color: #fff;">Thank you for signing up! Please verify your email address by entering the OTP below:</p>
+                    <h1 style="color: #000;">Email Verification</h1>
+                    <p style="font-size: 16px; color: #000;">Thank you for signing up! Please verify your email address by entering the OTP below:</p>
                     <div style="margin: 20px 0;">
                         <span style="display: inline-block; padding: 10px 20px; font-size: 24px; font-weight: bold; background-color: #222; color: #FFD700; border-radius: 5px;">
                             ${otp}
@@ -41,8 +41,8 @@ export const sendOPTVerificationEmail = async (email) => {
             `,
             attachments: [
                 {
-                    filename: 'propertybuddywhitelogo.png', // Name of the file
-                    path: path.join(__dirname, '../assets/images/propertybuddywhitelogo.png'), // Corrected path to the image file
+                    filename: 'logo.png', // Name of the file
+                    path: path.join(__dirname, '../assets/images/logo.png'), // Corrected path to the image file
                     cid: 'logo' // Same as the value in the src attribute in the HTML
                 }
             ]

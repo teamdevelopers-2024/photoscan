@@ -1,7 +1,10 @@
 import  argon2  from "argon2";
 import UserDb from "../model/userModel.js";
 import generateToken from "../services/generateToken.js";
-import { isEmailisExist, loginValidation, registerValidation } from "../services/userServices.js";
+import validator from "validator";
+import { isEmailisExist, isverifyOtp, loginValidation, registerValidation } from "../services/userServices.js";
+import { sendOPTVerificationEmail } from "../services/generateOtp.js";
+import OtpDb from "../model/otpModel.js";
 
 
 
@@ -32,7 +35,7 @@ const login = async (req,res)=>{
 
 const register = async (req,res)=>{
     try {
-        const { email, password, userName, confirmPassword ,phoneNumber} = req.body;
+        const { email, password, name, confirmPassword ,phoneNumber} = req.body;
         console.log('coming here')
         const errors = await registerValidation(req.body)
         if (errors.length > 0) {
@@ -43,7 +46,7 @@ const register = async (req,res)=>{
           const result = await isEmailisExist(email, "user");
 
           if (result) {
-            return res.status(409).json({ error: "User already exists" });
+            return res.status(409).json({ error: true ,field:'email' , message:"User already exists"});
           }
 
 
@@ -53,7 +56,7 @@ const register = async (req,res)=>{
           const newUser = new UserDb({
             email,
             password: hashedpassword, // Note: you should hash the password before saving it
-            userName,
+            name,
             phoneNumber:phoneNumber
           });
 
@@ -75,8 +78,62 @@ const register = async (req,res)=>{
 }
 
 
+const getOtp = async (req, res) => {
+    try {
+      const { email } = req.body;
+  
+      // Check if email is valid
+      if (!validator.isEmail(email)) {
+        return res.status(400).json({ error: true , message:'invalid email address' });
+      }
+  
+      const result = await sendOPTVerificationEmail(email)
+  
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Error in getOtp:', error);
+      res.status(500).json({ error: true , message:'An error occurred while processing your request' });
+    }
+  };
+ 
+
+  const verifyOtp = async (req, res) => {
+    try {
+      const { otp, email } = req.body;
+      console.log(otp, email);
+      const result = await isverifyOtp(email);
+      if (result) {
+        const otpResult = await argon2.verify(result.otp, otp);
+        if (otpResult) {
+          await OtpDb.deleteOne({ userEmail: email });
+          res.status(200).json({
+            error: false,
+            message: "otp successfully verified",
+          });
+        } else {
+          res.status(400).json({
+            error: true,
+            message: "Invalid Otp",
+          });
+        }
+      } else {
+        res.status(403).json({
+          error: true,
+          message: "otp is expired please resent otp",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        error: true,
+        message: "Internal Server error",
+      });
+    }
+  }
 
 export default {
     login,
-    register
+    register,
+    getOtp,
+    verifyOtp
 }

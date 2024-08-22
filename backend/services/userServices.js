@@ -1,5 +1,7 @@
 import validator from 'validator';
 import UserDb from '../model/userModel.js';
+import OtpDb from '../model/otpModel.js';
+
 
 export async function loginValidation(email, password , res) {
 
@@ -39,7 +41,8 @@ export async function loginValidation(email, password , res) {
 
 export async function registerValidation(body,res){
     try {
-        const { email, password, userName, confirmPassword } = body;
+        console.log(body)
+        const { email, password, name, confirmPassword } = body;
         
         // Validation checks
         let errors = [];
@@ -48,7 +51,7 @@ export async function registerValidation(body,res){
             errors.push('invalid email or email not found')
         }
 
-         if (!userName || validator.isEmpty(userName.trim())) {
+         if (!name || validator.isEmpty(name.trim())) {
             errors.push('user name is required.');
         }
 
@@ -76,4 +79,18 @@ export async function isEmailisExist( email  ){
     } catch (error) {
         console.log(error)
     }
+}
+
+
+
+export async function isverifyOtp(email) {
+    try{
+        console.log(email);
+        const result=await OtpDb.findOne({userEmail:email})
+        return result
+    }
+    catch(error){
+        console.log(error);
+    }
+    
 }
