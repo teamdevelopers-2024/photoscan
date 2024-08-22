@@ -45,7 +45,7 @@ const Header = () => {
     <>
       <header
         ref={headerRef}
-        className="flex relative justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
+        className="flex fixed justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
       >
         <div className="w-[8rem] md:w-[12rem]">
           <img
@@ -146,7 +146,7 @@ const Header = () => {
           <div className="cursor-pointer">FRAMES</div>
         </div>
       </div>
-      {/* )} */}
+          <div className="w-full h-[72px]"></div>
     </>
   );
 };
