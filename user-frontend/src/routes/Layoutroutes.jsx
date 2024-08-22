@@ -5,6 +5,7 @@ import Register from "../pages/Register/Register";
 import HomePage from "../pages/HomePage/HomePage";
 import CheckoutPage from "../pages/CheckoutPage/Checkout";
 import ContactUs from "../pages/ContactUs/ContactUs";
+import Aboutus from "../pages/AboutUsPage/Aboutus";
 
 export default function Layoutroutes(){
     return(
@@ -15,6 +16,7 @@ export default function Layoutroutes(){
                 <Route path="/checkout" element={<CheckoutPage />}/>
                 <Route path="/" element={<HomePage />}/>
                 <Route path="/contact" element={<ContactUs />}/>
+                <Route path="/about" element={<Aboutus />}/>
             </Routes>
         </Router>
     )
