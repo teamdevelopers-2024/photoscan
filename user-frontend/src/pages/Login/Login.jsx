@@ -1,6 +1,6 @@
 import React from 'react';
-import logo from '../../../admin-frontend/src/assets/images/logo.png';
-import sideImage from '../assets/WhatsApp Image 2024-08-21 at 16.59.30_7503ed8e.jpg';
+import logo from "../../assets/images/logo.png";
+import sideImage from '../../assets/WhatsApp Image 2024-08-21 at 16.59.30_7503ed8e.jpg';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -78,7 +78,7 @@ export default function Login() {
 
             <p className="mt-6 text-center text-sm text-gray-600">
               Not a member?{' '}
-              <a onClick={()=> navigate('/register')} className="font-medium cursor-pointer text-indigo-600 hover:text-indigo-500">
+              <a onClick={()=> navigate('/register')} className="font-medium cursor-pointer text-[rgb(211,184,130)] hover:text-[rgb(163,123,77)]">
                 Register here
               </a>
             </p>
