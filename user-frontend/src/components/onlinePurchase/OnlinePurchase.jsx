@@ -1,5 +1,7 @@
-import React, { useRef, useState } from "react";
-import './OnlinePurchase.css'
+import React, { useRef, useState, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import "./OnlinePurchase.css";
 import Slider from "react-slick";
 import img1 from "../../../../admin-frontend/src/assets/images/img1.jpg";
 import img2 from "../../../../admin-frontend/src/assets/images/img2.jpg";
@@ -10,50 +12,19 @@ import img4 from "../../../../admin-frontend/src/assets/images/img4.jpg";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-// Custom Arrow Components
-const PrevArrow = ({ onClick }) => (
-  <div
-    className="slick-arrow slick-prev"
-    onClick={onClick}
-    style={{
-      display: "block",
-      background: "rgba(0, 0, 0, 0.5)",
-      borderRadius: "50%",
-      width: "20px",
-      height: "20px",
-      color: "white",
-      lineHeight: "30px",
-      textAlign: "center",
-      cursor: "pointer",
-    }}
-  >
-    &#9664;
-  </div>
-);
-
-const NextArrow = ({ onClick }) => (
-  <div
-    className="slick-arrow slick-next"
-    onClick={onClick}
-    style={{
-      display: "block",
-      background: "rgba(0, 0, 0, 0.5)",
-      borderRadius: "50%",
-      width: "20px",
-      height: "20px",
-      color: "white",
-      lineHeight: "30px",
-      textAlign: "center",
-      cursor: "pointer",
-    }}
-  >
-    &#9654;
-  </div>
-);
-
 export default function OnlinePurchase() {
   const [selectedCategory, setSelectedCategory] = useState("newArrivals");
   const sliderRef = useRef(null);
+
+  useEffect(() => {
+    // Initialize AOS
+    AOS.init({
+      duration: 1000, 
+      easing: "ease-in-out", 
+      offset: 100, 
+      once: false, 
+    });
+  }, []);
 
   const getCategoryClasses = (category) => {
     const isSelected = selectedCategory === category;
@@ -72,28 +43,29 @@ export default function OnlinePurchase() {
     slidesToScroll: 1,
     responsive: [
       {
-        breakpoint: 1024, // For tablets and below
+        breakpoint: 1024,
         settings: {
-          slidesToShow: 3, // Show 2 slides on tablets
+          slidesToShow: 3,
           slidesToScroll: 1,
         },
       },
       {
-        breakpoint: 768, // For mobile devices
+        breakpoint: 768,
         settings: {
-          slidesToShow: 2, // Show 1 slide on mobile
+          slidesToShow: 2,
           slidesToScroll: 1,
         },
       },
       {
-        breakpoint: 480, // For mobile devices
+        breakpoint: 480,
         settings: {
-          slidesToShow: 1, // Show 1 slide on mobile
+          slidesToShow: 1,
           slidesToScroll: 1,
         },
       },
     ],
   };
+
   const products = [
     { id: 1, name: "Product 1", price: "₹2,499", image: img1 },
     { id: 2, name: "Product 2", price: "₹2,499", image: img2 },
@@ -105,7 +77,10 @@ export default function OnlinePurchase() {
     <div className="w-full h-auto bg-[#f6f6f6] relative">
       <div className="w-full max-w-screen-xl mx-auto relative py-8 px-4 flex flex-col items-center">
         {/* Header */}
-        <div className="w-full h-20 flex flex-col mb-6 justify-center items-center">
+        <div
+          className="w-full h-20 flex flex-col mb-6 justify-center items-center"
+          data-aos="fade-in"
+        >
           <div className="text-zinc-600 text-3xl font-semibold font-['Lato'] text-center leading-relaxed">
             Purchase Online On Photo Scan
           </div>
@@ -113,7 +88,10 @@ export default function OnlinePurchase() {
         </div>
 
         {/* Category Headers */}
-        <div className="relative flex justify-center space-x-8 mb-8">
+        <div
+          className="relative flex justify-center space-x-8 mb-8"
+          data-aos="fade-in"
+        >
           <div
             className={getCategoryClasses("mostPopular")}
             onClick={() => setSelectedCategory("mostPopular")}
@@ -153,6 +131,7 @@ export default function OnlinePurchase() {
               <div
                 key={product.id}
                 className="relative w-[250px] h-[312px] p-2"
+                data-aos="fade-up"
               >
                 <img
                   className="w-full h-[250px] object-cover"
