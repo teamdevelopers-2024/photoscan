@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import CheckoutPage from "../CheckoutPage/Checkout";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import HomePage from "../pages/HomePage/HomePage";
+import CheckoutPage from "../pages/CheckoutPage/Checkout";
 
 export default function Layoutroutes(){
     return(
