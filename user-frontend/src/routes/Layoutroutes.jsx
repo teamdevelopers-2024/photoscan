@@ -4,6 +4,7 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import HomePage from "../pages/HomePage/HomePage";
 import CheckoutPage from "../pages/CheckoutPage/Checkout";
+import ContactUs from "../pages/ContactUs/ContactUs";
 
 export default function Layoutroutes(){
     return(
@@ -13,7 +14,7 @@ export default function Layoutroutes(){
                 <Route path="/register" element={<Register />}/>
                 <Route path="/checkout" element={<CheckoutPage />}/>
                 <Route path="/" element={<HomePage />}/>
-
+                <Route path="/contact" element={<ContactUs />}/>
             </Routes>
         </Router>
     )
