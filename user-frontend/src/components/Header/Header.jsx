@@ -1,22 +1,34 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FaUser, FaShoppingBag, FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  FaUser,
+  FaShoppingBag,
+  FaShoppingCart,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
-import CartDropdown from '../cartDropdown/CardDropdown';
-import { useNavigate } from 'react-router-dom';
-import './Header.css'
+import CartDropdown from "../cartDropdown/CardDropdown";
+import { useNavigate } from "react-router-dom";
+import "./Header.css";
 
 const Header = () => {
   const menus = ["Home", "Products", "About Us", "Contact Us"];
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
-  const [isProductsClicked, setIsProductsClicked] = useState(false); // State for handling Products click
+  const [isProductsClicked, setIsProductsClicked] = useState("a"); // State for handling Products click
   const navigate = useNavigate();
   const headerRef = useRef(null);
-
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleCartDropdown = () => setIsCartDropdownOpen(!isCartDropdownOpen);
-  const handleProductClick = () => setIsProductsClicked(!isProductsClicked); // Toggle Products click
-
+ 
+  const handleProductClick = () =>{
+    if(isProductsClicked==="a"){
+      setIsProductsClicked(true); 
+    }else{
+    setIsProductsClicked(!isProductsClicked)
+    }
+  
+  }
   useEffect(() => {
     // Handle outside click for cartDropdown
     const handleClickOutside = (event) => {
@@ -25,21 +37,33 @@ const Header = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <>
-      <header ref={headerRef} className="flex relative justify-between items-center shadow-2xl w-full p-2 md:p-4 bg-white z-50">
+      <header
+        ref={headerRef}
+        className="flex relative justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
+      >
         <div className="w-[8rem] md:w-[12rem]">
-          <img onClick={() => navigate('/')} className="p-2 md:ml-3 cursor-pointer" src={logo} alt="logo" />
+          <img
+            onClick={() => navigate("/")}
+            className="p-2 md:ml-3 cursor-pointer"
+            src={logo}
+            alt="logo"
+          />
         </div>
 
         <div className="hidden md:grid text-[#666666] text-sm font-[600] p-2 md:p-4 tracking-tight">
           <ul className="flex justify-center items-center gap-4 md:gap-5">
             {menus.map((menu, index) => (
-              <li key={index} className="cursor-pointer hover:text-[#4d4d4d]" onClick={menu === "Products" ? handleProductClick : undefined}>
+              <li
+                key={index}
+                className="cursor-pointer hover:text-[#4d4d4d]"
+                onClick={menu === "Products" ? handleProductClick : undefined}
+              >
                 {menu.toUpperCase()}
               </li>
             ))}
@@ -47,20 +71,18 @@ const Header = () => {
         </div>
 
         <div className="hidden md:flex justify-center items-center gap-4 md:gap-5 w-[12rem] md:w-[16rem] p-2 md:p-4 text-[1rem] md:text-[1.2rem]">
-          <FaUser onClick={() => navigate('/login')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+          <FaUser
+            onClick={() => navigate("/login")}
+            className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110"
+          />
           <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
 
           {/* Cart Icon with Dropdown */}
-          <div
-            className="relative h-auto"
-            onClick={toggleCartDropdown}
-          >
+          <div className="relative h-auto" onClick={toggleCartDropdown}>
             <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-            
+
             {/* Dropdown Menu */}
-            {isCartDropdownOpen && (
-              <CartDropdown />
-            )}
+            {isCartDropdownOpen && <CartDropdown />}
           </div>
         </div>
 
@@ -72,8 +94,10 @@ const Header = () => {
         </button>
 
         <div
-          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden w-full`}
-          style={{ maxWidth: '100%' }}
+          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${
+            isMenuOpen ? "translate-x-0" : "translate-x-full"
+          } md:hidden w-full`}
+          style={{ maxWidth: "100%" }}
         >
           <div className="relative p-4">
             <button
@@ -87,7 +111,10 @@ const Header = () => {
             </div>
             <ul className="flex flex-col items-center space-y-4">
               {menus.map((menu, index) => (
-                <li key={index} className="cursor-pointer hover:text-[#4d4d4d] text-xl">
+                <li
+                  key={index}
+                  className="cursor-pointer hover:text-[#4d4d4d] text-xl"
+                >
                   {menu.toUpperCase()}
                 </li>
               ))}
@@ -95,10 +122,7 @@ const Header = () => {
             <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
               <FaUser className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-              <div
-                className="relative"
-                onClick={toggleCartDropdown}
-              >
+              <div className="relative" onClick={toggleCartDropdown}>
                 <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               </div>
             </div>
@@ -108,12 +132,20 @@ const Header = () => {
 
       {/* Conditionally render the "MOMENTOS" and "FRAMES" div */}
       {/* {isProductsClicked && ( */}
-        <div className={`w-full  text-[#666666] text-sm font-[600] h-[72px] bg-white flex justify-center items-center border border-gray-300 absolute top-[0%] left-0 z-30 ${isProductsClicked ? 'animate' : 'nanimate'}`}>
-          <div className="flex space-x-4">
-            <div className='cursor-pointer'>MOMENTOS</div>
-            <div className='cursor-pointer'>FRAMES</div>
-          </div>
+      <div
+        className={`w-full  text-[#666666] text-sm font-[600] h-[72px] bg-white flex justify-center items-center border border-gray-300 fixed top-[0px] left-0 z-30 
+          ${
+            isProductsClicked==true ? "animate" :
+            isProductsClicked==false ? "nanimate" :
+            ""
+          }
+          `}
+      >
+        <div className="flex space-x-4">
+          <div className="cursor-pointer">MOMENTOS</div>
+          <div className="cursor-pointer">FRAMES</div>
         </div>
+      </div>
       {/* )} */}
     </>
   );

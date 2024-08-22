@@ -6,21 +6,21 @@
 }
 @keyframes dropdown {
     0%{
-        top: 0%;
+        top: 0px;
         z-index: 30;
     }
     100%{
-        top: 12%;
+        top: 72px;
         z-index: 30;
     }
 }
 @keyframes dropup {
     0%{
-        top: 12%;
+        top: 72px;
         z-index: 30;
     }
     100%{
-        top: 0%;
+        top: 0px;
         z-index: 30;
     }
 }
