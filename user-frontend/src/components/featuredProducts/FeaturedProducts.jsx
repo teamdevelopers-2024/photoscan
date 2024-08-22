@@ -1,10 +1,10 @@
 import React from "react";
-import "./FeaturedProducts.css";
 import Slider from "react-slick";
 import img1 from "../../../../admin-frontend/src/assets/images/img1.jpg";
 import img2 from "../../../../admin-frontend/src/assets/images/img2.jpg";
 import img3 from "../../../../admin-frontend/src/assets/images/img3.jpg";
 import img4 from "../../../../admin-frontend/src/assets/images/img4.jpg";
+import './FeaturedProducts.css'
 
 // Import Slick Carousel CSS
 import "slick-carousel/slick/slick.css";
@@ -16,7 +16,7 @@ export default function FeaturedProducts() {
     slidesToShow: 3, // Default for desktop
     slidesToScroll: 1,
     nextArrow: (
-      <div className="slick-arrow">
+      <div className="">
         <button className="w-11 h-32 relative slick-next1">
           <div className="w-11 h-32 left-0 top-0 absolute border border-neutral-500/60" />
           <div className="w-3.5 h-28 left-[13.76px] top-[10.04px] absolute text-center text-neutral-500/50 text-xl font-semibold font-['Inter']">
@@ -26,35 +26,38 @@ export default function FeaturedProducts() {
       </div>
     ),
     prevArrow: (
-      <div className="slick-arrow">
-        <button className="w-11 h-32 relative slick-prev1">
-          <div className="w-11 h-32 left-0 top-0 absolute border border-neutral-500/60" />
-          <div className="w-3.5 h-28 left-[13.76px] top-[10.04px] absolute text-center text-neutral-500/50 text-xl font-semibold font-['Inter']">
-            p<br />r<br />e<br />v
-          </div>
-        </button>
-      </div>
+      <div className="">
+      <button className="w-11 h-32 relative slick-prev1">
+        <div className="w-11 h-32 left-0 top-0 absolute border border-neutral-500/60" />
+        <div className="w-3.5 h-28 left-[13.76px] top-[10.04px] absolute text-center text-neutral-500/50 text-xl font-semibold font-['Inter']">
+          p<br />r<br />e<br />v
+        </div>
+      </button>
+    </div>
     ),
     responsive: [
       {
-        breakpoint: 1024, // For tablets and below
+        breakpoint: 1424, // For tablets and below
         settings: {
-          slidesToShow: 3, // Show 2 slides on tablets
+          slidesToShow: 3, // Show 3 slides on tablets
           slidesToScroll: 1,
+          arrows: false,
         },
       },
       {
         breakpoint: 768, // For mobile devices
         settings: {
-          slidesToShow: 2, // Show 1 slide on mobile
+          slidesToShow: 2, // Show 2 slides on mobile
           slidesToScroll: 1,
+          arrows: false, // Disable arrows on mobile devices
         },
       },
       {
-        breakpoint: 480, // For mobile devices
+        breakpoint: 480, // For small mobile devices
         settings: {
-          slidesToShow: 1, // Show 1 slide on mobile
+          slidesToShow: 1, // Show 1 slide on smaller mobile
           slidesToScroll: 1,
+          arrows: false, // Disable arrows on smaller mobile devices
         },
       },
     ],
