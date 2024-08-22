@@ -151,7 +151,7 @@ export default function Register() {
         {/* Right side - Form */}
         <div className="w-full md:w-1/2 flex flex-col overflow-auto h-screen p-8 bg-gray-100">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img alt="Your Company" src={logo} className="mx-auto h-10 w-auto" />
+            <img onClick={()=> navigate('/')} alt="Your Company" src={logo} className="mx-auto cursor-pointer h-10 w-auto" />
             <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Sign Up to your account
             </h2>

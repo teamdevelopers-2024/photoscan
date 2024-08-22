@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaUser, FaShoppingBag, FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
 import logo from "../../assets/images/logo.png";
 import CartDropdown from '../cartDropdown/CardDropdown'
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const menus = ["Home", "Products", "About Us", "Contact Us"];
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
+  const navigate = useNavigate()
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleCartDropdown = () => setIsCartDropdownOpen(!isCartDropdownOpen);
@@ -25,9 +27,9 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="relative flex justify-between items-center shadow-2xl w-full p-2 md:p-4 bg-white">
+    <header className="flex justify-between items-center shadow-2xl w-full p-2 md:p-4 bg-white">
       <div className="w-[8rem] md:w-[12rem]">
-        <img className="p-2 md:ml-3" src={logo} alt="logo" />
+        <img onClick={()=> navigate('/')} className="p-2 md:ml-3 cursor-pointer" src={logo} alt="logo" />
       </div>
 
       <div className="hidden md:grid text-[#666666] text-sm font-[600] p-2 md:p-4 tracking-tight">
@@ -41,7 +43,7 @@ const Header = () => {
       </div>
 
       <div className="hidden md:flex justify-center items-center gap-4 md:gap-5 w-[12rem] md:w-[16rem] p-2 md:p-4 text-[1rem] md:text-[1.2rem]">
-        <FaUser className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+        <FaUser onClick={()=> navigate('/login')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
         <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
 
         {/* Cart Icon with Dropdown */}
