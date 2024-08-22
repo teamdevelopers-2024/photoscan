@@ -1,0 +1,82 @@
+fieldset label span {
+    min-width: 125px;
+}
+fieldset .select::after {
+    content: '';
+    position: absolute;
+    width: 9px;
+    height: 5px;
+    right: 20px;
+    top: 50%;
+    margin-top: -2px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'><title>Arrow</title><path d='M.552 0H8.45c.58 0 .723.359.324.795L5.228 4.672a.97.97 0 0 1-1.454 0L.228.795C-.174.355-.031 0 .552 0z' fill='%23CFD7DF' fill-rule='evenodd'/></svg>");
+    pointer-events: none;
+}
+.background{
+    background-image: url('../assets/images/bg1.jpeg'); 
+    background-size: 100% 100%;/* Ensures the image covers the entire element */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat;
+    
+}
+.background1{
+    background-color: #00000080;
+    
+}
+.background2{
+    background-color: #ffffff2b;
+    
+}
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 0.75rem 1rem; /* Padding for better spacing */
+  border-radius: 0.5rem; /* Rounded corners */
+  border: 1px solid #ffffff2b; /* Light gray border */
+  background-color: #ffffff2b; /* White background */
+  color: #333; /* Darker text for contrast */
+  font-size: 1rem; /* Readable font size */
+  line-height: 1.5; /* Improve line height */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transitions for focus and hover effects */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Focus State */
+input:focus,
+textarea:focus {
+  outline: none; /* Remove default outline */
+  border-color: #3b82f6; /* Border color on focus */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Shadow effect for focus */
+}
+
+/* Disabled State */
+input:disabled,
+textarea:disabled {
+  background-color: #f3f4f6; /* Lighter background for disabled fields */
+  border-color: #d1d5db; /* Lighter border for disabled fields */
+  cursor: not-allowed; /* Indicate that the field is not interactive */
+}
+
+/* Placeholder Styles */
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af; /* Placeholder text color */
+  opacity: 1; /* Ensure full opacity */
+}
+
+/* Error State */
+input.error,
+textarea.error {
+  border-color: #ef4444; /* Red border for errors */
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); /* Shadow effect for error */
+}
+
+/* Success State */
+input.success,
+textarea.success {
+  border-color: #22c55e; /* Green border for success */
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2); /* Shadow effect for success */
+}
