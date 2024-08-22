@@ -1,4 +1,6 @@
-import React from "react";
+
+import React, { useEffect } from "react";
+import "./FeaturedProducts.css";
 import Slider from "react-slick";
 import img1 from "../../../../admin-frontend/src/assets/images/img1.jpg";
 import img2 from "../../../../admin-frontend/src/assets/images/img2.jpg";
@@ -10,10 +12,22 @@ import './FeaturedProducts.css'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+// Import AOS
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 export default function FeaturedProducts() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, 
+      easing: "ease-in-out",
+      offset: 100, 
+    });
+  }, []);
+
   const settings = {
     infinite: true,
-    slidesToShow: 3, // Default for desktop
+    slidesToShow: 3, 
     slidesToScroll: 1,
     nextArrow: (
       <div className="">
@@ -88,6 +102,7 @@ export default function FeaturedProducts() {
               <div
                 key={product.id}
                 className="relative w-[250px] h-[312px] p-2"
+                data-aos="fade-up"  
               >
                 <img
                   className="w-full h-[250px] object-cover"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import img1 from '../../assets/images/0200de8f618428ba742174e1f740749a.png';
 import img2 from '../../assets/images/1037674.jpg';
 import img3 from '../../assets/images/bmw_car_sports_139454_3840x2160.jpg';
@@ -8,8 +8,19 @@ import rightArrow from '../../assets/images/right-arrow.png';
 
 export default function CarouselHome() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselRef = useRef(null);
 
   const slides = [img1, img2, img3, img4];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!carouselRef.current.matches(':hover, :focus')) {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
+      }
+    }, 3000); // Change slide every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
@@ -22,7 +33,10 @@ export default function CarouselHome() {
   };
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div
+      ref={carouselRef}
+      className="relative w-full overflow-hidden"
+    >
       {/* Carousel Wrapper */}
       <div
         className="flex transition-transform duration-700 ease-in-out"
@@ -55,12 +69,12 @@ export default function CarouselHome() {
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-2 md:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1 md:space-x-2">
+      <div className="absolute bottom-2 md:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {slides.map((_, index) => (
           <button
             key={index}
-            className={`w-2 h-2 md:w-3 md:h-3 rounded-full ${
-              currentIndex === index ? 'bg-white' : 'bg-gray-500'
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              currentIndex === index ? 'bg-white scale-110' : 'bg-gray-500'
             }`}
             onClick={() => setCurrentIndex(index)}
           />
