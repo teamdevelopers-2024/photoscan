@@ -13,7 +13,7 @@ fieldset .select::after {
     pointer-events: none;
 }
 .background{
-    background-image: url('../assets/images/bg1.jpeg'); 
+    background-image: url('../../assets/images/bg1.jpeg'); 
     background-size: 100% 100%;/* Ensures the image covers the entire element */
     background-position: center; /* Centers the image */
     background-repeat: no-repeat;
