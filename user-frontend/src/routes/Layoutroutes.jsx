@@ -7,6 +7,8 @@ import CheckoutPage from "../pages/CheckoutPage/Checkout";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import Aboutus from "../pages/AboutUsPage/Aboutus";
 import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
+import Cart from "../pages/CartPage/Cart";
+import Profile from "../pages/Profile/Profile";
 
 export default function Layoutroutes(){
     return(
@@ -19,6 +21,8 @@ export default function Layoutroutes(){
                 <Route path="/contact" element={<ContactUs />}/>
                 <Route path="/about" element={<Aboutus />}/>
                 <Route path="/ordersuccess" element={<OrderSuccess />}/>
+                <Route path="/cart" element={<Cart />}/>
+                <Route path="/profile" element={<Profile />}/>
             </Routes>
         </Router>
     )
