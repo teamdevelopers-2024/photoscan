@@ -1,0 +1,26 @@
+.animate{
+    animation: dropdown 1s forwards ;
+}
+.nanimate{
+    animation: dropup 1s forwards ;
+}
+@keyframes dropdown {
+    0%{
+        top: 0%;
+        z-index: 30;
+    }
+    100%{
+        top: 12%;
+        z-index: 30;
+    }
+}
+@keyframes dropup {
+    0%{
+        top: 12%;
+        z-index: 30;
+    }
+    100%{
+        top: 0%;
+        z-index: 30;
+    }
+}
