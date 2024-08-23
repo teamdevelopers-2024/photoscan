@@ -5,7 +5,7 @@ import CartDropdown from '../cartDropdown/CardDropdown'
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const menus = [
+  const menu = [
     {
       name:"Home",
       route:'/'
@@ -50,9 +50,9 @@ const Header = () => {
 
       <div className="hidden md:grid text-[#666666] text-sm font-[600] p-2 md:p-4 tracking-tight">
         <ul className="flex justify-center items-center gap-4 md:gap-5">
-          {menus.map((menu, index) => (
+          {menu.map((menu, index) => (
             <li key={index} className="cursor-pointer hover:text-[#4d4d4d]">
-              {menu.toUpperCase()}
+              {menu.name.toUpperCase()}
             </li>
           ))}
         </ul>
@@ -98,9 +98,9 @@ const Header = () => {
             <img className="w-[8rem] md:w-[12rem]" src={logo} alt="logo" />
           </div>
           <ul className="flex flex-col items-center space-y-4">
-            {menus.map((menu, index) => (
+            {menu.map((menu, index) => (
               <li key={index} className="cursor-pointer hover:text-[#4d4d4d] text-xl">
-                {menu.toUpperCase()}
+                {menu.name.toUpperCase()}
               </li>
             ))}
           </ul>
