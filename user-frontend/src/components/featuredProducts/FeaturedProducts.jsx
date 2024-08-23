@@ -19,8 +19,8 @@ import "aos/dist/aos.css";
 export default function FeaturedProducts() {
   useEffect(() => {
     AOS.init({
-      duration: 800, 
-      easing: "ease-in-sine",
+      duration: 700, 
+      easing: "ease-in",
       offset: 100, 
       delay:100,
     });
