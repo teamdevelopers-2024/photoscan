@@ -43,7 +43,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="flex justify-between items-center shadow-2xl w-full p-2 md:p-4 bg-white">
+    <header className="flex fixed z-10 justify-between items-center shadow-2xl w-full p-2 md:p-4 bg-white">
       <div className="w-[8rem] md:w-[12rem]">
         <img onClick={()=> navigate('/')} className="p-2 md:ml-3 cursor-pointer" src={logo} alt="logo" />
       </div>
@@ -52,7 +52,7 @@ const Header = () => {
         <ul className="flex justify-center items-center gap-4 md:gap-5">
           {menus.map((menu, index) => (
             <li key={index} className="cursor-pointer hover:text-[#4d4d4d]">
-              {menu.toUpperCase()}
+              {menu.name.toUpperCase()}
             </li>
           ))}
         </ul>
@@ -100,7 +100,7 @@ const Header = () => {
           <ul className="flex flex-col items-center space-y-4">
             {menus.map((menu, index) => (
               <li key={index} className="cursor-pointer hover:text-[#4d4d4d] text-xl">
-                {menu.toUpperCase()}
+                {menu.name.toUpperCase()}
               </li>
             ))}
           </ul>
