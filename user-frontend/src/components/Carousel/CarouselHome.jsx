@@ -56,12 +56,14 @@ export default function CarouselHome() {
 
       {/* Navigation Buttons */}
       <button
+         data-aos="fade-left" data-aos-duration="500"
         onClick={prevSlide}
         className="absolute top-1/2 left-2 sm:left-4 transform -translate-y-1/2 text-white p-1 sm:p-2 rounded-full"
       >
         <img className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10" src={leftArrow} alt="Left Arrow" />
       </button>
       <button
+        data-aos="fade-right" data-aos-duration="500"
         onClick={nextSlide}
         className="absolute top-1/2 right-2 sm:right-4 transform -translate-y-1/2 text-white p-1 sm:p-2 rounded-full"
       >

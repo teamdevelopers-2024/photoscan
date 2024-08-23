@@ -19,7 +19,7 @@ export default function OnlinePurchase() {
   useEffect(() => {
     // Initialize AOS
     AOS.init({
-      duration: 1000, 
+      duration: 800, 
       easing: "ease-in-out", 
       offset: 100, 
       once: false, 
@@ -67,10 +67,10 @@ export default function OnlinePurchase() {
   };
 
   const products = [
-    { id: 1, name: "Product 1", price: "₹2,499", image: img1 },
-    { id: 2, name: "Product 2", price: "₹2,499", image: img2 },
-    { id: 3, name: "Product 3", price: "₹2,499", image: img3 },
-    { id: 4, name: "Product 4", price: "₹2,499", image: img4 },
+    { id: 1, name: "Product 1", price: "₹2,499", image: img1, aosDelay: "0"},
+    { id: 2, name: "Product 2", price: "₹2,499", image: img2, aosDelay: "200"},
+    { id: 3, name: "Product 3", price: "₹2,499", image: img3, aosDelay: "400"},
+    { id: 4, name: "Product 4", price: "₹2,499", image: img4, aosDelay: "600"},
   ];
 
   return (
@@ -129,9 +129,10 @@ export default function OnlinePurchase() {
           <Slider ref={sliderRef} {...settings}>
             {products.map((product) => (
               <div
+              data-aos="fade-up"
+              data-aos-delay={product.aosDelay}
                 key={product.id}
                 className="relative w-[250px] h-[312px] p-2"
-                data-aos="fade-up"
               >
                 <img
                   className="w-full h-[250px] object-cover"
@@ -150,8 +151,8 @@ export default function OnlinePurchase() {
             ))}
           </Slider>
           <div className="slider-buttons">
-            <button onClick={() => sliderRef.current.slickPrev()}>Prev</button>
-            <button onClick={() => sliderRef.current.slickNext()}>Next</button>
+            <button data-aos="fade-right" data-aos-duration="500" onClick={() => sliderRef.current.slickPrev()}>Prev</button>
+            <button data-aos="fade-left" data-aos-duration="500" onClick={() => sliderRef.current.slickNext()}>Next</button>
           </div>
         </div>
       </div>

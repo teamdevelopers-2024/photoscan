@@ -16,7 +16,7 @@ export default function OfferBanner() {
   const slides = [img1, img2, img3, img4];
 
   useEffect(() => {
-    AOS.init({ duration: 1000 });
+    AOS.init({ duration: 500 });
   }, []);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function OfferBanner() {
             <div
               key={index}
               className="w-full flex-shrink-0"
-              data-aos="fade-up" 
+              data-aos="zoom-in" 
             >
               <img
                 src={slide}
@@ -66,12 +66,14 @@ export default function OfferBanner() {
 
         {/* Navigation Buttons */}
         <button
+          data-aos="fade-left" data-aos-duration="500"
           onClick={prevSlide}
           className="absolute top-1/2 left-2 md:left-4 transform -translate-y-1/2 p-1 md:p-2 rounded-full bg-gray-700 bg-opacity-50"
         >
           <img className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10" src={leftArrow} alt="Left Arrow" />
         </button>
         <button
+          data-aos="fade-right" data-aos-duration="500"
           onClick={nextSlide}
           className="absolute top-1/2 right-2 md:right-4 transform -translate-y-1/2 p-1 md:p-2 rounded-full bg-gray-700 bg-opacity-50"
         >

@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaPinterestP } from 'react-icons/fa';
+import AOS from 'aos';
 
 function Footer() {
+  useEffect(() => {
+    // Refresh AOS to ensure it recalculates animations
+    AOS.refresh();
+  }, []);
+
   return (
     <footer className="w-full bg-[#d9d9d9]">
       <div className="w-full max-w-screen-xl mx-auto py-8 px-4 md:px-8">
@@ -52,11 +58,36 @@ function Footer() {
           <div className="flex flex-col w-full md:w-1/3 items-center md:items-start">
             <h2 className="text-xl font-semibold text-[#5d5565] mb-2">CONNECT US</h2>
             <div className="flex space-x-4 mb-4">
-              <FaFacebookF className="text-[#666666] text-xl cursor-pointer hover:text-[#c87065] transition-colors duration-300" />
-              <FaTwitter className="text-[#666666] text-xl cursor-pointer hover:text-[#c87065] transition-colors duration-300" />
-              <FaInstagram className="text-[#666666] text-xl cursor-pointer hover:text-[#c87065] transition-colors duration-300" />
-              <FaLinkedinIn className="text-[#666666] text-xl cursor-pointer hover:text-[#c87065] transition-colors duration-300" />
-              <FaPinterestP className="text-[#666666] text-xl cursor-pointer hover:text-[#c87065] transition-colors duration-300" />
+              <FaFacebookF 
+                className="text-[#666666] text-xl cursor-pointer hover:text-[#c87065] transition-colors duration-300" 
+                data-aos="fade-left" 
+                data-aos-delay="100" 
+                data-aos-duration="800" 
+              />
+              <FaTwitter 
+                className="text-[#666666] text-xl cursor-pointer hover:text-[#c87065] transition-colors duration-300" 
+                data-aos="fade-left" 
+                data-aos-delay="200" 
+                data-aos-duration="800" 
+              />
+              <FaInstagram 
+                className="text-[#666666] text-xl cursor-pointer hover:text-[#c87065] transition-colors duration-300" 
+                data-aos="fade-left" 
+                data-aos-delay="300" 
+                data-aos-duration="800" 
+              />
+              <FaLinkedinIn 
+                className="text-[#666666] text-xl cursor-pointer hover:text-[#c87065] transition-colors duration-300" 
+                data-aos="fade-left" 
+                data-aos-delay="400" 
+                data-aos-duration="800" 
+              />
+              <FaPinterestP 
+                className="text-[#666666] text-xl cursor-pointer hover:text-[#c87065] transition-colors duration-300" 
+                data-aos="fade-left" 
+                data-aos-delay="500" 
+                data-aos-duration="800" 
+              />
             </div>
           </div>
         </div>
