@@ -1,11 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import AOS from "aos";
+import "aos/dist/aos.css";
 import Header from '../../components/Header/Header'
 import Footer from '../../components/Footer/Footer'
 import AboutUsSection from '../../components/AboutUsSection/AboutUsSection';
 import AboutUsSection1 from '../../components/AboutUsSection1/AboutUsSection1';
 
 
+
 export default function Aboutus() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Duration of the animation
+      easing: 'ease-out', // Easing function
+      offset: 400, // Distance from the viewport when animation triggers
+      once: true, // If true, animation happens only once
+      // Add more options as needed
+    });
+  }, []);
     const newsData = [
         {
           id: 1,
@@ -13,6 +25,7 @@ export default function Aboutus() {
           title: "What Curling Irons Are The Best Ones",
           image: "https://i.postimg.cc/2y6wbZCm/news1.jpg",
           link: "https://www.vogue.com/article/best-curling-irons",
+          delay:0
         },
         {
           id: 2,
@@ -20,6 +33,7 @@ export default function Aboutus() {
           title: "The Health Benefits Of Sunglasses",
           image: "https://i.postimg.cc/9MXPK7RT/news2.jpg",
           link: "https://www.rivieraopticare.com/blog/314864-the-health-benefits-of-wearing-sunglasses_2/",
+          delay:400
         },
         {
           id: 3,
@@ -27,6 +41,7 @@ export default function Aboutus() {
           title: "Eternity Bands Do Last Forever",
           image: "https://i.postimg.cc/x1KKdRLM/news3.jpg",
           link: "https://www.briangavindiamonds.com/news/eternity-bands-symbolize-love-that-lasts-forever/",
+          delay:800
         },
       ];
   return (
@@ -35,13 +50,15 @@ export default function Aboutus() {
     <AboutUsSection1/>
     <AboutUsSection/>
     <section id="news" className="py-12 bg-gray-50">
-      <div className="text-center mb-12">
+      <div data-aos="fade-up" className="text-center mb-12">
         <p className="text-pink-600 font-semibold text-sm uppercase">LATEST NEWS</p>
         <h2 className="text-3xl font-bold text-gray-900">Fashion New Trends</h2>
       </div>
-      <div className="container mx-auto grid gap-8 md:grid-cols-2 lg:grid-cols-3 px-4">
+      <div data-aos="fade-up" className="container mx-auto grid gap-8 md:grid-cols-2 lg:grid-cols-3 px-4">
         {newsData.map((news) => (
-          <div 
+          <div
+          data-aos="fade-up"
+          data-aos-delay={news.delay} 
             key={news.id}
             className="bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
           >
