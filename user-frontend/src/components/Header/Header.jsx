@@ -8,11 +8,27 @@ import {
 } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
 import CartDropdown from "../cartDropdown/CardDropdown";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,Link } from "react-router-dom";
 import "./Header.css";
 
 const Header = () => {
-  const menus = ["Home", "Products", "About Us", "Contact Us"];
+  const menus = [
+    {
+      name:"Home",
+      route:'/'
+    }, 
+    {
+      name:"Products",
+      route:''
+    }, 
+    {
+      name:"About Us",
+      route:'/about'
+    }, 
+    {
+      name:"Contact Us",
+      route:'/contact'
+    }];
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
   const [isProductsClicked, setIsProductsClicked] = useState("a"); // State for handling Products click
@@ -47,14 +63,17 @@ const Header = () => {
         ref={headerRef}
         className="flex fixed justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
       >
+        <Link to='/'>
+        
         <div className="w-[8rem] md:w-[12rem]">
           <img
-            onClick={() => navigate("/")}
+            
             className="p-2 md:ml-3 cursor-pointer"
             src={logo}
             alt="logo"
           />
         </div>
+        </Link>
 
         <div className="hidden md:grid text-[#666666] text-sm font-[600] p-2 md:p-4 tracking-tight">
           <ul className="flex justify-center items-center gap-4 md:gap-5">
@@ -62,23 +81,30 @@ const Header = () => {
               <li
                 key={index}
                 className="cursor-pointer hover:text-[#4d4d4d]"
-                onClick={menu === "Products" ? handleProductClick : undefined}
+                onClick={menu.name === "Products" ? handleProductClick : undefined}
               >
-                {menu.toUpperCase()}
+                <Link to={menu.route}>
+                
+                {menu.name}
+                </Link>
               </li>
             ))}
           </ul>
         </div>
 
         <div className="hidden md:flex justify-center items-center gap-4 md:gap-5 w-[12rem] md:w-[16rem] p-2 md:p-4 text-[1rem] md:text-[1.2rem]">
+          <Link to='/login'>
           <FaUser
-            onClick={() => navigate("/login")}
+          
             className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110"
           />
+          </Link>
+          <Link to=''>
           <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-
+          </Link>
           {/* Cart Icon with Dropdown */}
           <div className="relative h-auto" onClick={toggleCartDropdown}>
+
             <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
 
             {/* Dropdown Menu */}
@@ -115,7 +141,7 @@ const Header = () => {
                   key={index}
                   className="cursor-pointer hover:text-[#4d4d4d] text-xl"
                 >
-                  {menu.toUpperCase()}
+                  {menu.name.toUpperCase()}
                 </li>
               ))}
             </ul>
