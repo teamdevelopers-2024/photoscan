@@ -5,6 +5,7 @@ import img2 from '../../../../admin-frontend/src/assets/images/img2.jpg'
 import img3 from '../../../../admin-frontend/src/assets/images/img3.jpg'
 import img4 from '../../../../admin-frontend/src/assets/images/img4.jpg'
 import './Custom.css'
+import { Link } from 'react-router-dom';
 
 const CartDropdown = () => {
   const cartItems = [
@@ -75,12 +76,17 @@ const CartDropdown = () => {
             TOTAL: ${totalAmount}
           </div>
           <div className="flex gap-2">
+            <Link to='/cart'>
+            
             <button className="w-full h-10 bg-gray-200 rounded-lg text-sm text-gray-700 font-bold">
               VIEW CART
             </button>
+            </Link>
+            <Link to='/checkout'>
             <button className="w-full h-10 bg-gray-200 rounded-lg text-sm text-gray-700 font-bold">
               CHECKOUT
             </button>
+            </Link>
           </div>
         </div>
       </div>
