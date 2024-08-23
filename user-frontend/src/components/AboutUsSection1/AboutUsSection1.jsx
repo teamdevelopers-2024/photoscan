@@ -5,11 +5,9 @@ import "aos/dist/aos.css";
 export default function AboutUsSection1 (){
     useEffect(() => {
       AOS.init({
-        duration: 1000, // Duration of the animation
+        duration: 800, // Duration of the animation
         easing: 'ease-out', // Easing function
-        offset: 400, // Distance from the viewport when animation triggers
-        once: true, // If true, animation happens only once
-        // Add more options as needed
+        offset: 100, // Distance from the viewport when animation triggers
       });
     }, []);
   return (
