@@ -168,8 +168,9 @@ const Header = () => {
           `}
       >
         <div className="flex space-x-4">
-          <div className="cursor-pointer">MOMENTOS</div>
-          <div className="cursor-pointer">FRAMES</div>
+          <Link to='/momentos'><div className="cursor-pointer" >MOMENTOS</div></Link>
+          <Link to='/frames'><div className="cursor-pointer">FRAMES</div></Link>
+          
         </div>
       </div>
           <div className="w-full h-[72px]"></div>
