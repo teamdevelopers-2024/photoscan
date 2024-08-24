@@ -3,10 +3,10 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "./OnlinePurchase.css";
 import Slider from "react-slick";
-import img1 from "../../../../admin-frontend/src/assets/images/img1.jpg";
-import img2 from "../../../../admin-frontend/src/assets/images/img2.jpg";
-import img3 from "../../../../admin-frontend/src/assets/images/img3.jpg";
-import img4 from "../../../../admin-frontend/src/assets/images/img4.jpg";
+import img1 from "../../assets/images/img1.jpg";
+import img2 from "../../assets/images/img2.jpg";
+import img3 from "../../assets/images/img3.jpg";
+import img4 from "../../assets/images/img4.jpg";
 
 // Import Slick Carousel CSS
 import "slick-carousel/slick/slick.css";

@@ -4,8 +4,8 @@ import logo from "../../assets/images/logo.png";
 import sideImage from "../../assets/WhatsApp Image 2024-08-21 at 19.12.44_2cf4a973.jpg";
 import api from "../../services/api";
 import { findErrorField } from "../../services/findErrorField";
-import OtpModal from "../../components/otpModal/otpModal";
-import { CheckCircleIcon } from '@heroicons/react/solid';
+import OtpModal from "../../components/otpModal/OtpModal";
+import { CheckCircleIcon } from '@heroicons/react/24/solid';
 export default function Register() {
   const navigate = useNavigate();
 
