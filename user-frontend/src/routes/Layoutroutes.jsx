@@ -13,6 +13,7 @@ import Profile from "../pages/Profile/Profile";
 import MomentoListing from "../pages/Momento_Listing/MomentoListing";
 import FrameListing from "../pages/Frames_Listing/FrameListing";
 import PageNotFound from "../pages/404/PageNotFound";
+import SingleProduct from "../pages/Single Product/SingleProduct";
 
 export default function Layoutroutes() {
     return (
