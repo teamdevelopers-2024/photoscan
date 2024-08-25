@@ -12,10 +12,10 @@ const login = async (req,res)=>{
     try {
         const {email , password} = req.body
         const result = await loginValidation(email , password , res)
-        if(result != false) return 
+        if(result != false) return
         const isUser = await UserDb.findOne({email:email})
         if(!isUser){
-            return res.status(404).json({
+            return res.status(400).json({
                 error:true,
                 message:'User is not exist'
             })
@@ -68,6 +68,7 @@ const register = async (req,res)=>{
             error: false,
             message: "User registered successfully.",
             accessToken: token.accessToken,
+            email: email,
             refreshToken: token.refreshToken,
           });
 
