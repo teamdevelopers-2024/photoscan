@@ -58,6 +58,7 @@ const Header = () => {
   }, []);
 
   return (
+
     <>
       <header
         ref={headerRef}
@@ -74,7 +75,6 @@ const Header = () => {
           />
         </div>
         </Link>
-
         <div className="hidden md:grid text-[#666666] text-sm font-[600] p-2 md:p-4 tracking-tight">
           <ul className="flex justify-center items-center gap-4 md:gap-5">
             {menus.map((menu, index) => (
