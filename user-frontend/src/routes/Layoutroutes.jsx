@@ -13,6 +13,7 @@ import Profile from "../pages/Profile/Profile";
 import MomentoListing from "../pages/Momento_Listing/MomentoListing";
 import FrameListing from "../pages/Frames_Listing/FrameListing";
 import PageNotFound from "../pages/404/PageNotFound";
+import SingleProduct from "../pages/Single Product/SingleProduct";
 
 export default function Layoutroutes(){
     return(
@@ -31,6 +32,7 @@ export default function Layoutroutes(){
                 <Route path="/momentos" element={<MomentoListing />}/>
                 <Route path="/frames" element={<FrameListing />}/>
                 <Route path="/404" element={<PageNotFound />}/>
+                <Route path="/productpage" element={<SingleProduct />}/>
             </Routes>
         </Router>
     )
