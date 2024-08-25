@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",
+    "@vitejs/plugin-react-swc": "^3.7.0",
     "axios": "^1.7.4",
     "chart.js": "^4.4.3",
     "react": "^18.3.1",
