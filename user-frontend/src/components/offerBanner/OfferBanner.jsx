@@ -16,13 +16,18 @@ export default function OfferBanner() {
   const slides = [img1, img2, img3, img4];
 
   useEffect(() => {
-    AOS.init({ duration: 500 });
+    AOS.init({
+      duration: 500, 
+      easing: "ease-in",
+      offset: 100, 
+      delay:300,
+    });
   }, []);
 
   useEffect(() => {
     if (isPaused) return; 
 
-    const interval = setInterval(nextSlide, 3000);
+    const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval); 
   }, [currentIndex, isPaused]);
 
@@ -53,7 +58,7 @@ export default function OfferBanner() {
             <div
               key={index}
               className="w-full flex-shrink-0"
-              data-aos="zoom-in" 
+              data-aos="fade-up"
             >
               <img
                 src={slide}
