@@ -3,10 +3,17 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import sideImage from "../../assets/WhatsApp Image 2024-08-21 at 16.59.30_7503ed8e.jpg";
 import mobileimg from "../../assets/WhatsApp Image 2024-08-21 at 19.12.44_2cf4a973.jpg"
+import api from "../../services/api";
 
 export default function Login() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [Email,setEmail]=useState('');
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -14,6 +21,15 @@ export default function Login() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const checkUser=async()=>{
+    const data=await api.userLogin(Email,password);
+    const token=localStorage.getItem('accessToken')
+    if(data.accessToken===token){
+      navigate('/')
+    }
+    
+  }
 
   return (
     <>
@@ -35,9 +51,9 @@ export default function Login() {
               Sign in to your account
             </h2>
 
-            {/* Login Form */}
+            {/* Login div */}
             <div className="w-full bg-white p-6 rounded-lg shadow-md">
-              <form action="#" method="POST" className="space-y-4">
+              <div  className="space-y-4">
                 {/* Email Field */}
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -47,6 +63,7 @@ export default function Login() {
                     id="email"
                     name="email"
                     type="email"
+                    onChange={handleEmailChange}
                     required
                     autoComplete="email"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
@@ -64,6 +81,7 @@ export default function Login() {
                     name="password"
                     type="password"
                     required
+                    onChange={handlePasswordChange}
                     autoComplete="current-password"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
                     placeholder="Enter your password"
@@ -80,13 +98,14 @@ export default function Login() {
                 {/* Submit Button */}
                 <div>
                   <button
-                    type="submit"
+                    
+                    onClick={checkUser}
                     className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Sign in
                   </button>
                 </div>
-              </form>
+              </div>
 
               {/* Register Link */}
               <p className="mt-6 text-center text-sm text-gray-600">
@@ -141,7 +160,7 @@ export default function Login() {
               </div>
 
               <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <form action="#" method="POST" className="space-y-6">
+                <div className="space-y-6">
                   <div>
                     <label
                       htmlFor="email"
@@ -175,6 +194,7 @@ export default function Login() {
                         name="password"
                         placeholder="Enter Password"
                         type="password"
+                        onChange={handleEmailChange}
                         required
                         autoComplete="current-password"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
@@ -190,13 +210,13 @@ export default function Login() {
 
                   <div>
                     <button
-                      type="submit"
+                      onClick={checkUser}
                       className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       Sign in
                     </button>
                   </div>
-                </form>
+                </div>
 
                 <p className="mt-6 text-center text-sm text-gray-600">
                   Not a member?{" "}

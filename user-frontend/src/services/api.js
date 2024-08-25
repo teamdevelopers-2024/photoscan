@@ -7,8 +7,12 @@ const userLogin = async (email, password) => {
   try {
     const response = await axios.post('http://localhost:4000/user/login', { email:email, password:password }); 
     console.log(response.data);
+    const data=response.data;
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('refreshToken', data.refreshToken);
+
     
-    return response.data;
+    return data;
   } catch (error) {
     console.error(error);
     return error.response.data;
