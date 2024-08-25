@@ -15,7 +15,7 @@ const login = async (req,res)=>{
         if(result != false) return 
         const isUser = await UserDb.findOne({email:email})
         if(!isUser){
-            return res.status(404).json({
+            return res.status(400).json({
                 error:true,
                 message:'User is not exist'
             })
