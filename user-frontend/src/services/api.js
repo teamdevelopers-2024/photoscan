@@ -40,6 +40,8 @@ const getOtp = async (email) => {
     return error.response.data
   }
 };
+
+
 const verifyOtp = async (email,otp) => {
     
   try {

@@ -174,6 +174,7 @@ export default function Login() {
                         name="email"
                         placeholder="Enter Your Email"
                         type="email"
+                        onChange={handleEmailChange}
                         required
                         autoComplete="email"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
@@ -194,7 +195,7 @@ export default function Login() {
                         name="password"
                         placeholder="Enter Password"
                         type="password"
-                        onChange={handleEmailChange}
+                        onChange={handlePasswordChange}
                         required
                         autoComplete="current-password"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
