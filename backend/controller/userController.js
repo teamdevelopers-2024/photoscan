@@ -100,11 +100,14 @@ const getOtp = async (req, res) => {
   const verifyOtp = async (req, res) => {
     try {
       const { otp, email } = req.body;
+      console.log(req.body);
+      
       console.log(otp, email);
       const result = await isverifyOtp(email);
       if (result) {
         const otpResult = await argon2.verify(result.otp, otp);
         if (otpResult) {
+          await UserDb.updateOne({ email: email }, { verificationStatus: true });
           await OtpDb.deleteOne({ userEmail: email });
           res.status(200).json({
             error: false,

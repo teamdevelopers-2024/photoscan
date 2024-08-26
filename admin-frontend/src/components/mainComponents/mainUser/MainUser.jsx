@@ -67,7 +67,7 @@ function MainUser() {
                                     {users.map((user,index) => (
                                         <tr key={user._id}>
                                             <td>{index+1}</td>
-                                            <td>{user.userName}</td>
+                                            <td>{user.name}</td>
                                             <td>{user.email}</td>
                                             <td style={{ display: "flex", justifyContent: 'center' }}>
                                                 <button onClick={() => handleEdit(user.id)}>Block</button>
