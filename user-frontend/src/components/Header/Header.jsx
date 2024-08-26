@@ -8,26 +8,26 @@ import {
 } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
 import CartDropdown from "../cartDropdown/CardDropdown";
-import { useNavigate ,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./Header.css";
 
 const Header = () => {
   const menus = [
     {
-      name:"Home",
-      route:'/'
-    }, 
+      name: "Home",
+      route: '/'
+    },
     {
-      name:"Products",
-      route:''
-    }, 
+      name: "Products",
+      route: ''
+    },
     {
-      name:"About Us",
-      route:'/about'
-    }, 
+      name: "About Us",
+      route: '/about'
+    },
     {
-      name:"Contact Us",
-      route:'/contact'
+      name: "Contact Us",
+      route: '/contact'
     }];
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
@@ -36,14 +36,14 @@ const Header = () => {
   const headerRef = useRef(null);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleCartDropdown = () => setIsCartDropdownOpen(!isCartDropdownOpen);
- 
-  const handleProductClick = () =>{
-    if(isProductsClicked==="a"){
-      setIsProductsClicked(true); 
-    }else{
-    setIsProductsClicked(!isProductsClicked)
+
+  const handleProductClick = () => {
+    if (isProductsClicked === "a") {
+      setIsProductsClicked(true);
+    } else {
+      setIsProductsClicked(!isProductsClicked)
     }
-  
+
   }
   useEffect(() => {
     // Handle outside click for cartDropdown
@@ -57,6 +57,16 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+
+  const handleUserClick = () => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      navigate('/profile');
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
 
     <>
@@ -65,15 +75,15 @@ const Header = () => {
         className="flex fixed justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
       >
         <Link to='/'>
-        
-        <div className="w-[8rem] md:w-[12rem]">
-          <img
-            
-            className="p-2 md:ml-3 cursor-pointer"
-            src={logo}
-            alt="logo"
-          />
-        </div>
+
+          <div className="w-[8rem] md:w-[12rem]">
+            <img
+
+              className="p-2 md:ml-3 cursor-pointer"
+              src={logo}
+              alt="logo"
+            />
+          </div>
         </Link>
         <div className="hidden md:grid text-[#666666] text-sm font-[600] p-2 md:p-4 tracking-tight">
           <ul className="flex justify-center items-center gap-4 md:gap-5">
@@ -84,8 +94,8 @@ const Header = () => {
                 onClick={menu.name === "Products" ? handleProductClick : undefined}
               >
                 <Link to={menu.route}>
-                
-                {menu.name}
+
+                  {menu.name}
                 </Link>
               </li>
             ))}
@@ -93,14 +103,12 @@ const Header = () => {
         </div>
 
         <div className="hidden md:flex justify-center items-center gap-4 md:gap-5 w-[12rem] md:w-[16rem] p-2 md:p-4 text-[1rem] md:text-[1.2rem]">
-          <Link to='/login'>
           <FaUser
-          
+            onClick={handleUserClick}
             className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110"
           />
-          </Link>
           <Link to=''>
-          <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+            <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
           </Link>
           {/* Cart Icon with Dropdown */}
           <div className="relative h-auto" onClick={toggleCartDropdown}>
@@ -120,9 +128,8 @@ const Header = () => {
         </button>
 
         <div
-          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${
-            isMenuOpen ? "translate-x-0" : "translate-x-full"
-          } md:hidden w-full`}
+          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+            } md:hidden w-full`}
           style={{ maxWidth: "100%" }}
         >
           <div className="relative p-4">
@@ -160,20 +167,19 @@ const Header = () => {
       {/* {isProductsClicked && ( */}
       <div
         className={`w-full  text-[#666666] text-sm font-[600] h-[72px] bg-white flex justify-center items-center border border-gray-300 fixed top-[0px] left-0 z-30 
-          ${
-            isProductsClicked==true ? "animate" :
-            isProductsClicked==false ? "nanimate" :
-            ""
+          ${isProductsClicked == true ? "animate" :
+            isProductsClicked == false ? "nanimate" :
+              ""
           }
           `}
       >
         <div className="flex space-x-4">
           <Link to='/momentos'><div className="cursor-pointer" >MOMENTOS</div></Link>
           <Link to='/frames'><div className="cursor-pointer">FRAMES</div></Link>
-          
+
         </div>
       </div>
-          <div className="w-full h-[72px]"></div>
+      <div className="w-full h-[72px]"></div>
     </>
   );
 };

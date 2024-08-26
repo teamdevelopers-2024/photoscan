@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import sideImage from "../../assets/WhatsApp Image 2024-08-21 at 16.59.30_7503ed8e.jpg";
+import mobileimg from "../../assets/WhatsApp Image 2024-08-21 at 19.12.44_2cf4a973.jpg";
 import api from "../../services/api";
 
 export default function Login() {
@@ -12,17 +13,27 @@ export default function Login() {
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Handle form submission
-  const handleSubmit = async(event) => {
-    event.preventDefault(); // Prevent page reload on form submit
-    // const formErrors = await loginValidation({email , password})
-    const result = await api.userLogin(email , password)
-    console.log(result)
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await api.userLogin(email, password);
+      const token = localStorage.getItem('accessToken');
+      if (data.accessToken === token) {
+        navigate('/');
+      } else {
+        // Handle invalid login
+        alert("Invalid credentials. Please try again.");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (
@@ -47,12 +58,12 @@ export default function Login() {
           </div>
 
           {/* Heading */}
-
-          {/* Login Form */}
-          <div className="w-full bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-center text-lg font-bold text-gray-900 mb-8">
             Sign in to your account
           </h2>
+
+          {/* Login Form */}
+          <div className="w-full bg-white p-6 rounded-lg shadow-md">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email Field */}
               <div>
@@ -69,7 +80,7 @@ export default function Login() {
                   required
                   autoComplete="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)} // Update email state
+                  onChange={handleEmailChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
                   placeholder="Enter your email"
                 />
@@ -90,7 +101,7 @@ export default function Login() {
                   required
                   autoComplete="current-password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)} // Update password state
+                  onChange={handlePasswordChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
                   placeholder="Enter your password"
                 />
@@ -163,7 +174,7 @@ export default function Login() {
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-6">
                 <div>
                   <label
                     htmlFor="email"
@@ -171,19 +182,17 @@ export default function Login() {
                   >
                     Email address
                   </label>
-                  <div className="mt-1">
-                    <input
-                      id="email"
-                      name="email"
-                      placeholder="Enter Your Email"
-                      type="email"
-                      required
-                      autoComplete="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)} // Update email state
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
-                    />
-                  </div>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
+                    placeholder="Enter your email"
+                  />
                 </div>
 
                 <div>
@@ -193,19 +202,17 @@ export default function Login() {
                   >
                     Password
                   </label>
-                  <div className="mt-1">
-                    <input
-                      id="password"
-                      name="password"
-                      placeholder="Enter Password"
-                      type="password"
-                      required
-                      autoComplete="current-password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)} // Update password state
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
-                    />
-                  </div>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm"
+                    placeholder="Enter your password"
+                  />
                 </div>
                 <p
                   style={{ marginTop: "5px" }}
@@ -217,12 +224,13 @@ export default function Login() {
                 <div>
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    onClick={handleSubmit}
+                    className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Sign in
                   </button>
                 </div>
-              </form>
+              </div>
 
               <p className="mt-6 text-center text-sm text-gray-600">
                 Not a member?{" "}

@@ -20,12 +20,12 @@ export async function loginValidation(email, password , res) {
 
     // Password validation
     if (!password) {
-       return res.status(400).json({
+        return res.status(400).json({
             error:true ,
             message:'password is required'
         })
     } else if (!validator.isLength(password, { min: 6 })) {
-       return res.status(400).json({
+        return res.status(400).json({
             error:true ,
             message:'password must need 6 or more letters'
         })
