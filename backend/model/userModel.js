@@ -16,7 +16,7 @@ import mongoose from 'mongoose';
             default:true
         },
         phoneNumber:String,
-        verificationStatus:{
+        isBlocked:{
             type:Boolean,
             default:false
         }
