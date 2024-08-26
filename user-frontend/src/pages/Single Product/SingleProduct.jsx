@@ -1,0 +1,113 @@
+import React from 'react';
+import mainImage from '../../assets/images/1.jpg'
+import image1 from '../../assets/images/1_3.jpg'
+import image2 from '../../assets/images/2_2.jpg'
+
+const SingleProduct = () => {
+  return (
+    <div className="bg-gray-100">
+      {/* HEADING-BANNER START */}
+      <div className="bg-gray-700 text-white py-10 px-5">
+        <div className="container mx-auto">
+          <div className="flex flex-col items-center">
+            <h2 className="text-3xl font-bold mb-3">Single Product</h2>
+            <nav>
+              <ul className="flex space-x-2">
+                <li><a href="index.html" className="text-blue-400 hover:underline">Home</a></li>
+                <li className="text-gray-400">Single Product</li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+      {/* HEADING-BANNER END */}
+
+      {/* PRODUCT-AREA START */}
+      <div className="py-20 bg-white">
+        <div className="container mx-auto">
+          <div className="flex flex-col lg:flex-row">
+            {/* Single-product start */}
+            <div className="lg:w-full">
+              <div className="flex flex-col lg:flex-row">
+                {/* Single-pro-slider Big-photo start */}
+                <div className="lg:w-2/3 flex flex-col">
+                  <div className="relative">
+                    <img src={mainImage} alt="Product" className="w-full h-auto object-cover" />
+                    <a href={mainImage} data-lightbox="roadtrip" data-title="My caption" className="absolute top-0 right-0 p-3 text-white">
+                      <i className="zmdi zmdi-zoom-in text-xl"></i>
+                    </a>
+                  </div>
+                  {/* Add more images here */}
+                </div>
+                {/* Single-pro-slider Big-photo end */}
+
+                {/* Product Info */}
+                <div className="lg:w-1/3 p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-2xl font-semibold">dummy Product name</h4>
+                    <div className="flex items-center">
+                      <span className="flex space-x-1 text-yellow-500">
+                        <i className="zmdi zmdi-star"></i>
+                        <i className="zmdi zmdi-star"></i>
+                        <i className="zmdi zmdi-star"></i>
+                        <i className="zmdi zmdi-star-half"></i>
+                        <i className="zmdi zmdi-star-half"></i>
+                      </span>
+                      <span className="ml-2 text-gray-500">(27 Rating)</span>
+                    </div>
+                  </div>
+                  <p className="text-lg font-bold mb-4">$56.20</p>
+                  <p className="text-gray-700 mb-4">There are many variations of passages of Lorem Ipsum available, but the majority have been altered in some form by injected humour or randomised words which don't look even slightly believable.</p>
+                  
+                  {/* Color Filter */}
+                  <div className="mb-4">
+                    <span className="text-gray-700 font-semibold">Color:</span>
+                    <div className="flex space-x-2 mt-2">
+                      <span className="w-6 h-6 rounded-full bg-red-500 cursor-pointer"></span>
+                      <span className="w-6 h-6 rounded-full bg-green-500 cursor-pointer"></span>
+                      <span className="w-6 h-6 rounded-full bg-blue-500 cursor-pointer"></span>
+                      {/* Add more colors here */}
+                    </div>
+                  </div>
+
+                  {/* Size Filter */}
+                  <div className="mb-6">
+                    <span className="text-gray-700 font-semibold">Size:</span>
+                    <div className="flex space-x-2 mt-2">
+                      <a href="#" className="px-3 py-1 border border-gray-300 rounded text-gray-700">M</a>
+                      <a href="#" className="px-3 py-1 border border-gray-300 rounded bg-gray-300 text-gray-800">S</a>
+                      <a href="#" className="px-3 py-1 border border-gray-300 rounded text-gray-700">L</a>
+                      {/* Add more sizes here */}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <input type="text" value="02" className="w-16 py-2 px-3 border border-gray-300 rounded" />
+                    <div className="flex space-x-2">
+                      <a href="wishlist.html" className="text-gray-700 hover:text-blue-500"><i className="zmdi zmdi-favorite-outline text-xl"></i></a>
+                      <a href="#" className="text-gray-700 hover:text-blue-500"><i className="zmdi zmdi-zoom-in text-xl"></i></a>
+                      <a href="#" className="text-gray-700 hover:text-blue-500"><i className="zmdi zmdi-refresh text-xl"></i></a>
+                      <a href="cart.html" className="text-gray-700 hover:text-blue-500"><i className="zmdi zmdi-shopping-cart-plus text-xl"></i></a>
+                    </div>
+                  </div>
+
+                  {/* Single-pro-slider Small-photo start */}
+                  <div className="flex mt-6 space-x-2">
+                    <img src={image1} alt="Product Thumbnail" className="w-16 h-16 object-cover cursor-pointer" />
+                    <img src={image2} alt="Product Thumbnail" className="w-16 h-16 object-cover cursor-pointer" />
+                    {/* Add more thumbnails here */}
+                  </div>
+                  {/* Single-pro-slider Small-photo end */}
+                </div>
+              </div>
+            </div>
+            {/* Single-product end */}
+          </div>
+        </div>
+      </div>
+      {/* PRODUCT-AREA END */}
+    </div>
+  );
+};
+
+export default SingleProduct;
