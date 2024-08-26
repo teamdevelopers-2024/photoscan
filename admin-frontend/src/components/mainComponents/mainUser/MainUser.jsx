@@ -24,6 +24,8 @@ function MainUser() {
                 setLoading(false);
             }
         };
+        console.log(users);
+        
 
         fetchUsers();
     }, [currentPage]);
@@ -62,9 +64,9 @@ function MainUser() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users.map(user => (
+                                    {users.map((user,index) => (
                                         <tr key={user._id}>
-                                            <td>{user.id}</td>
+                                            <td>{index+1}</td>
                                             <td>{user.userName}</td>
                                             <td>{user.email}</td>
                                             <td style={{ display: "flex", justifyContent: 'center' }}>
