@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./MainUser.css";
-import PropertyDetailsModal from "../../modal/Modal";
 import api from "../../../services/api";
+import Modal from "../../modal/Modal";
+import eye from '../../../assets/images/eye_4571787.png'
 
 function MainUser() {
   const [users, setUsers] = useState([]);
@@ -78,7 +79,7 @@ function MainUser() {
                       <td style={{ display: "flex", gap:'10px', justifyContent: "center" }}>
                         <button >Block</button>
                         <button onClick={() => handleEdit(user)}>view</button>
-                        <PropertyDetailsModal
+                        <Modal
                           user={selectedUser}
                           isOpen={isModalOpen}
                           onClose={handleCloseModal}
