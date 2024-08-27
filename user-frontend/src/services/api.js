@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;  // Ensure cookies are sent with requests
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:4000',
@@ -9,96 +9,58 @@ const apiClient = axios.create({
   },
 });
 
-// Function to refresh the access token
+// Function to handle token refresh
 const refreshToken = async () => {
   try {
-    const refreshToken = localStorage.getItem('refreshToken');
-    const response = await apiClient.post('/user/refresh-token', { refreshToken });
-    const { accessToken } = response.data;
-
-    // Save new tokens
-    localStorage.setItem('accessToken', accessToken);
-    return accessToken;
+    const response = await apiClient.post('/user/refresh-token');  // No need to send the refresh token manually
+    return response.data.accessToken;  // Assuming new accessToken is set in the cookies by backend
   } catch (error) {
     console.error('Failed to refresh token:', error);
-    // Handle token refresh failure
+    // Handle token refresh failure (e.g., redirect to login page)
     throw error;
   }
 };
 
 
-apiClient.interceptors.request.use(
-  async (config) => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      config.headers['Authorization'] = `${accessToken}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Interceptor to handle token refresh on request failure
+// Response interceptor to handle token expiration
 apiClient.interceptors.response.use(
-  (response) => response,  // If response is successful, just return it.
-  async (error) => {  // If response has an error, handle it here.
-    const originalRequest = error.config;  // Keep a reference to the original request.
-    
+  (response) => response,  // If response is successful, just return it
+  async (error) => {  // Handle token expiration and refresh logic
+    const originalRequest = error.config;
 
-    // Check if the error is due to unauthorized access and it's the first retry attempt.
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;  // Mark the request as already retried to avoid infinite loops.
-
+      originalRequest._retry = true;  // Mark request as retried to prevent loops
+      console.log('inside interceptors')
       try {
-        const newAccessToken = await refreshToken();  // Get a new access token by refreshing.
-
-        // Set the new access token on the original request directly.
-        originalRequest.headers['Authorization'] = `${newAccessToken}`;
-
-        // Also update the default headers in apiClient if necessary.
-        apiClient.defaults.headers.common['Authorization'] = `${newAccessToken}`;
-
-        // Retry the original request with the new token.
-        return apiClient(originalRequest);
+        await refreshToken();  // Attempt to refresh token
+        return apiClient(originalRequest);  // Retry original request
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError);
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('refreshToken')
-        // If refreshing fails, redirect to login or handle the error appropriately.
+        // Handle logout or redirection if refresh fails
         return Promise.reject(refreshError);
       }
     }
 
-    // If the error is not due to token expiration or refresh failed, reject the promise.
-    return Promise.reject(error);
+    return Promise.reject(error);  // If error is not due to expired token or refresh fails
   }
 );
 
-
+// Example login function
 export const userLogin = async (email, password) => {
   try {
     const response = await apiClient.post('/user/login', { email, password });
-    const data = response.data;
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
-
-    return data;
+    return response.data;  // Tokens should be set in cookies by backend
   } catch (error) {
     console.error('Login failed:', error);
     return error.response.data;
   }
 };
 
+// Other API functions remain unchanged...
 const userRegister = async (details) => {
   try {
     const response = await apiClient.post('/user/register', details);
-    const data = response.data;
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
-
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Registration failed:', error);
     return error.response.data;
@@ -127,21 +89,11 @@ const verifyOtp = async (email, otp) => {
 
 const checkAuthenticate = async () => {
   try {
-    const accessToken = localStorage.getItem('accessToken')
-    const refreshToken = localStorage.getItem('refreshToken');
-    console.log('accessToken : ',accessToken)
-    console.log('refreshToken : ', refreshToken)
-    const response = await apiClient.get('/user/checkAuthenticate', {
-      headers: {
-        'Authorization': `${accessToken}`
-      },
-      params: {
-        refreshToken
-      }
-    });
-    console.log('response : ',response.data)
-
-    return response.data;
+    console.log('insed checkAuthenticate')
+    const response = await apiClient.get('/user/checkAuthenticate');
+    const data = response.data
+    console.log(data)
+    return data
   } catch (error) {
     console.error('Authentication check failed:', error.response.data);
     return error.response.data;
@@ -153,5 +105,5 @@ export default {
   userRegister,
   getOtp,
   verifyOtp,
-  checkAuthenticate
+  checkAuthenticate,
 };

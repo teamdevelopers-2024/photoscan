@@ -24,11 +24,7 @@ export default function Login() {
 
   const checkUser=async()=>{
     const data=await api.userLogin(Email,password);
-    const token=localStorage.getItem('accessToken')
-    if(data.accessToken===token){
       navigate('/')
-    }
-    
   }
 
   return (

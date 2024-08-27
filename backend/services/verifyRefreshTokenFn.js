@@ -20,7 +20,7 @@ const verifyRefreshTokenFn = async (refreshToken) => {
         const newAccessToken = jwt.sign(
             { userId: tokenDetails.userId,name :tokenDetails.name},
             process.env.ACCESS_TOKEN_PRIVAT_KEY,
-            { expiresIn: '1m' } // Adjust the expiration time as needed
+            { expiresIn: '5m' } 
         );
         console.log('newACcessToken',newAccessToken)
         

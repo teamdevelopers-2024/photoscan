@@ -10,6 +10,7 @@ import logo from "../../assets/images/logo.png";
 import CartDropdown from "../cartDropdown/CardDropdown";
 import { useNavigate, Link } from "react-router-dom";
 import "./Header.css";
+import api from "../../services/api";
 
 const Header = () => {
   const menus = [
@@ -58,13 +59,10 @@ const Header = () => {
   }, []);
 
 
-  const handleUserClick = () => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      navigate('/profile');
-    } else {
-      navigate('/login');
-    }
+  const handleUserClick = async(e) => {
+    e.preventDefault()
+      console.log('clicked')
+      navigate('/profile');    
   };
 
   return (
