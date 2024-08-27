@@ -7,4 +7,4 @@ export default defineConfig({
     host: '0.0.0.0', // Correct host configuration
     port: 3000, // The port on which the server will run
   },
-});
+})

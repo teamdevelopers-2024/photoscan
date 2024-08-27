@@ -14,26 +14,31 @@ import MomentoListing from "../pages/Momento_Listing/MomentoListing";
 import FrameListing from "../pages/Frames_Listing/FrameListing";
 import PageNotFound from "../pages/404/PageNotFound";
 import SingleProduct from "../pages/Single Product/SingleProduct";
+import PrivateRoute from "./PrivateRoute";
 
 export default function Layoutroutes() {
     return (
         <Router>
             <Routes>
+                {/* Private Routes */}
+                <Route element={<PrivateRoute />}>
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/ordersuccess" element={<OrderSuccess />} />
+                    <Route path="/myorder" element={<MyOrder />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/profile" element={<Profile />} />
+                </Route>
+
+                {/* Public Routes */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/about" element={<Aboutus />} />
-                <Route path="/ordersuccess" element={<OrderSuccess />} />
-                <Route path="/Myorder" element={<MyOrder />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/profile" element={<Profile />} />
                 <Route path="/momentos" element={<MomentoListing />} />
                 <Route path="/frames" element={<FrameListing />} />
-                {/* Catch-all route for 404 page */}
+                <Route path="/productpage" element={<SingleProduct />} />
                 <Route path="*" element={<PageNotFound />} />
-                <Route path="/productpage" element={<SingleProduct />}/>
             </Routes>
         </Router>
     );
