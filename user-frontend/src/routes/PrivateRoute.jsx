@@ -1,29 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate ,Outlet } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 import api from '../services/api';
-import Loader from '../components/loader/Loader'
+import Loader from '../components/loader/Loader';
 
-const PrivateRoute = ({children}) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);
+const PrivateRoute = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const effectRan = useRef(false); // Add a ref to track if effect ran
 
-    useEffect(() => {
-        const checkAuth = async () => {
-            const result = await api.checkAuthenticate();
-            if (result.error) {
-                setIsAuthenticated(false);
-            } else {
-                setIsAuthenticated(true);
-            }
-            setLoading(false);
-        };
+  useEffect(() => {
+    if (effectRan.current) return; // Prevents running the effect again
 
-        checkAuth();
-    }, []);
+    const checkAuth = async () => {
+      try {
+        const result = await api.checkAuthenticate();
+        setIsAuthenticated(!result.error);
+      } catch (error) {
+        console.error('Error during authentication check:', error);
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    if (loading) return <Loader/>; // Optional: Show a loading spinner or message
+    checkAuth();
+    effectRan.current = true; // Mark effect as ran
 
-    return isAuthenticated ? <Outlet/>: <Navigate to="/login" />;
+    // Cleanup function
+    return () => {
+      effectRan.current = false; // Reset for cleanup in case of future re-renders
+    };
+  }, []);
+
+  if (loading) return <Loader />;
+
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;
