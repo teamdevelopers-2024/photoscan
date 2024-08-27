@@ -52,7 +52,6 @@ export default function Register() {
     e.preventDefault();
     setLoader(true)
     try {
-      console.log("clicked");
       const formErrors = await registerValidation({ email, name, phoneNumber, password, confirmPassword ,isVerify });
       if (Object.keys(formErrors).length === 0) {
         // If no errors, proceed with form submission or further processing

@@ -98,7 +98,7 @@ export default function FeaturedProducts() {
 
         {/* Products Carousel */}
         <div className="w-full mt-4">
-          <Slider {...settings}>
+        <Slider {...settings}>
             {products.map((product) => (
               <div
               data-aos="fade-up"

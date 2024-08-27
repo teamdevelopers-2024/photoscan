@@ -2,7 +2,7 @@ import argon2 from "argon2";
 import UserDb from "../model/userModel.js";
 import generateToken from "../services/generateToken.js";
 import validator from "validator";
-import { isEmailisExist, isverifyOtp, loginValidation, registerValidation } from "../services/userServices.js";
+import { decodeToken, isEmailisExist, isverifyOtp, loginValidation, registerValidation } from "../services/userServices.js";
 import { sendOPTVerificationEmail } from "../services/generateOtp.js";
 import OtpDb from "../model/otpModel.js";
 import TokenDb from "../model/tokenMode.js";
@@ -25,7 +25,8 @@ const login = async (req, res) => {
     if (!isUser) {
       return res.status(400).json({
         error: true,
-        message: 'User does not exist'
+        message: 'User does not exist',
+        field:'email'
       });
     }
 
@@ -50,7 +51,8 @@ const login = async (req, res) => {
     // Respond with a success message
     res.status(200).json({
       error: false,
-      message: "User logged in successfully"
+      message: "User logged in successfully",
+      user:isUser
     });
   } catch (error) {
     console.log('Error during login:', error);
@@ -112,7 +114,7 @@ const register = async (req, res) => {
     res.status(201).json({
       error: false,
       message: "User registered successfully.",
-      email: email,
+      user: newUser,
     });
 
   } catch (error) {
@@ -285,11 +287,62 @@ const verifyRefreshToken = async (req, res) => {
 
 
 
+const fetchUser = async(req,res)=>{
+  try {
+    const token = req.cookies.accessToken
+    const userDetails = await decodeToken(token)
+    const user = await UserDb.findOne({_id:userDetails.userId})
+    if(!user){
+     return res.status(400).json({
+        error:true ,
+        message:"token is invalid or user is not exist "
+      })
+    }
+
+    res.status(200).json({
+      error:false,
+      data:user
+    })
+  } catch (error) {
+    res.status(500).json({
+      error: true,
+      message: 'Internal server error',
+    });
+  }
+}
+
+
+const logout = async (req,res)=>{
+  try {
+
+    const data = await decodeToken(req.cookies.accessToken)
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Set to true if you use HTTPS
+      sameSite: 'strict'
+    });
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Set to true if you use HTTPS
+      sameSite: 'strict'
+    });
+     await UserDb.updateOne({_id:data.userId},{$set:{active:false}})
+     await TokenDb.deleteMany({userId:data.userId})
+     res.status(200).json({error:false , message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Error during logout:', error);
+    res.status(500).json({error:true , message: 'Logout failed' });
+  }
+}
+
+
 export default {
   login,
   register,
   getOtp,
   verifyOtp,
   checkAuthenticate,
-  verifyRefreshToken
+  verifyRefreshToken,
+  fetchUser,
+  logout
 }
