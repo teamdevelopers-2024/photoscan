@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 
-
 const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isTimerActive, setIsTimerActive] = useState(true);
@@ -68,8 +67,8 @@ const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp }) => {
       {/* Background overlay */}
       <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
 
-      {/* Modal content */}
-      <div className="relative bg-white p-10 rounded-lg shadow-lg max-w-md mx-auto z-10">
+      {/* Modal content with animation */}
+      <div className="relative bg-white p-10 rounded-lg shadow-lg max-w-md mx-auto z-10 transform transition-transform duration-300 ease-out animate-fade-in-scale">
         {/* Close Icon */}
         <button
           type="button"

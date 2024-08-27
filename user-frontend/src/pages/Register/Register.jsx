@@ -7,6 +7,7 @@ import { findErrorField } from "../../services/findErrorField";
 import OtpModal from "../../components/otpModal/OtpModal";
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { registerValidation } from "../../services/userServices";
+import Loader from "../../components/loader/Loader";
 export default function Register() {
   const navigate = useNavigate();
 
@@ -17,6 +18,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otpModal, setOtpModal] = useState(false);
+  const [loader , setLoader ] = useState(false)
 
   // State for validation messages
   const [errors, setErrors] = useState({});
@@ -48,63 +50,88 @@ export default function Register() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("clicked");
-    const formErrors = await registerValidation({ email, name, phoneNumber, password, confirmPassword });
-    if (Object.keys(formErrors).length === 0) {
-      // If no errors, proceed with form submission or further processing
-      const userData = {
-        name,
-        email,
-        phoneNumber,
-        password,
-        confirmPassword
-      };
-
-      const result = await api.userRegister(userData);
-      if (result.error) {
-        let errorField = await findErrorField(result);
-        errorField = errorField.toString();
-        const error = {
-          [errorField]: `*${result.message}`
+    setLoader(true)
+    try {
+      console.log("clicked");
+      const formErrors = await registerValidation({ email, name, phoneNumber, password, confirmPassword ,isVerify });
+      if (Object.keys(formErrors).length === 0) {
+        // If no errors, proceed with form submission or further processing
+        const userData = {
+          name,
+          email,
+          phoneNumber,
+          password,
+          confirmPassword
         };
-        console.log(error);
-        setErrors(error);
+  
+        const result = await api.userRegister(userData);
+        if (result.error) {
+          let errorField = await findErrorField(result);
+          errorField = errorField.toString();
+          const error = {
+            [errorField]: `*${result.message}`
+          };
+          console.log(error);
+          setErrors(error);
+        } else {
+          navigate('/')
+          console.log("User Data:", userData);
+        }
       } else {
-        console.log("User Data:", userData);
+        // Set errors state to show validation messages
+        setErrors(formErrors);
       }
-    } else {
-      // Set errors state to show validation messages
-      setErrors(formErrors);
+    } catch (error) {
+      console.log(error)
+    }finally{
+      setLoader(false)
     }
+   
   };
 
   const isOpen = () => setOtpModal(true);
   const onClose = () => setOtpModal(false);
 
   const onSumbitSuccess = async (otp) => {
-    const result = await api.verifyOtp(email, otp);
-    console.log(result);
-    if (!result.error) {
-      setIsVerify(true);
-      setOtpModal(false);
+    try {
+      setLoader(true)
+      const result = await api.verifyOtp(email, otp);
+      console.log(result);
+      if (!result.error) {
+        setIsVerify(true);
+        setOtpModal(false);
+      }
+    } catch (error) {
+      console.log(error)
+    }finally{
+      setLoader(false)
     }
+  
   };
 
   const handleVerifySubmit = async () => {
+    setLoader(true)
     try {
       const result = await api.getOtp(email);
       if (!result.error) {
+        setErrors({})
         setOtpModal(true);
       } else {
-        alert("Failed to send OTP");
+        const formError = {
+          email : `*${result.message}`
+        }
+       setErrors(formError)
       }
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoader(false)
     }
   };
 
   return (
     <>
+     {loader && <Loader/>}
       {isMobile ? (
         <>
           {otpModal &&

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
     const userSchema = new mongoose.Schema({
-        userName:String,
+        name:String,
         email:{
             type:String,
             required:true,
@@ -16,7 +16,7 @@ import mongoose from 'mongoose';
             default:true
         },
         phoneNumber:String,
-        verificationStatus:{
+        isBlocked:{
             type:Boolean,
             default:false
         }

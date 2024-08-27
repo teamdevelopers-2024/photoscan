@@ -5,7 +5,10 @@ import validator from "validator";
 import { isEmailisExist, isverifyOtp, loginValidation, registerValidation } from "../services/userServices.js";
 import { sendOPTVerificationEmail } from "../services/generateOtp.js";
 import OtpDb from "../model/otpModel.js";
-
+import TokenDb from "../model/tokenMode.js";
+import jwt from 'jsonwebtoken'
+import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
+import "dotenv/config"
 
 
 const login = async (req,res)=>{
@@ -82,6 +85,14 @@ const register = async (req,res)=>{
 const getOtp = async (req, res) => {
     try {
       const { email } = req.body;
+      const isEmail = await isEmailisExist(email)
+
+      if(isEmail){
+        return res.status(400).json({
+          error:true ,
+          message :'user is already exist'
+        })
+      }
   
       // Check if email is valid
       if (!validator.isEmail(email)) {
@@ -101,11 +112,14 @@ const getOtp = async (req, res) => {
   const verifyOtp = async (req, res) => {
     try {
       const { otp, email } = req.body;
+      console.log(req.body);
+      
       console.log(otp, email);
       const result = await isverifyOtp(email);
       if (result) {
         const otpResult = await argon2.verify(result.otp, otp);
         if (otpResult) {
+          await UserDb.updateOne({ email: email }, { verificationStatus: true });
           await OtpDb.deleteOne({ userEmail: email });
           res.status(200).json({
             error: false,
@@ -132,9 +146,81 @@ const getOtp = async (req, res) => {
     }
   }
 
+
+
+  const checkAuthenticate = async (req, res) => {
+    try {
+      const accessToken = req.headers['authorization'];
+      const id = req.query.id;
+      console.log(accessToken)
+      // Verify the access token
+      if (!accessToken) {
+        return res.status(400).json({
+          error: true,
+          message: 'Access token is required',
+        });
+      }
+  
+      // Replace 'your-secret-key' with the actual secret key used to sign your JWT
+      const secretKey = process.env.ACCESS_TOKEN_PRIVAT_KEY
+
+      jwt.verify(accessToken, secretKey, async (err, decoded) => {
+        if (err) {
+          return res.status(401).json({
+            error: true,
+            message: 'Invalid or expired access token',
+          });
+        }   
+
+
+
+        const userId = decoded.userId;
+        console.log('userId : ', decoded)
+        const tokenInDb = await TokenDb.findOne({ userId:userId});
+        if (tokenInDb) {
+          console.log('success')
+          return res.status(200).json({
+            error: false,
+            message: 'User authenticated',
+          });
+        } else {
+          return res.status(401).json({
+            error: true,
+            message: 'Token not found in database',
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error)
+      console.error('Error during authentication:', error);
+      res.status(500).json({
+        error: true,
+        message: 'Internal server error',
+      });
+    }
+  };
+
+
+
+
+
+  const verifyRefreshToken =async (req,res)=>{
+    const { refreshToken } = req.body;
+    console.log('coming inside refreshToken Function')
+    const result = await verifyRefreshTokenFn(refreshToken);
+
+    if (result.error) {
+        return res.status(403).json(result);
+    }
+
+    res.status(200).json(result);
+  }
+
 export default {
     login,
     register,
     getOtp,
-    verifyOtp
+    verifyOtp,
+    checkAuthenticate,
+    verifyRefreshToken
 }

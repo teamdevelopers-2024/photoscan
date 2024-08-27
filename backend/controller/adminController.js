@@ -63,6 +63,8 @@ const getUsers = async (req, res) => {
 
     // Fetch users with pagination
     const users = await UserDb.find().skip(startIndex).limit(limit);
+    console.log(users);
+    
     const totalUsers = await UserDb.countDocuments(); 
 
     if (!users.length) {

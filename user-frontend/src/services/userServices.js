@@ -1,3 +1,4 @@
+import { isVAT } from "validator";
 
 
 
@@ -13,7 +14,7 @@ export function userLoginValidation(details){
 
 
 export function registerValidation(details){
-    const {name , email , phoneNumber , password , confirmPassword} = details
+    const {name , email , phoneNumber , password , confirmPassword ,isVerify} = details
     const errors = {};
 
     if (!name.trim()) {
@@ -43,7 +44,10 @@ export function registerValidation(details){
     } else if (confirmPassword !== password) {
       errors.confirmPassword = "*Passwords do not match";
     }
-
+    if(!isVerify){
+      errors.email = "*Verify your email"
+    }
+    
     return errors
 }
 
