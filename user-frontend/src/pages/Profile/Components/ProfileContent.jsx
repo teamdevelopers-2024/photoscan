@@ -1,14 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import ProfileSection from './ProfileSection';
 
 const ProfileContent = ({ activeSection }) => {
-  const userInfo = useSelector((state) => state.user.userInfo);
-  console.log(userInfo.name);
   
   const content = {
     profile: {
       title: "Profile Overview",
-      description: userInfo.email,
+      Page: ProfileSection,
     },
     'change-password': {
       title: "Change Password",
@@ -28,13 +27,12 @@ const ProfileContent = ({ activeSection }) => {
     },
   };
 
-  const { title, description } = content[activeSection] || { title: "Not Found", description: "" };
+  const { title, Page } = content[activeSection] || { title: "Not Found", description: "" };
 
   return (
     <main className="flex-1 p-6">
       <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">{title}</h2>
-        <p className="text-gray-600 mb-4">{description}</p>
+        <Page/>
         {/* Add buttons or additional content here as needed */}
       </div>
     </main>

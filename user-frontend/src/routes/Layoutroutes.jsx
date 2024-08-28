@@ -15,6 +15,7 @@ import FrameListing from "../pages/Frames_Listing/FrameListing";
 import PageNotFound from "../pages/404/PageNotFound";
 import SingleProduct from "../pages/Single Product/SingleProduct";
 import PrivateRoute from "./PrivateRoute";
+import RedirectIfAuthenticated from "./RedirectIfAuthenticated";
 
 export default function Layoutroutes() {
     return (
@@ -30,8 +31,16 @@ export default function Layoutroutes() {
                 </Route>
 
                 {/* Public Routes */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={
+                    <RedirectIfAuthenticated>
+                        <Login />
+                    </RedirectIfAuthenticated>
+                } />
+                <Route path="/register" element={
+                    <RedirectIfAuthenticated>
+                        <Register />
+                    </RedirectIfAuthenticated>
+                } />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/about" element={<Aboutus />} />

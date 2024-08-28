@@ -10,7 +10,10 @@ router.post('/verifyOtp',userController.verifyOtp)
 router.post('/refresh-token',userController.verifyRefreshToken)
 router.get('/fetchUser',userController.fetchUser)
 
- 
-
+router.get('/fetchUser',userController.fetchUser)
 router.get('/checkAuthenticate',userController.checkAuthenticate)
-export default router;
+
+
+
+router.delete('/logout',userController.logout)
+export default router; 
