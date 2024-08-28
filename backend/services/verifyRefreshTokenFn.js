@@ -15,7 +15,6 @@ const verifyRefreshTokenFn = async (refreshToken) => {
 
         // Verify the JWT token
         const tokenDetails = jwt.verify(refreshToken, privateKey);
-        console.log('refresh toke id :  ',tokenDetails)
         // Generate new access token
         const newAccessToken = jwt.sign(
             { userId: tokenDetails.userId,name :tokenDetails.name},
