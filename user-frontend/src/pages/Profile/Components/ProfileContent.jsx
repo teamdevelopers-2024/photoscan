@@ -1,10 +1,14 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 const ProfileContent = ({ activeSection }) => {
+  const userInfo = useSelector((state) => state.user.userInfo);
+  console.log(userInfo.name);
+  
   const content = {
     profile: {
       title: "Profile Overview",
-      description: "View and edit your profile details.",
+      description: userInfo.email,
     },
     'change-password': {
       title: "Change Password",

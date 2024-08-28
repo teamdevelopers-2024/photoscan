@@ -86,6 +86,16 @@ const verifyOtp = async (email, otp) => {
     return error.response.data;
   }
 };
+const fetchUser=async()=>{
+  try {
+    const response=await apiClient.get('/user/fetchUser');
+    const data=response.data.user
+    
+    return data;
+  } catch (error) {
+    
+  }
+}
 
 const checkAuthenticate = async () => {
   try {
@@ -106,4 +116,5 @@ export default {
   getOtp,
   verifyOtp,
   checkAuthenticate,
+  fetchUser
 };
