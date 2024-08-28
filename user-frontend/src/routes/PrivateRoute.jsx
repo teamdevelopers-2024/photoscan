@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import api from '../services/api';
 import Loader from '../components/loader/Loader';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/userSlice';
 
 const PrivateRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -31,6 +33,18 @@ const PrivateRoute = () => {
       effectRan.current = false; // Reset for cleanup in case of future re-renders
     };
   }, []);
+  const dispatch = useDispatch();
+
+  if(isAuthenticated){
+    api.fetchUser().then((data)=>{
+      dispatch(setUser(data));
+    }).catch((err)=>{
+
+    })
+     
+
+
+  }
 
   if (loading) return <Loader />;
 

@@ -1,7 +1,9 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import ProfileSection from './ProfileSection';
 
 const ProfileContent = ({ activeSection }) => {
+  
   const content = {
     profile: {
       title: "Profile Overview",
