@@ -2,6 +2,8 @@ import React from 'react';
 import ProfileOverView from './ProfileOverView';
 import { useSelector } from 'react-redux';
 import AccountSettings from './AccountSettings'
+import ChangePassword from './ChangePassword';
+import MyOrders from './MyOrders';
 
 const ProfileContent = ({ activeSection }) => {
   
@@ -12,7 +14,7 @@ const ProfileContent = ({ activeSection }) => {
     },
     'change-password': {
       title: "Change Password",
-      description: "Manage your password and secure your account.",
+      Page:ChangePassword,
     },
     'account-settings': {
       title: "Account Settings",
@@ -20,11 +22,7 @@ const ProfileContent = ({ activeSection }) => {
     },
     'my-orders': {
       title: "My Orders",
-      description: "View and manage your recent orders.",
-    },
-    wallet: {
-      title: "Wallet",
-      description: "Manage your wallet and payment methods.",
+      Page: MyOrders,
     },
   };
 
