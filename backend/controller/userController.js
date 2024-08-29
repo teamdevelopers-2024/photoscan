@@ -327,6 +327,5 @@ export default {
   verifyOtp,
   checkAuthenticate,
   verifyRefreshToken,
-  fetchUser,
   logout
 }
