@@ -26,7 +26,7 @@ const login = async (req, res) => {
       return res.status(400).json({
         error: true,
         message: 'User does not exist',
-        field:'email'
+        field: 'email'
       });
     }
 
@@ -35,24 +35,28 @@ const login = async (req, res) => {
     const { accessToken, refreshToken } = tokens;
 
     // Set the tokens as HTTP-only cookies
+    // Set a cookie that expires in 30 days
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: 'Strict', // Helps prevent CSRF attacks
+      sameSite: 'Strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       path: '/user/refresh-token',
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: 'Strict', // Helps prevent CSRF attacks
+      sameSite: 'Strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
     });
+
 
     // Respond with a success message
     res.status(200).json({
       error: false,
       message: "User logged in successfully",
-      user:isUser
+      user: isUser
     });
   } catch (error) {
     console.log('Error during login:', error);
@@ -98,18 +102,22 @@ const register = async (req, res) => {
     const token = await generateToken(newUser);
     console.log(token);
     // Set the tokens as HTTP-only cookies
+    // Set a cookie that expires in 30 days
     res.cookie('accessToken', token.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: 'Strict', // Helps prevent CSRF attacks
+      sameSite: 'Strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
     });
 
     res.cookie('refreshToken', token.refreshToken, {
       httpOnly: true,
       path: '/user/refresh-token',
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: 'Strict', // Helps prevent CSRF attacks
+      sameSite: 'Strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
     });
+
     await newUser.save();
     res.status(201).json({
       error: false,
@@ -222,11 +230,13 @@ const checkAuthenticate = async (req, res) => {
 
       // Check if the refresh token exists in the database
       const tokenInDb = await TokenDb.findOne({ userId: userId });
+      const user = await UserDb.findOne({_id:userId})
       if (tokenInDb) {
         console.log('User authenticated successfully');
         return res.status(200).json({
           error: false,
           message: 'User authenticated',
+          user:user
         });
       } else {
         return res.status(401).json({
@@ -309,11 +319,7 @@ console.log('reach here');
 };
 
 
-
-
-
-
-const logout = async (req,res)=>{
+const logout = async (req, res) => {
   try {
 
     const data = await decodeToken(req.cookies.accessToken)
@@ -327,12 +333,12 @@ const logout = async (req,res)=>{
       secure: process.env.NODE_ENV === 'production', // Set to true if you use HTTPS
       sameSite: 'strict'
     });
-     await UserDb.updateOne({_id:data.userId},{$set:{active:false}})
-     await TokenDb.deleteMany({userId:data.userId})
-     res.status(200).json({error:false , message: 'Logged out successfully' });
+    await UserDb.updateOne({ _id: data.userId }, { $set: { active: false } })
+    await TokenDb.deleteOne({ userId: data.userId , token : req.cookies.refreshToken })
+    res.status(200).json({ error: false, message: 'Logged out successfully' });
   } catch (error) {
     console.error('Error during logout:', error);
-    res.status(500).json({error:true , message: 'Logout failed' });
+    res.status(500).json({ error: true, message: 'Logout failed' });
   }
 }
 

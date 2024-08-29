@@ -1,13 +1,14 @@
 import React from 'react';
+import ProfileOverView from './ProfileOverView';
 import { useSelector } from 'react-redux';
-import ProfileSection from './ProfileSection';
+import AccountSettings from './AccountSettings'
 
 const ProfileContent = ({ activeSection }) => {
   
   const content = {
     profile: {
       title: "Profile Overview",
-      Page: ProfileSection,
+      Page: ProfileOverView,
     },
     'change-password': {
       title: "Change Password",
@@ -15,7 +16,7 @@ const ProfileContent = ({ activeSection }) => {
     },
     'account-settings': {
       title: "Account Settings",
-      description: "Update your account details and preferences.",
+      Page : AccountSettings
     },
     'my-orders': {
       title: "My Orders",
@@ -31,10 +32,8 @@ const ProfileContent = ({ activeSection }) => {
 
   return (
     <main className="flex-1 p-6">
-      <div className="bg-white p-6 rounded-lg shadow-lg">
         <Page/>
         {/* Add buttons or additional content here as needed */}
-      </div>
     </main>
   );
 };

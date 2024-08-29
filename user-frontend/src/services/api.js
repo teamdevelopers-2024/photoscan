@@ -87,7 +87,6 @@ const verifyOtp = async (email, otp) => {
   }
 };
 
-
 const checkAuthenticate = async () => {
   try {
     console.log('insed checkAuthenticate')

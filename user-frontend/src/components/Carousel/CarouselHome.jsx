@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import img1 from '../../assets/images/0200de8f618428ba742174e1f740749a.png';
-import img2 from '../../assets/images/1037674.jpg';
-import img3 from '../../assets/images/bmw_car_sports_139454_3840x2160.jpg';
-import img4 from '../../assets/images/bmw-f82-dark-side-car-digital-art_1569189343.jpg';
+import img1 from '../../assets/images/b_1.jpg';
+import img2 from '../../assets/images/b_2.jpg';
+import img3 from '../../assets/images/b_3.jpg';
+import img4 from '../../assets/images/b_2.jpg';
 import leftArrow from '../../assets/images/left-arrow.png';
 import rightArrow from '../../assets/images/right-arrow.png';
 
