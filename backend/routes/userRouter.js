@@ -8,9 +8,7 @@ router.post('/register',userController.register)
 router.post('/getOtp',userController.getOtp)
 router.post('/verifyOtp',userController.verifyOtp)
 router.post('/refresh-token',userController.verifyRefreshToken)
-router.get('/fetchUser',userController.fetchUser)
 
-router.get('/fetchUser',userController.fetchUser)
 router.get('/checkAuthenticate',userController.checkAuthenticate)
 
 

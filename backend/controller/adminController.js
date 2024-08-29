@@ -1,3 +1,5 @@
+
+import FrameDb from "../model/prodectModel.js";
 import UserDb from "../model/userModel.js";
 
 
@@ -49,6 +51,53 @@ const status = async (req, res) => {
       res.status(401).json({ loggedIn: false });
     }
   };
+  const addframes = async (req, res) => {
+    if (req.body) {
+        try {
+          
+            // Extract properties from request body
+            const data = req.body.data;
+            console.log(data);
+
+            // Create a new frame document
+            const newFrame = new FrameDb({
+                productname: data.productName,
+                productdescription: data.description,
+                productprice: data.price,
+                image: data.image
+            });
+
+            // Save the new frame to the database
+            await newFrame.save();
+
+            // Send success response
+            res.status(201).json({ message: 'Product saved successfully' });
+
+        } catch (error) {
+            // Log the error and send a response with the error details
+            console.error('Error saving product:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    } else {
+        // Send a response indicating that the request body is missing
+        console.error('Request body is missing');
+        res.status(400).json({ error: 'Request body is missing' });
+    }
+};
+
+const getframes = async (req, res) => {
+  try {
+    // Retrieve all frames from the database
+    const data = await FrameDb.find();
+    
+    // Send a success response with the retrieved data
+    res.status(200).json(data);
+  } catch (error) {
+    // Handle errors and send an error response
+    console.error('Error fetching frames:', error);
+    res.status(500).json({ error: 'Internal Server Error. Error while getting frames' });
+  }
+};
 
 
 
@@ -98,5 +147,7 @@ const getUsers = async (req, res) => {
 export default {
     login,
     status,
-    getUsers
+    getUsers,
+    addframes,
+    getframes,
 }

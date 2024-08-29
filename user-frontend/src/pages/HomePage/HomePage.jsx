@@ -17,7 +17,7 @@ export default function HomePage(){
         <CarouselHome />
         <FeaturedProducts />
         <OfferBanner />
-        {/* <OnlinePurchase /> */}
+        <OnlinePurchase />
         <Footer />
         </>
         
