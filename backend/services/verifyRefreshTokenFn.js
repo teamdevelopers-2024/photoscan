@@ -12,7 +12,7 @@ const verifyRefreshTokenFn = async (refreshToken) => {
         if (!doc) {
             throw new Error('Invalid refresh token');
         }
-
+ 
         // Verify the JWT token
         const tokenDetails = jwt.verify(refreshToken, privateKey);
         // Generate new access token

@@ -296,33 +296,6 @@ const verifyRefreshToken = async (req, res) => {
 
 
 
-
-
-const fetchUser = async (req, res) => {
-  try {
-    const token = req.cookies.accessToken
-    const userDetails = await decodeToken(token)
-    const user = await UserDb.findOne({ _id: userDetails.userId })
-    if (!user) {
-      return res.status(400).json({
-        error: true,
-        message: "token is invalid or user is not exist "
-      })
-    }
-
-    res.status(200).json({
-      error: false,
-      data: user
-    })
-  } catch (error) {
-    res.status(500).json({
-      error: true,
-      message: 'Internal server error',
-    });
-  }
-}
-
-
 const logout = async (req, res) => {
   try {
 
