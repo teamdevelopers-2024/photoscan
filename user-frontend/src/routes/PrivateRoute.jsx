@@ -4,8 +4,6 @@ import api from '../services/api';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/userSlice';
 import Loader from '../components/loader/Loader';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../redux/userSlice';
 
 const PrivateRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -39,7 +37,6 @@ const PrivateRoute = () => {
       effectRan.current = false; // Reset for cleanup in case of future re-renders
     };
   }, []);
-  const dispatch = useDispatch();
 
   if(isAuthenticated){
     api.fetchUser().then((data)=>{
