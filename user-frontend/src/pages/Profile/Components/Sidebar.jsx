@@ -23,7 +23,7 @@ const ProfileSidebar = ({ setActiveSection }) => {
   };
 
   return (
-    <aside className="w-64 bg-white h-[80vh] p-6 shadow-md flex flex-col">
+    <aside className="w-64 bg-white fixed  h-[90vh] p-6 shadow-md hidden md:flex flex-col">
       <div className='relative top-5'>
         <h2 className="text-lg font-bold top-4 mb-6">Profile Menu</h2>
         <ul className="space-y-4">
