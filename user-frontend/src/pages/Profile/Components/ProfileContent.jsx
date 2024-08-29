@@ -1,12 +1,12 @@
 import React from 'react';
-import ProfileSection from './ProfileSection';
+import ProfileOverView from './ProfileOverView';
 import AccountSettings from './AccountSettings'
 
 const ProfileContent = ({ activeSection }) => {
   const content = {
     profile: {
       title: "Profile Overview",
-      Page: ProfileSection,
+      Page: ProfileOverView,
     },
     'change-password': {
       title: "Change Password",

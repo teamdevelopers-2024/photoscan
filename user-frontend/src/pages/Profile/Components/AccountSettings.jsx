@@ -80,9 +80,9 @@ function ProfileSection() {
   }
 
   return (
-    <main className="flex-1 p-6">
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Account Settings</h2>
+    <main className="flex-1">
+      <div className="p-6 w-[82%] h-[90vh] left-[18%] relative bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold mb-4">Account Settings </h2>
 
         {/* Display user data in boxes */}
         <div className="space-y-4">
