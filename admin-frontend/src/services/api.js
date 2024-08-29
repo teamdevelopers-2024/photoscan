@@ -29,7 +29,33 @@ const getUsers = async (limit , page)=>{
   }
 }
 
+const addFrames = async (data) => {
+  try {
+    console.log(data);
+    
+    const response = await axios.post('http://localhost:4000/admin/addframes', {data:data});
+    return response.data;
+  } catch (error) {
+    console.error('Error adding frames:', error);
+    return null;
+  }
+};
+const getFrames = async () => {
+  try {   
+    const response = await axios.get('http://localhost:4000/admin/getframes');
+    console.log(response.data);
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error getting frames:', error);
+    return null;
+  }
+};
+
+
 export default {
   checkadmin,
-  getUsers
+  getUsers,
+  addFrames,
+  getFrames
 };
