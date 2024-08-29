@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import api from '../services/api';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/userSlice';
 import Loader from '../components/loader/Loader';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/userSlice';
@@ -9,6 +11,7 @@ const PrivateRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const effectRan = useRef(false); // Add a ref to track if effect ran
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (effectRan.current) return; // Prevents running the effect again
@@ -17,6 +20,9 @@ const PrivateRoute = () => {
       try {
         const result = await api.checkAuthenticate();
         setIsAuthenticated(!result.error);
+        if(!result.error){
+          dispatch(setUser(result.user))
+        }
       } catch (error) {
         console.error('Error during authentication check:', error);
         setIsAuthenticated(false);

@@ -3,10 +3,8 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import sideImage from "../../assets/WhatsApp Image 2024-08-21 at 16.59.30_7503ed8e.jpg";
 import Loader from "../../components/loader/Loader";
-import { useDispatch } from "react-redux";
 import { loginValidation } from "../../services/userServices";
 import api from "../../services/api";
-import { setUser } from "../../redux/userSlice";
 
 export default function Login() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -15,7 +13,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
@@ -49,7 +46,6 @@ export default function Login() {
            return
         }
         setErrors({})
-        dispatch(setUser(data.user));
         navigate('/');
       } else {
         setErrors(formErrors);
