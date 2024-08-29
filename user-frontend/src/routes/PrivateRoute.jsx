@@ -38,6 +38,17 @@ const PrivateRoute = () => {
     };
   }, []);
 
+  if(isAuthenticated){
+    api.fetchUser().then((data)=>{
+      dispatch(setUser(data));
+    }).catch((err)=>{
+
+    })
+     
+
+
+  }
+
   if (loading) return <Loader />;
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;

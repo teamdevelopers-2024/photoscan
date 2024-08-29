@@ -1,8 +1,10 @@
 import React from 'react';
 import ProfileOverView from './ProfileOverView';
+import { useSelector } from 'react-redux';
 import AccountSettings from './AccountSettings'
 
 const ProfileContent = ({ activeSection }) => {
+  
   const content = {
     profile: {
       title: "Profile Overview",

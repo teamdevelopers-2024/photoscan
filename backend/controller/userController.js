@@ -293,6 +293,30 @@ const verifyRefreshToken = async (req, res) => {
     });
   }
 };
+const fetchUser = async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+    const decodedToken = jwt.verify(token,process.env.ACCESS_TOKEN_PRIVAT_KEY); // Replace 'your-secret-key' with your actual secret key
+
+    // Fetch user details from the database
+    const user = await UserDb.findById(decodedToken.userId); // Adjust according to your User model
+console.log('reach here');
+
+    res.status(200).json({
+      user: {
+        name: user.name,
+        email: user.email,
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 
 
