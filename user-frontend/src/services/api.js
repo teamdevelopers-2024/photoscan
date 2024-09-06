@@ -43,10 +43,10 @@ apiClient.interceptors.response.use(
 
     return Promise.reject(error);  // If error is not due to expired token or refresh fails
   }
-);
+);1
 
 // Example login function
-export const userLogin = async (email, password) => {
+ const userLogin = async (email, password) => {
   try {
     const response = await apiClient.post('/user/login', { email, password });
     return response.data;  // Tokens should be set in cookies by backend
