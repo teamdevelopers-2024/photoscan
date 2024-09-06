@@ -1,16 +1,3 @@
-import { isVAT } from "validator";
-
-
-
-
-export function userLoginValidation(details){
-    try {
-        
-    } catch (error) {
-        
-    }
-}
-
 
 
 export function registerValidation(details){

@@ -22,6 +22,9 @@ const login = async (req, res) => {
 
     // Find the user in the database
     const isUser = await UserDb.findOne({ email: email });
+
+
+    const passResult = await argon2.verify(isUser.password , password)
     if (!isUser) {
       return res.status(400).json({
         error: true,
@@ -29,7 +32,14 @@ const login = async (req, res) => {
         field: 'email'
       });
     }
-
+    
+    if(!passResult){
+      return res.status(400).json({
+        error: true,
+        message: 'incorrect password',
+        field: 'password'
+      });
+    }
     // Generate tokens
     const tokens = await generateToken(isUser);
     const { accessToken, refreshToken } = tokens;
