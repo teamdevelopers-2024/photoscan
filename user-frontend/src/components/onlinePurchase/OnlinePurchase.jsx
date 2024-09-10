@@ -151,8 +151,8 @@ export default function OnlinePurchase() {
             ))}
           </Slider>
           <div className="slider-buttons">
-            <button data-aos="fade-right" data-aos-duration="500" onClick={() => sliderRef.current.slickPrev()}>Prev</button>
-            <button data-aos="fade-left" data-aos-duration="500" onClick={() => sliderRef.current.slickNext()}>Next</button>
+            <button data-aos="fade-up" data-aos-duration="500" onClick={() => sliderRef.current.slickPrev()}>Prev</button>
+            <button data-aos="fade-up" data-aos-duration="500" onClick={() => sliderRef.current.slickNext()}>Next</button>
           </div>
         </div>
       </div>
