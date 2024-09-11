@@ -18,13 +18,13 @@ const login = async (req, res) => {
 
     // Validate the login input
     const result = await loginValidation(email, password, res);
+    console.log(password)
     if (result !== false) return;
 
     // Find the user in the database
     const isUser = await UserDb.findOne({ email: email });
 
 
-    const passResult = await argon2.verify(isUser.password , password)
     if (!isUser) {
       return res.status(400).json({
         error: true,
@@ -32,6 +32,7 @@ const login = async (req, res) => {
         field: 'email'
       });
     }
+    const passResult = await argon2.verify(isUser.password , password)
     
     if(!passResult){
       return res.status(400).json({
@@ -83,7 +84,7 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   try {
-    const { email, password, name, confirmPassword, phoneNumber } = req.body;
+    const { email, password, firstName , lastName, confirmPassword,  phoneNumber } = req.body;
     console.log('coming here')
     const errors = await registerValidation(req.body)
     if (errors.length > 0) {
@@ -104,7 +105,8 @@ const register = async (req, res) => {
     const newUser = new UserDb({
       email,
       password: hashedpassword, // Note: you should hash the password before saving it
-      name,
+      firstName,
+      lastName,
       phoneNumber: phoneNumber
     });
 
