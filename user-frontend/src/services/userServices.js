@@ -1,11 +1,14 @@
 
 
 export function registerValidation(details){
-    const {name , email , phoneNumber , password , confirmPassword ,isVerify} = details
+    const {firstName , lastName , email , phoneNumber , password , confirmPassword ,isVerify} = details
     const errors = {};
 
-    if (!name.trim()) {
-      errors.name = "*Name is required";
+    if (!firstName.trim()) {
+      errors.firstName = "*First Name is required";
+    }
+    if (!lastName.trim()) {
+      errors.lastName = "*Last Name is required";
     }
 
     if (!email.trim()) {
