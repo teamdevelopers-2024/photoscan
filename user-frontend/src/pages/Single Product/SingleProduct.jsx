@@ -2,26 +2,14 @@ import React from 'react';
 import mainImage from '../../assets/images/1.jpg'
 import image1 from '../../assets/images/1_3.jpg'
 import image2 from '../../assets/images/2_2.jpg'
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
 
 const SingleProduct = () => {
   return (
+    <>
+    <Header/>
     <div className="bg-gray-100">
-      {/* HEADING-BANNER START */}
-      <div className="bg-gray-700 text-white py-10 px-5">
-        <div className="container mx-auto">
-          <div className="flex flex-col items-center">
-            <h2 className="text-3xl font-bold mb-3">Single Product</h2>
-            <nav>
-              <ul className="flex space-x-2">
-                <li><a href="index.html" className="text-blue-400 hover:underline">Home</a></li>
-                <li className="text-gray-400">Single Product</li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </div>
-      {/* HEADING-BANNER END */}
-
       {/* PRODUCT-AREA START */}
       <div className="py-20 bg-white">
         <div className="container mx-auto">
@@ -107,6 +95,8 @@ const SingleProduct = () => {
       </div>
       {/* PRODUCT-AREA END */}
     </div>
+    <Footer/>
+    </>
   );
 };
 
