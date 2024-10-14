@@ -1,26 +1,6 @@
-.animate{
-    animation: dropdown 1s forwards ;
+.nothover{
+    display: none;
 }
-.nanimate{
-    animation: dropup 1s forwards ;
-}
-@keyframes dropdown {
-    0%{
-        top: 0px;
-        z-index: 30;
-    }
-    100%{
-        top: 72px;
-        z-index: 30;
-    }
-}
-@keyframes dropup {
-    0%{
-        top: 72px;
-        z-index: 30;
-    }
-    100%{
-        top: 0px;
-        z-index: 30;
-    }
+.onhover{
+    display: flex;
 }
