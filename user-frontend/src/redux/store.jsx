@@ -10,19 +10,17 @@ const persistConfig = {
   storage,
 };
 
-// Combine reducers if you have multiple reducers
 const rootReducer = combineReducers({
   user: userSlice,
-  // other reducers can go here
 });
 
-// Create a persisted reducer
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// Create a Redux store with the persisted reducer
+
 const store = createStore(persistedReducer);
 
-// Create a persistor instance
+
 const persistor = persistStore(store);
 
 // Export both the store and persistor

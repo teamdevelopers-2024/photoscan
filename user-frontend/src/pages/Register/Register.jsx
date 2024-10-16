@@ -12,7 +12,8 @@ export default function Register() {
   const navigate = useNavigate();
 
   // State for form inputs
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +28,8 @@ export default function Register() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Handle input changes
-  const handleNameChange = (e) => setName(e.target.value);
+  const handleFirstNameChange = (e) => setFirstName(e.target.value);
+  const handleLastNameChange = (e) => setLastName(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePhoneNumberChange = (e) => setPhoneNumber(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
@@ -52,11 +54,12 @@ export default function Register() {
     e.preventDefault();
     setLoader(true)
     try {
-      const formErrors = await registerValidation({ email, name, phoneNumber, password, confirmPassword ,isVerify });
+      const formErrors = await registerValidation({ email, firstName , lastName, phoneNumber, password, confirmPassword ,isVerify });
       if (Object.keys(formErrors).length === 0) {
         // If no errors, proceed with form submission or further processing
         const userData = {
-          name,
+          firstName,
+          lastName,
           email,
           phoneNumber,
           password,
@@ -162,13 +165,34 @@ export default function Register() {
                         id="name"
                         name="name"
                         type="text"
-                        placeholder="Enter Name"
-                        value={name}
-                        onChange={handleNameChange}
+                        placeholder="Enter First Name"
+                        value={firstName}
+                        onChange={handleFirstNameChange}
                         autoComplete="name"
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm sm:leading-6"
                       />
-                      {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
+                      {errors.firstName && <p className="text-red-600 text-sm mt-1">{errors.firstName}</p>}
+                    </div>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Last Name
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        placeholder="Enter Last Name"
+                        value={lastName}
+                        onChange={handleLastNameChange}
+                        autoComplete="additional-name"
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm sm:leading-6"
+                      />
+                      {errors.lastName && <p className="text-red-600 text-sm mt-1">{errors.lastName}</p>}
                     </div>
                   </div>
 
@@ -335,27 +359,50 @@ export default function Register() {
 
               <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="flex gap-2">
+
                   <div>
                     <label
                       htmlFor="name"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Enter Name
+                      First Name
                     </label>
                     <div className="mt-2">
                       <input
                         id="name"
                         name="name"
                         type="text"
-                        placeholder="Enter Name"
-                        value={name}
-                        onChange={handleNameChange}
+                        placeholder="Enter First Name"
+                        value={firstName}
+                        onChange={handleFirstNameChange}
                         autoComplete="name"
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm sm:leading-6"
                       />
-                      {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
+                      {errors.firstName && <p className="text-red-600 text-sm mt-1">{errors.firstName}</p>}
                     </div>
                   </div>
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Last Name
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        placeholder="Enter Last Name"
+                        value={lastName}
+                        onChange={handleLastNameChange}
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm sm:leading-6"
+                      />
+                      {errors.lastName && <p className="text-red-600 text-sm mt-1">{errors.lastName}</p>}
+                    </div>
+                  </div>
+                    </div>
 
                   <div>
                     <label

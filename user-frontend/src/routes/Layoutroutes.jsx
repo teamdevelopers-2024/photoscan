@@ -17,6 +17,7 @@ import SingleProduct from "../pages/Single Product/SingleProduct";
 import PrivateRoute from "./PrivateRoute";
 import RedirectIfAuthenticated from "./RedirectIfAuthenticated";
 import FrameCustomization from "../components/customisationModal/Customisationmodal";
+import ForgotPass from "../pages/forgtoPass/ForgotPass";
 
 export default function Layoutroutes() {
     return (
@@ -42,6 +43,7 @@ export default function Layoutroutes() {
                         <Register />
                     </RedirectIfAuthenticated>
                 } />
+                <Route path="/forgotPassword" element={<ForgotPass/>} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/about" element={<Aboutus />} />
