@@ -139,6 +139,9 @@ const Header = () => {
           <div className="cursor-pointer wh[20px]">FRAMES</div>
         </div>
       </div>
+      <div className="w-full h-[72px]">
+
+      </div>
     </>
   );
 };
