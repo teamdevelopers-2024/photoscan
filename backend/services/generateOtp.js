@@ -3,25 +3,34 @@ import otpDb from '../model/otpModel.js';
 import path from 'path';
 import { config } from 'dotenv';
 import { fileURLToPath } from 'url';
-import  argon2  from 'argon2';
-config()
+import argon2 from 'argon2';
+
+config();
+
 // Utility to get __dirname equivalent in ES6 modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Nodemailer transporter
 let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
         user: process.env.AUTH_EMAIL,
-        pass: process.env.AUTH_PASS
-    }
+        pass: process.env.AUTH_PASS,
+    },
+    secure: true, // Use SSL
+    tls: {
+        rejectUnauthorized: false, 
+    },
 });
 
+// Function to send OTP verification email
 export const sendOPTVerificationEmail = async (email) => {
     try {
         const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
-        console.log(otp)
-        // MAIL OPTIONS
+        console.log(otp);
+
+        // Mail options
         const mailOptions = {
             from: process.env.AUTH_EMAIL,
             to: email,
@@ -41,34 +50,39 @@ export const sendOPTVerificationEmail = async (email) => {
             `,
             attachments: [
                 {
-                    filename: 'logo.png', // Name of the file
+                    filename: 'logo.png',
                     path: path.join(__dirname, '../assets/images/logo.png'), // Corrected path to the image file
                     cid: 'logo' // Same as the value in the src attribute in the HTML
                 }
             ]
         };
 
-        const result = await otpDb.findOne({userEmail:email})
-
-        if(result){
-            await otpDb.deleteOne({userEmail:email})
+        // Remove any existing OTPs for the email
+        const result = await otpDb.findOne({ userEmail: email });
+        if (result) {
+            await otpDb.deleteOne({ userEmail: email });
         }
 
-        const hashedOtp = await argon2.hash(otp)
+        // Hash the new OTP
+        const hashedOtp = await argon2.hash(otp);
+
+        // Save the OTP in the database
         const newOptVerification = new otpDb({
             userEmail: email,
             otp: hashedOtp
         });
 
         await newOptVerification.save();
+
+        // Send the OTP email
         await transporter.sendMail(mailOptions);
-        console.log('otp send successfully')
+        console.log('OTP sent successfully');
         return {
             error: false,
             status: "PENDING",
             message: "Verification OTP email sent",
-            email:email,
-            otp:otp
+            email: email,
+            otp: otp
         };
     } catch (error) {
         console.log(error);
@@ -78,4 +92,4 @@ export const sendOPTVerificationEmail = async (email) => {
             message: "Failed to send Verification OTP"
         };
     }
-}
+};

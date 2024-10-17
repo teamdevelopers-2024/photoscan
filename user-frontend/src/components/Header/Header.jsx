@@ -187,6 +187,7 @@ const Header = () => {
         <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Leather Wallets</div>
         <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Fabric Wallets</div>
       </div>
+
     </div>
     <div className="relative cursor-pointer">
       <div className="font-bold text-sm">MUG</div>
@@ -225,7 +226,6 @@ const Header = () => {
     </div>
   </div>
 </div>
-
 
     </>
   );
