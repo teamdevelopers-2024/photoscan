@@ -215,6 +215,7 @@ const checkAuthenticate = async (req, res) => {
   try {
     // Extract accessToken from cookies
     const accessToken = req.cookies.accessToken;
+    console.log(req.cookies)
     const id = req.query.id;
     console.log('Access Token from Cookie:', accessToken);
 
