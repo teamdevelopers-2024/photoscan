@@ -35,8 +35,16 @@ app.use(session({
     }
 }));
 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.get("/",(req,res)=>{
+    res.json({
+        error:false,
+        message:"photoscan api is working fine"
+    })
+})
 
 app.use('/user', UserRouter);
 app.use('/admin', AdminRouter);
