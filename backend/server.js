@@ -7,6 +7,7 @@ import MongoStore from 'connect-mongo'; // Import MongoStore
 import AdminRouter from './routes/adminRouter.js';
 import connectDb from './database/connection.js';
 import UserRouter from './routes/userRouter.js';
+import morgan from 'morgan';
 
 const app = express();
 const port = process.env.PORT || 5000;
