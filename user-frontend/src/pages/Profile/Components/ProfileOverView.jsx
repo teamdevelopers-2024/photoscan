@@ -6,7 +6,8 @@ function ProfileOverview() {
 
   // Local state to manage form data
   const [formData, setFormData] = useState({
-    name: user?.name || '',
+    firstName: user?.firstName || '',
+    lastName : user?.lastName || '',
     email: user?.email || '',
     phoneNumber: user?.phoneNumber || '',
   });
@@ -17,7 +18,7 @@ function ProfileOverview() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="mb-4">
           <p className="text-gray-500 font-semibold">Name:</p>
-          <p className="text-gray-700">{formData.name}</p>
+          <p className="text-gray-700">{formData.firstName} {formData.lastName}</p>
         </div>
         <div className="mb-4">
           <p className="text-gray-500 font-semibold">Email:</p>
