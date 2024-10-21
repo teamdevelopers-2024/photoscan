@@ -2,20 +2,20 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true;  // Ensure cookies are sent with requests
 
-const apiClient = axios.create({
-  baseURL: 'https://photoscanapi.codeandclick.in/user',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-
 // const apiClient = axios.create({
-//   baseURL: 'http://localhost:4000/user',
+//   baseURL: 'https://photoscanapi.codeandclick.in/user',
 //   headers: {
 //     'Content-Type': 'application/json',
 //   },
 // });
+
+
+const apiClient = axios.create({
+  baseURL: 'http://localhost:4000/user',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 // Function to handle token refresh
 const refreshToken = async () => {
