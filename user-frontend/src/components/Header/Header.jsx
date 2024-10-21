@@ -139,91 +139,92 @@ const Header = () => {
   onMouseLeave={() => setIsproducthover(false)}
 >
   <div className="flex w-4/5 justify-center border border-gray-300 bg-white items-start space-x-4 py-4">
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm ml-6">MOMENTOS</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-7 py-1 hover:bg-gray-100 cursor-pointer">Mini Moments</div>
-        <div className="px-7 py-1 hover:bg-gray-100 cursor-pointer">Digital Moments</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">JEWELLERY</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Necklaces</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Bracelets</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">KEY CHAIN</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Metal Keychains</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Plastic Keychains</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">BED SHEET & PILLOW</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Cotton Sheets</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Silk Sheets</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">LAMP</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Table Lamps</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Ceiling Lamps</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">BOTTLE</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Plastic Bottles</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Metal Bottles</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">WALLET</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Leather Wallets</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Fabric Wallets</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">MUG</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Ceramic Mugs</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Glass Mugs</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">DAIRY</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Personal Diaries</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Office Diaries</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">CARD HOLDER</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Leather Holders</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Plastic Holders</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">PEN</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Ball Pens</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Fountain Pens</div>
-      </div>
-    </div>
-    <div className="relative cursor-pointer">
-      <div className="font-bold text-sm">COMBO GIFT SET</div>
-      <div className="mt-2 bg-white shadow-lg text-xs">
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Gift Set 1</div>
-        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Gift Set 2</div>
-      </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm ml-6">MOMENTOS</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-7 py-1 hover:bg-gray-100 cursor-pointer">Mini Moments</div>
+      <div className="px-7 py-1 hover:bg-gray-100 cursor-pointer">Digital Moments</div>
     </div>
   </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">JEWELLERY</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Necklaces</div>
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Bracelets</div>
+    </div>
+  </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">KEY CHAIN</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 cursor-pointer">Metal Keychains</div>
+      <div className="px-2 py-1 cursor-pointer">Plastic Keychains</div>
+    </div>
+  </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">BED SHEET & PILLOW</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Cotton Sheets</div>
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Silk Sheets</div>
+    </div>
+  </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">LAMP</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Table Lamps</div>
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Ceiling Lamps</div>
+    </div>
+  </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">BOTTLE</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Plastic Bottles</div>
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Metal Bottles</div>
+    </div>
+  </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">WALLET</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Leather Wallets</div>
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Fabric Wallets</div>
+    </div>
+  </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">MUG</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Ceramic Mugs</div>
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Glass Mugs</div>
+    </div>
+  </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">DAIRY</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Personal Diaries</div>
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Office Diaries</div>
+    </div>
+  </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">CARD HOLDER</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Leather Holders</div>
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Plastic Holders</div>
+    </div>
+  </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">PEN</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Ball Pens</div>
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Fountain Pens</div>
+    </div>
+  </div>
+  <div className="relative cursor-pointer">
+    <div className="font-bold text-sm">COMBO GIFT SET</div>
+    <div className="mt-2 shadow-lg text-xs">
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Gift Set 1</div>
+      <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Gift Set 2</div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 
