@@ -102,16 +102,7 @@ const checkAuthenticate = async () => {
  
 
 
-const fetchUser = async ()=>{
-  try {
-    const response = await apiClient.get('/fetchUser')
-    console.log(response.data)
-    return response.data
-  } catch (error) {
-    console.log(error)
-    return error.response.data
-  }
-}
+
 
 
 const logout = async ()=>{
@@ -131,6 +122,5 @@ export default {
   getOtp,
   verifyOtp,
   checkAuthenticate,
-  fetchUser,
   logout
 };

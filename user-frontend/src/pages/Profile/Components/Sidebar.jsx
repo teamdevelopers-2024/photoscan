@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  FaUser, FaLock, FaCog, FaBox, FaSignOutAlt, FaMoon, FaSun
+  FaUser, FaLock, FaCog, FaBox, FaSignOutAlt,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../services/api';
@@ -15,7 +15,6 @@ const menuItems = [
 const ProfileSidebar = ({ setActiveSection, activeSection }) => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
-  const [darkMode, setDarkMode] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -31,18 +30,12 @@ const ProfileSidebar = ({ setActiveSection, activeSection }) => {
     }
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
   return (
-    <aside className={`w-64 fixed h-[90vh] p-6 shadow-lg transition-colors duration-300 ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} rounded-lg flex flex-col`}>
+    <aside className={`w-64 fixed h-[90vh] p-6 shadow-lg transition-colors duration-300 rounded-lg flex flex-col`}>
       <div className="relative top-5">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Profile Menu</h2>
-          <button onClick={toggleDarkMode} className="text-lg">
-            {darkMode ? <FaSun /> : <FaMoon />}
-          </button>
+          
         </div>
         <ul className="space-y-4">
           {menuItems.map(({ id, label, icon: Icon }) => (
@@ -50,7 +43,7 @@ const ProfileSidebar = ({ setActiveSection, activeSection }) => {
               <a
                 href={`#${id}`}
                 onClick={() => setActiveSection(id)}
-                className={`flex items-center p-2 rounded-lg transition-all duration-200 ${activeSection === id ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md' : 'hover:bg-gray-200 dark:hover:bg-gray-700'} `}
+                className={`flex items-center p-2 rounded-lg transition-all duration-200 ${activeSection === id ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md' : 'hover:bg-gray-200 dark:hover:bg-gray-200'} `}
                 aria-current={activeSection === id ? 'page' : undefined}
               >
                 <Icon className="mr-3" size={20} /> {label}
