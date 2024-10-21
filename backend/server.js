@@ -7,6 +7,7 @@ import MongoStore from 'connect-mongo'; // Import MongoStore
 import AdminRouter from './routes/adminRouter.js';
 import connectDb from './database/connection.js';
 import UserRouter from './routes/userRouter.js';
+import morgan from 'morgan';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -27,16 +28,26 @@ app.use(session({
     secret: 'photoscan@1223',
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27017/sessions' }), // Use MongoStore
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27018/sessions' }), // Change port here
     cookie: {
         secure: false, // Should be true in production if using HTTPS
         sameSite: "strict",
-        maxAge: 1 * 60 * 60 * 1000
+        maxAge: 1 * 60 * 60 * 1000 // 1 hour
     }
 }));
 
+app.use(morgan('dev'));
+
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.get("/",(req,res)=>{
+    res.json({
+        error:false,
+        message:"photoscan api is working fine"
+    })
+})
 
 app.use('/user', UserRouter);
 app.use('/admin', AdminRouter);

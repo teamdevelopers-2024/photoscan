@@ -3,11 +3,19 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;  // Ensure cookies are sent with requests
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:4000/user',
+  baseURL: 'https://photoscanapi.codeandclick.in/user',
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+
+// const apiClient = axios.create({
+//   baseURL: 'http://localhost:4000/user',
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
 
 // Function to handle token refresh
 const refreshToken = async () => {
@@ -54,7 +62,7 @@ apiClient.interceptors.response.use(
     console.error('Login failed:', error);
     return error.response.data;
   }
-};
+}
 
 // Other API functions remain unchanged...
 const userRegister = async (details) => {
@@ -87,6 +95,7 @@ const verifyOtp = async (email, otp) => {
   }
 };
 
+
 const checkAuthenticate = async () => {
   try {
     console.log('insed checkAuthenticate')
@@ -100,9 +109,6 @@ const checkAuthenticate = async () => {
   }
 };
  
-
-
-
 
 
 const logout = async ()=>{

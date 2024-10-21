@@ -12,7 +12,7 @@ const PrivateRoute = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (effectRan.current) return; // Prevents running the effect again
+    if (effectRan.current) return; 
 
     const checkAuth = async () => {
       try {

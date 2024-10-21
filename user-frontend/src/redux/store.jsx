@@ -1,6 +1,6 @@
 import { createStore, combineReducers } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 import userSlice from "./userSlice.jsx"; // Import your reducer
 
 // Config for redux-persist

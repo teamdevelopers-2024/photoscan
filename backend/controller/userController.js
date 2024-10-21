@@ -50,7 +50,7 @@ const login = async (req, res) => {
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: 'Strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict', 
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
     });
 
@@ -58,7 +58,7 @@ const login = async (req, res) => {
       httpOnly: true,
       path: '/user/refresh-token',
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: 'Strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict', 
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
     });
 
@@ -215,6 +215,7 @@ const checkAuthenticate = async (req, res) => {
   try {
     // Extract accessToken from cookies
     const accessToken = req.cookies.accessToken;
+    console.log(req.cookies)
     const id = req.query.id;
     console.log('Access Token from Cookie:', accessToken);
 
@@ -267,31 +268,6 @@ const checkAuthenticate = async (req, res) => {
 };
 
 
-const fetchUser = async (req, res) => {
-  try {
-    const token = req.cookies.accessToken;
-
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided' });
-    }
-    const decodedToken = jwt.verify(token,process.env.ACCESS_TOKEN_PRIVAT_KEY); // Replace 'your-secret-key' with your actual secret key
-
-    // Fetch user details from the database
-    const user = await UserDb.findById(decodedToken.userId); // Adjust according to your User model
-console.log('reach here');
-
-    res.status(200).json({
-      user: {
-        name: user.name,
-        email: user.email,
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
 
 const verifyRefreshToken = async (req, res) => {
   try {
@@ -329,6 +305,32 @@ const verifyRefreshToken = async (req, res) => {
   }
 };
 
+
+
+
+const fetchUser = async (req, res) => {
+  try {
+    const token = req.cookies.accessToken
+    const userDetails = await decodeToken(token)
+    const user = await UserDb.findOne({ _id: userDetails.userId })
+    if (!user) {
+      return res.status(400).json({
+        error: true,
+        message: "token is invalid or user is not exist "
+      })
+    }
+
+    res.status(200).json({
+      error: false,
+      data: user
+    })
+  } catch (error) {
+    res.status(500).json({
+      error: true,
+      message: 'Internal server error',
+    });
+  }
+}
 
 
 const logout = async (req, res) => {
