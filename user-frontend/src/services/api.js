@@ -111,7 +111,6 @@ const checkAuthenticate = async () => {
  
 
 
-
 const logout = async ()=>{
   try {
     const response = await apiClient.delete('/logout')

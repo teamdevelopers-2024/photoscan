@@ -44,7 +44,7 @@ function MainDashbord() {
       <div className="dash-main">
         <div className="flex justify-center items-center h-60">
           <div className="flex flex-col md:flex-row justify-center items-center space-y-5 md:space-y-0 md:space-x-10 w-full max-w-5xl">
-            <div className="w-80 h-44 relative njammlecard">
+            <div className="w-80 h-44 relative">
               <div className="w-full h-full bg-[#7978E9] rounded-xl shadow" />
               <div className="absolute left-[33px] bottom-[20px] text-white text-4xl font-semibold font-['Josefin Sans']">
                 Customers
@@ -53,7 +53,7 @@ function MainDashbord() {
                 749
               </div>
             </div>
-            <div className="w-80 h-44 relative njammlecard">
+            <div className="w-80 h-44 relative">
               <div className="w-full h-full bg-[#7DA0FA] rounded-xl shadow" />
               <div className="absolute left-[29px] bottom-[20px] text-white text-4xl font-semibold font-['Josefin Sans']">
                 Orders
@@ -62,7 +62,7 @@ function MainDashbord() {
                 835
               </div>
             </div>
-            <div className="w-80 h-44 relative njammlecard">
+            <div className="w-80 h-44 relative">
               <div className="w-full h-full bg-[#F3797E] rounded-xl shadow" />
               <div className="absolute left-[21px] bottom-[20px] text-white text-4xl font-semibold font-['Josefin Sans']">
                 Sales
