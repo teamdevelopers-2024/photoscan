@@ -47,7 +47,7 @@ export async function loginValidation(email, password , res) {
 export async function registerValidation(body,res){
     try {
         console.log(body)
-        const { email, password, name, confirmPassword } = body;
+        const { email, password, firstName,lastName, confirmPassword } = body;
         
         // Validation checks
         let errors = [];
@@ -56,7 +56,7 @@ export async function registerValidation(body,res){
             errors.push('invalid email or email not found')
         }
 
-         if (!name || validator.isEmpty(name.trim())) {
+         if (!firstName || validator.isEmpty(firstName.trim())) {
             errors.push('user name is required.');
         }
 

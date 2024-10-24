@@ -3,16 +3,24 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;  // Ensure cookies are sent with requests
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:4000',
+  baseURL: 'https://photoscanapi.codeandclick.in/user',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
+
+// const apiClient = axios.create({
+//   baseURL: 'http://localhost:4000/user',
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
+
 // Function to handle token refresh
 const refreshToken = async () => {
   try {
-    const response = await apiClient.post('/user/refresh-token');  // No need to send the refresh token manually
+    const response = await apiClient.post('/refresh-token');  // No need to send the refresh token manually
     return response.data.accessToken;  // Assuming new accessToken is set in the cookies by backend
   } catch (error) {
     console.error('Failed to refresh token:', error);
@@ -48,18 +56,18 @@ apiClient.interceptors.response.use(
 // Example login function
  const userLogin = async (email, password) => {
   try {
-    const response = await apiClient.post('/user/login', { email, password });
+    const response = await apiClient.post('/login', { email, password });
     return response.data;  // Tokens should be set in cookies by backend
   } catch (error) {
     console.error('Login failed:', error);
     return error.response.data;
   }
-};
+}
 
 // Other API functions remain unchanged...
 const userRegister = async (details) => {
   try {
-    const response = await apiClient.post('/user/register', details);
+    const response = await apiClient.post('/register', details);
     return response.data;
   } catch (error) {
     console.error('Registration failed:', error);
@@ -69,7 +77,7 @@ const userRegister = async (details) => {
 
 const getOtp = async (email) => {
   try {
-    const response = await apiClient.post('/user/getOtp', { email });
+    const response = await apiClient.post('/getOtp', { email });
     return response.data;
   } catch (error) {
     console.error('Failed to get OTP:', error);
@@ -79,7 +87,7 @@ const getOtp = async (email) => {
 
 const verifyOtp = async (email, otp) => {
   try {
-    const response = await apiClient.post('/user/verifyOtp', { email, otp });
+    const response = await apiClient.post('/verifyOtp', { email, otp });
     return response.data;
   } catch (error) {
     console.error('Failed to verify OTP:', error);
@@ -87,10 +95,11 @@ const verifyOtp = async (email, otp) => {
   }
 };
 
+
 const checkAuthenticate = async () => {
   try {
     console.log('insed checkAuthenticate')
-    const response = await apiClient.get('/user/checkAuthenticate');
+    const response = await apiClient.get('/checkAuthenticate');
     const data = response.data
     console.log(data)
     return data
@@ -102,21 +111,9 @@ const checkAuthenticate = async () => {
  
 
 
-const fetchUser = async ()=>{
-  try {
-    const response = await apiClient.get('/user/fetchUser')
-    console.log(response.data)
-    return response.data
-  } catch (error) {
-    console.log(error)
-    return error.response.data
-  }
-}
-
-
 const logout = async ()=>{
   try {
-    const response = await apiClient.delete('/user/logout')
+    const response = await apiClient.delete('/logout')
     console.log(response.data)
     return response.data
   } catch (error) {
@@ -131,6 +128,5 @@ export default {
   getOtp,
   verifyOtp,
   checkAuthenticate,
-  fetchUser,
   logout
 };

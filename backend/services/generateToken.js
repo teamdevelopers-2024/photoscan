@@ -21,7 +21,7 @@ const generateToken = async (user) => {
 
         // Ensure userId is correctly referenced
         const userToken = await TokenDb.findOne({ userId: user._id });
-        if (userToken) await TokenDb.deleteOne({userId:user._id})
+        // if (userToken) await TokenDb.deleteOne({userId:user._id})
         await new TokenDb({ userId: user._id, token: refreshToken }).save();
         return { accessToken, refreshToken };
     } catch (error) {

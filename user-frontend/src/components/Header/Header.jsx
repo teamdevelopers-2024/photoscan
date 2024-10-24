@@ -10,44 +10,25 @@ import logo from "../../assets/images/logo.png";
 import CartDropdown from "../cartDropdown/CardDropdown";
 import { useNavigate, Link } from "react-router-dom";
 import "./Header.css";
-import api from "../../services/api";
 
 const Header = () => {
   const menus = [
-    {
-      name: "Home",
-      route: '/'
-    },
-    {
-      name: "Products",
-      route: ''
-    },
-    {
-      name: "About Us",
-      route: '/about'
-    },
-    {
-      name: "Contact Us",
-      route: '/contact'
-    }];
+    { name: "Home", route: "/" },
+    { name: "Products", route: "#" },
+    { name: "About Us", route: "/about" },
+    { name: "Contact Us", route: "/contact" },
+  ];
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
-  const [isProductsClicked, setIsProductsClicked] = useState("a"); // State for handling Products click
+  const [isproducthover, setIsproducthover] = useState(false);
   const navigate = useNavigate();
   const headerRef = useRef(null);
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleCartDropdown = () => setIsCartDropdownOpen(!isCartDropdownOpen);
 
-  const handleProductClick = () => {
-    if (isProductsClicked === "a") {
-      setIsProductsClicked(true);
-    } else {
-      setIsProductsClicked(!isProductsClicked)
-    }
-
-  }
   useEffect(() => {
-    // Handle outside click for cartDropdown
     const handleClickOutside = (event) => {
       if (headerRef.current && !headerRef.current.contains(event.target)) {
         setIsCartDropdownOpen(false);
@@ -58,41 +39,33 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-
-  const handleUserClick = async(e) => {
-    e.preventDefault()
-      console.log('clicked')
-      navigate('/profile');    
+  const handleUserClick = async (e) => {
+    e.preventDefault();
+    navigate("/profile");
   };
 
   return (
-
     <>
       <header
         ref={headerRef}
         className="flex fixed justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
       >
-        <Link to='/'>
-
+        <Link to="/">
           <div className="w-[8rem] md:w-[12rem]">
-            <img
-
-              className="p-2 md:ml-3 cursor-pointer"
-              src={logo}
-              alt="logo"
-            />
+            <img className="p-2 md:ml-3 cursor-pointer" src={logo} alt="logo" />
           </div>
         </Link>
         <div className="hidden md:grid text-[#666666] text-sm font-[600] p-2 md:p-4 tracking-tight">
-          <ul className="flex justify-center items-center gap-4 md:gap-5">
+          <ul className="flex justify-center items-center gap-4 md:gap-5 relative">
             {menus.map((menu, index) => (
               <li
                 key={index}
-                className="cursor-pointer hover:text-[#4d4d4d]"
-                onClick={menu.name === "Products" ? handleProductClick : undefined}
+                className="relative cursor-pointer hover:text-[#4d4d4d]"
+                onMouseEnter={() =>
+                  menu.name === "Products" && setIsproducthover(true)
+                }
               >
-                <Link to={menu.route}>
-
+                <Link to={menu.route} className="block">
                   {menu.name}
                 </Link>
               </li>
@@ -105,15 +78,11 @@ const Header = () => {
             onClick={handleUserClick}
             className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110"
           />
-          <Link to=''>
+          <Link to="">
             <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
           </Link>
-          {/* Cart Icon with Dropdown */}
           <div className="relative h-auto" onClick={toggleCartDropdown}>
-
             <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-
-            {/* Dropdown Menu */}
             {isCartDropdownOpen && <CartDropdown />}
           </div>
         </div>
@@ -126,8 +95,9 @@ const Header = () => {
         </button>
 
         <div
-          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"
-            } md:hidden w-full`}
+          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${
+            isMenuOpen ? "translate-x-0" : "translate-x-full"
+          } md:hidden w-full`}
           style={{ maxWidth: "100%" }}
         >
           <div className="relative p-4">
@@ -161,23 +131,102 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Conditionally render the "MOMENTOS" and "FRAMES" div */}
-      {/* {isProductsClicked && ( */}
       <div
-        className={`w-full  text-[#666666] text-sm font-[600] h-[72px] bg-white flex justify-center items-center border border-gray-300 fixed top-[0px] left-0 z-30 
-          ${isProductsClicked == true ? "animate" :
-            isProductsClicked == false ? "nanimate" :
-              ""
-          }
-          `}
-      >
-        <div className="flex space-x-4">
-          <Link to='/momentos'><div className="cursor-pointer" >MOMENTOS</div></Link>
-          <Link to='/frames'><div className="cursor-pointer">FRAMES</div></Link>
-
-        </div>
+  className={`w-full text-[#666666] text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300
+    ${isproducthover ? "" : "hidden"}
+  `}
+  onMouseEnter={() => setIsproducthover(true)}
+  onMouseLeave={() => setIsproducthover(false)}
+>
+  <div className="flex w-4/5 justify-center border border-gray-300 bg-white items-start space-x-4 py-4">
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm ml-6">MOMENTOS</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-7 py-1 hover:bg-gray-100 cursor-pointer">Mini Moments</div>
+        <div className="px-7 py-1 hover:bg-gray-100 cursor-pointer">Digital Moments</div>
       </div>
-      <div className="w-full h-[72px]"></div>
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">JEWELLERY</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Necklaces</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Bracelets</div>
+      </div>
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">KEY CHAIN</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Metal Keychains</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Plastic Keychains</div>
+      </div>
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">BED SHEET & PILLOW</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Cotton Sheets</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Silk Sheets</div>
+      </div>
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">LAMP</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Table Lamps</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Ceiling Lamps</div>
+      </div>
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">BOTTLE</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Plastic Bottles</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Metal Bottles</div>
+      </div>
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">WALLET</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Leather Wallets</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Fabric Wallets</div>
+      </div>
+
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">MUG</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Ceramic Mugs</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Glass Mugs</div>
+      </div>
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">DAIRY</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Personal Diaries</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Office Diaries</div>
+      </div>
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">CARD HOLDER</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Leather Holders</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Plastic Holders</div>
+      </div>
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">PEN</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Ball Pens</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Fountain Pens</div>
+      </div>
+    </div>
+    <div className="relative cursor-pointer">
+      <div className="font-bold text-sm">COMBO GIFT SET</div>
+      <div className="mt-2 bg-white shadow-lg text-xs">
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Gift Set 1</div>
+        <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">Gift Set 2</div>
+      </div>
+    </div>
+  </div>
+</div>
+
     </>
   );
 };
