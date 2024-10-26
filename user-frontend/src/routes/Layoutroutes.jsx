@@ -19,6 +19,7 @@ import RedirectIfAuthenticated from "./RedirectIfAuthenticated";
 import FrameCustomization from "../components/customisationModal/Customisationmodal";
 import ForgotPass from "../pages/forgtoPass/ForgotPass";
 import MomentoPage from "../pages/momentoPage/MomentoPage";
+import FramePage from "../pages/framePage/FramePage";
 
 export default function Layoutroutes() {
     return (
@@ -54,6 +55,7 @@ export default function Layoutroutes() {
                 <Route path="/modal" element={<FrameCustomization />} />
                 <Route path="*" element={<PageNotFound />} />
                 <Route path="/momentopage" element={<MomentoPage />} />
+                <Route path="/framepage" element={<FramePage />} />
             </Routes>
         </Router>
     );
