@@ -17,6 +17,7 @@ import SingleProduct from "../pages/Single Product/SingleProduct";
 import PrivateRoute from "./PrivateRoute";
 import RedirectIfAuthenticated from "./RedirectIfAuthenticated";
 import FrameCustomization from "../components/customisationModal/Customisationmodal";
+import FrameCustomize from "../components/customize/Customize";
 
 export default function Layoutroutes() {
     return (
@@ -50,6 +51,7 @@ export default function Layoutroutes() {
                 <Route path="/productpage" element={<SingleProduct />} />
                 <Route path="/modal" element={<FrameCustomization />} />
                 <Route path="*" element={<PageNotFound />} />
+                <Route path="/customize" element={<FrameCustomize />} />
             </Routes>
         </Router>
     );
