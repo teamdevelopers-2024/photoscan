@@ -20,6 +20,7 @@ import FrameCustomization from "../components/customisationModal/Customisationmo
 import ForgotPass from "../pages/forgtoPass/ForgotPass";
 import MomentoPage from "../pages/momentoPage/MomentoPage";
 import FramePage from "../pages/framePage/FramePage";
+import Customize from "../components/customize/Customize";
 
 export default function Layoutroutes() {
     return (
@@ -56,6 +57,7 @@ export default function Layoutroutes() {
                 <Route path="*" element={<PageNotFound />} />
                 <Route path="/momentopage" element={<MomentoPage />} />
                 <Route path="/framepage" element={<FramePage />} />
+                <Route path="/customise" element={<Customize/>} />
             </Routes>
         </Router>
     );
