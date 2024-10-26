@@ -13,18 +13,19 @@ fieldset .select::after {
     pointer-events: none;
 }
 .background{
-    background-image: url('../../assets/images/bg1.jpeg'); 
-    background-size: 100% 100%;/* Ensures the image covers the entire element */
-    background-position: center; /* Centers the image */
-    background-repeat: no-repeat;
+    /* background-image: url('../../assets/images/bg1.jpeg'); 
+    background-size: 100% 100%;
+    background-position: center; 
+    background-repeat: no-repeat; */
+    background-color: #595959;
     
 }
 .background1{
-    background-color: #00000080;
+    background-color: #595959;
     
 }
 .background2{
-    background-color: #ffffff2b;
+    background-color: #ffffff;
     
 }
 input[type="text"],
@@ -36,7 +37,7 @@ textarea {
   padding: 0.75rem 1rem; /* Padding for better spacing */
   border-radius: 0.5rem; /* Rounded corners */
   border: 1px solid #ffffff2b; /* Light gray border */
-  background-color: #ffffff2b; /* White background */
+  /* background-color: #b5b5b5; */
   color: #333; /* Darker text for contrast */
   font-size: 1rem; /* Readable font size */
   line-height: 1.5; /* Improve line height */
