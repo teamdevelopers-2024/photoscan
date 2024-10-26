@@ -118,7 +118,7 @@ function MomentoPage() {
                   aria-label="Choose file"
                 />
               </div> */}
-              <div className="mt-4 space-y-4 sm:space-y-0 sm:space-x-4 text-xs text-zinc-500 font-['Lato'] flex flex-wrap gap-2 sm:gap-4">
+              <div className="mt-5 h-auto flex flex-col gap-4 text-xs text-zinc-500 font-['Lato'] ">
                 <div className="w-full sm:w-auto">
                   <input
                     type="text"
@@ -145,7 +145,7 @@ function MomentoPage() {
                     placeholder="Enter coupon code"
                     className="text-xs text-zinc-500 font-['Lato'] border border-gray-300 rounded-md p-1 w-full sm:w-auto"
                   />
-                  <button className="text-xs bg-blue-500 text-white px-2 py-1 rounded-md">
+                  <button className="text-xs bg-zinc-300 text-zinc-500 px-2 py-1 rounded-md">
                     Check
                   </button>
                 </div>
@@ -157,7 +157,7 @@ function MomentoPage() {
                     placeholder="Enter pincode"
                     className="text-xs text-zinc-500 font-['Lato'] border border-gray-300 rounded-md p-1 w-full sm:w-auto"
                   />
-                  <button className="text-xs bg-blue-500 text-white px-2 py-1 rounded-md">
+                  <button className="text-xs bg-zinc-300 text-zinc-500 px-2 py-1 rounded-md">
                     Check
                   </button>
                 </div>

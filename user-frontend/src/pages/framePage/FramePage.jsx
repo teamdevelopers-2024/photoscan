@@ -91,7 +91,7 @@ function FramePage() {
                   <div className="flex gap-4">
                     {/* Customize Button */}
                     <div className="mt-4 flex justify-center">
-                      <button className="px-6 py-2 bg-zinc-300 text-zinc-500 rounded-md font-['Lato'] hover:bg-blue-600 focus:outline-none">
+                      <button className="px-6 py-2 bg-zinc-300 text-zinc-500 rounded-md font-['Lato'] focus:outline-none">
                         Customize
                       </button>
                     </div>
@@ -114,7 +114,7 @@ function FramePage() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 space-y-4 sm:space-y-0 sm:space-x-4 text-xs text-zinc-500 font-['Lato']  flex-wrap gap-2 sm:gap-4">
+                <div className="mt-4 h-auto flex flex-col text-xs text-zinc-500 font-['Lato'] gap-4 sm:gap-4">
                   {/* Coupon Input */}
                   <div className="flex w-full sm:w-auto space-x-2 items-center">
                     <input
@@ -122,19 +122,19 @@ function FramePage() {
                       placeholder="Enter coupon code"
                       className="text-xs text-zinc-500 font-['Lato'] border border-gray-300 rounded-md p-1 w-full sm:w-auto"
                     />
-                    <button className="text-xs bg-blue-500 text-white px-2 py-1 rounded-md">
+                    <button className="text-xs bg-zinc-300 text-zincc-500 px-2 py-1 rounded-md">
                       Check
                     </button>
                   </div>
 
                   {/* Pincode Input */}
-                  <div className="flex w-full sm:w-auto space-x-2 items-center">
+                  <div className="flex w-full h-fit sm:w-auto space-x-2 items-center">
                     <input
                       type="text"
                       placeholder="Enter pincode"
                       className="text-xs text-zinc-500 font-['Lato'] border border-gray-300 rounded-md p-1 w-full sm:w-auto"
                     />
-                    <button className="text-xs bg-blue-500 text-white px-2 py-1 rounded-md">
+                    <button className="text-xs bg-zinc-300 text-zinc-500 px-2 py-1 rounded-md">
                       Check
                     </button>
                   </div>
