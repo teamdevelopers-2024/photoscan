@@ -1,20 +1,15 @@
 import mongoose from "mongoose";
 
+async function connectDb() {
+    try {
+        mongoose.set("strictQuery", false);
+        await mongoose.connect(process.env.MONGO_URL);
 
-function connectDb(){
-    mongoose.set("strictQuery" , false)
-    mongoose.connect(process.env.MONGO_URL)
-    .then(()=>{
-        console.log("Database connected successfully!!")
-    }).catch((error)=>{
-        console.log(`data base conncetion error ${error}`)
-    })
+        console.log("Database connected successfully!!");
+
+    } catch (error) {
+        console.log(`Database connection error: ${error}`);
+    }
 }
 
- 
-
-
 export default connectDb;
-
-
-

@@ -158,7 +158,7 @@ export default function Login() {
                   </div>
                 {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
                 </div>
-                <p style={{ marginTop: '5px' }} className="text-end text-gray-500 cursor-pointer font-normal hover:underline hover:underline-offset-1 z-10">Forgot Password</p>
+                <p style={{ marginTop: '5px' }} className="text-end text-gray-500 cursor-pointer font-normal hover:underline hover:underline-offset-1 z-10" onClick={()=> navigate("/forgotPassword")}>Forgot Password</p>
                 <div>
                   <button
                     onClick={checkUser}
