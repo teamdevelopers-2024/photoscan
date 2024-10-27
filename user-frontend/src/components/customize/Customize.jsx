@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Header from "../Header/Header";
+import Previews from "../Preview/Preview";
 
 const Customize = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -93,9 +94,10 @@ const Customize = () => {
               ))}
             </div>
           </div>
-          <div className="mt-4 p-4 border-dashed border-2 border-gray-400 w-64 h-32 flex items-center justify-center">
-            Drag & Drop Photos Here
+          <div className="flex justify-center w-full">
+          <Previews/>
           </div>
+          
         </div>
 
         {/* Right side: Carousel with layer underneath */}
