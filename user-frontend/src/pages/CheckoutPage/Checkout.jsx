@@ -1,12 +1,18 @@
 // Example React Component
-import React from "react";
+import React, { useState } from "react";
 import "./Checkout.css";
 
 const CheckoutPage = () => {
+  const [selectedMethod, setSelectedMethod] = useState(null);
+
+  const methods = [
+    { id: "online-payment", name: "Online Payment" },
+    { id: "cash-on-delivery", name: "Cash On Delivery" },
+  ];
   return (
-    <div className="h-screen grid grid-cols-3 background">
+    <div className="h-auto grid grid-cols-3 background">
       <div className="lg:col-span-2 col-span-3 space-y-8 px-12 background1">
-        <div className="mt-8 p-4 relative flex flex-col sm:flex-row sm:items-center background2 bg-[#ffffff2b] shadow rounded-md">
+        <div className="mt-5 p-4 relative flex flex-col sm:flex-row sm:items-center background2 bg-white shadow rounded-md">
           <div className="flex flex-row items-center border-b sm:border-b-0 w-full sm:w-auto pb-4 sm:pb-0">
             <div className="text-yellow-500">
               <svg
@@ -62,19 +68,43 @@ const CheckoutPage = () => {
                       <input
                         type="text"
                         name="name"
-                        placeholder="John Doe"
+                        placeholder="Enter your name here..."
+                        className="block w-full border outline-2 border-gray-300 rounded-lg py-2 px-4 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Phone Number
+                      </label>
+                      <input
+                        type="number"
+                        name="number"
+                        placeholder="10-digit mobile number"
                         className="block w-full border border-gray-300 rounded-lg py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         required
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Email Address
+                        PIN Code
                       </label>
                       <input
-                        type="email"
-                        name="email"
-                        placeholder="you@example.com"
+                        type="number"
+                        name="pincode"
+                        placeholder="Enter your pincode here..."
+                        className="block w-full border border-gray-300 rounded-lg py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Locality
+                      </label>
+                      <input
+                        type="text"
+                        name="locality"
+                        placeholder="Enter your locality here..."
                         className="block w-full border border-gray-300 rounded-lg py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         required
                       />
@@ -87,7 +117,7 @@ const CheckoutPage = () => {
                     <input
                       type="text"
                       name="address"
-                      placeholder="1234 Main St"
+                      placeholder="Enter your address here ( Area and Street ) ..."
                       className="block w-full border border-gray-300 rounded-lg py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       required
                     />
@@ -95,12 +125,12 @@ const CheckoutPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        City
+                        District
                       </label>
                       <input
                         type="text"
-                        name="city"
-                        placeholder="San Francisco"
+                        name="district"
+                        placeholder="Enter your district here..."
                         className="block w-full border border-gray-300 rounded-lg py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         required
                       />
@@ -112,43 +142,10 @@ const CheckoutPage = () => {
                       <input
                         type="text"
                         name="state"
-                        placeholder="CA"
+                        placeholder="Enter your state here..."
                         className="block w-full border border-gray-300 rounded-lg py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         required
                       />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        ZIP Code
-                      </label>
-                      <input
-                        type="text"
-                        name="postal_code"
-                        placeholder="94103"
-                        className="block w-full border border-gray-300 rounded-lg py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm  font-medium text-gray-700 mb-1">
-                        Country
-                      </label>
-                      <select
-                        name="country"
-                        className="block w-full border bg-[#ffffff2b] border-[#ffffff2b] rounded-lg py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        required
-                      >
-                        <option value="">Select Country</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="GB">United Kingdom</option>
-                        <option value="AU">Australia</option>
-                        <option value="FR">France</option>
-                        <option value="DE">Germany</option>
-                        {/* Add more countries as needed */}
-                      </select>
                     </div>
                   </div>
                 </form>
@@ -156,9 +153,36 @@ const CheckoutPage = () => {
             </section>
           </form>
         </div>
-        <button className="submit-button px-4 py-3 rounded-full bg-[#ffffff2b] text-black focus:ring focus:outline-none w-full text-xl font-semibold transition-colors">
+        <div className="max-w-4xl mx-auto p-6 background2 shadow-lg rounded-lg">
+          <h2 className="text-2xl font-semibold mb-4">Select Payment Method</h2>
+          <form className="space-y-4">
+            {methods.map((method) => (
+              <div key={method.id} className="flex items-center">
+                <input
+                  type="radio"
+                  id={method.id}
+                  name="payment-method"
+                  value={method.id}
+                  checked={selectedMethod === method.id}
+                  onChange={() => setSelectedMethod(method.id)}
+                  className="form-radio h-4 w-4 text-blue-500 transition duration-150 ease-in-out"
+                />
+                <label
+                  htmlFor={method.id}
+                  className="ml-2 text-gray-700 cursor-pointer"
+                >
+                  {method.name}
+                </label>
+              </div>
+            ))}
+          </form>
+        </div>
+        <div className="mt-4">
+        <button className="submit-button px-4 py-3 shadow rounded-full bg-white text-black focus:ring focus:outline-none w-full text-xl font-semibold transition-colors">
           Pay €846.98
         </button>
+        </div>
+        
       </div>
       <div className="col-span-1 bg-white lg:block hidden">
         <h1 className="py-6 border-b-2 text-xl text-gray-600 px-8">
