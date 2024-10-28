@@ -8,7 +8,7 @@ import AdminHome from "../components/Pages/adminHome/AdminHome";
 import AdminUser from "../components/mainComponents/mainUser/MainUser";
 import AdminDashbord from "../components/mainComponents/mainDashbord/MainDashbord";
 import AdminFrame from "../components/mainComponents/mainFrame/MainFrame";
-import AdminMomento from "../components/mainComponents/mainMomento/MainMomento";
+import AdminCategory from "../components/mainComponents/mainCategory/Category";
 import AdminOrder from "../components/mainComponents/mainOrder/MainOrder";
 import AdminBanner from "../components/mainComponents/mainBanner/MainBanner";
 import AdminExpense from "../components/mainComponents/mainExpense/MainExpense";
@@ -23,7 +23,7 @@ function Layoutroutes() {
             <Route index element={<AdminDashbord />} />
             <Route path="user" element={<AdminUser />} />
             <Route path="frame" element={<AdminFrame />} />
-            <Route path="momento" element={<AdminMomento />} />
+            <Route path="category" element={<AdminCategory />} />
             <Route path="order" element={<AdminOrder />} />
             <Route path="expense" element={<AdminExpense />} />
             <Route path="banner" element={<AdminBanner />} />
