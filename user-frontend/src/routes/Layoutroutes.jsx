@@ -16,7 +16,6 @@ import PageNotFound from "../pages/404/PageNotFound";
 import SingleProduct from "../pages/Single Product/SingleProduct";
 import PrivateRoute from "./PrivateRoute";
 import RedirectIfAuthenticated from "./RedirectIfAuthenticated";
-import FrameCustomization from "../components/customisationModal/Customisationmodal";
 import ForgotPass from "../pages/forgtoPass/ForgotPass";
 import MomentoPage from "../pages/momentoPage/MomentoPage";
 import FramePage from "../pages/framePage/FramePage";
@@ -53,7 +52,6 @@ export default function Layoutroutes() {
                 <Route path="/momentos" element={<MomentoListing />} />
                 <Route path="/frames" element={<FrameListing />} />
                 <Route path="/productpage" element={<SingleProduct />} />
-                <Route path="/modal" element={<FrameCustomization />} />
                 <Route path="*" element={<PageNotFound />} />
                 <Route path="/momentopage" element={<MomentoPage />} />
                 <Route path="/framepage" element={<FramePage />} />
