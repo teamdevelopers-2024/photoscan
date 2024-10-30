@@ -3,9 +3,9 @@ import "./Checkout.css";
 
 const CheckoutPage = () => {
   return (
-    <div className="h-screen grid grid-cols-3 background">
+    <div className="h-screen grid grid-cols-3 bg-white">
       {/* Main Content Section */}
-      <div className="lg:col-span-2 col-span-3 space-y-8 px-12 background1">
+      <div className="lg:col-span-2 col-span-3 space-y-8 px-12">
         <div className="mt-8 p-6 relative flex flex-col sm:flex-row sm:items-center background2 bg-white shadow-lg rounded-md transition-transform duration-300 hover:scale-105">
           <div className="flex flex-row items-center border-b sm:border-b-0 w-full sm:w-auto pb-4 sm:pb-0">
             <div className="text-yellow-500">
