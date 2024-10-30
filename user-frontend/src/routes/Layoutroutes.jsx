@@ -27,7 +27,6 @@ export default function Layoutroutes() {
             <Routes>
                 {/* Private Routes */}
                 <Route element={<PrivateRoute />}>
-                    <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="/ordersuccess" element={<OrderSuccess />} />
                     <Route path="/myorder" element={<MyOrder />} />
                     <Route path="/cart" element={<Cart />} />
@@ -35,6 +34,7 @@ export default function Layoutroutes() {
                 </Route>
 
                 {/* Public Routes */}
+                    <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/login" element={
                     <RedirectIfAuthenticated>
                         <Login />
