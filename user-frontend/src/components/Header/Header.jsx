@@ -48,7 +48,7 @@ const Header = () => {
     <>
       <header
         ref={headerRef}
-        className="flex fixed justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
+        className="flex  justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
       >
         <Link to="/">
           <div className="w-[8rem] md:w-[12rem]">
