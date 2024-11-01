@@ -62,9 +62,45 @@ const getFrames = async () => {
 };
 
 
+async function addCategory(body) {
+    try {
+        const response = await apiClient.post("/addCategory",body)
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
+
+
+
+async function getCategories(active) {
+    try {
+        const response = await apiClient.get(`/getCategories?active=${active}`)
+        return response.data
+    } catch (error) {
+      console.log(error)
+      return error.response.data  
+    }
+}
+
+
+async function updateActive(id) {
+    try {
+        const response = await apiClient.put(`/updateActive?id=${id}`)
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data  
+    }
+}
+
 export default {
     checkAdmin,
     getUsers,
     addFrames,
     getFrames,
+    addCategory,
+    getCategories,
+    updateActive
 };

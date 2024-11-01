@@ -1,5 +1,6 @@
 
-import FrameDb from "../model/prodectModel.js";
+import CategoryDb from "../model/Category.js";
+import ProductDb from "../model/prodectModel.js";
 import UserDb from "../model/userModel.js";
 
 
@@ -60,7 +61,7 @@ const status = async (req, res) => {
             console.log(data);
 
             // Create a new frame document
-            const newFrame = new FrameDb({
+            const newFrame = new ProductDb({
                 productname: data.productName,
                 productdescription: data.description,
                 productprice: data.price,
@@ -88,7 +89,7 @@ const status = async (req, res) => {
 const getframes = async (req, res) => {
   try {
     // Retrieve all frames from the database
-    const data = await FrameDb.find();
+    const data = await ProductDb.find();
     
     // Send a success response with the retrieved data
     res.status(200).json(data);
@@ -144,10 +145,91 @@ const getUsers = async (req, res) => {
 
 
 
+
+async function addCategory(req,res) {
+  try {
+    const {name , image} = req.body
+    if(!name){
+       return res.status(400).json({
+        error:true,
+        message:"name and image is required"
+       })
+    }
+    await CategoryDb.create({
+      name:name
+    })
+    res.status(200).json({
+      error:false,
+      message:"Category Added Successfully..!"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: true,
+      message: "Internal server error",
+      error,
+    });
+  }
+}
+
+
+
+async function getCategories(req,res) {
+  try {
+    let obj = {}
+    const active = req.query.active
+    console.log(active)
+    if(active){
+      obj = {
+        isActive :active
+      }
+    }
+    const data = await CategoryDb.find(obj)
+    console.log(data)
+    res.status(200).json({
+      error:false,
+      data:data
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: true,
+      message: "Internal server error",
+      error,
+    });
+  }
+}
+
+
+
+async function updateActive(req,res) {
+  try {
+    const id = req.query.id
+    await CategoryDb.updateOne(
+      { _id: id },
+      [{ $set: { isActive: { $not: "$isActive" } } }]  // Use aggregation to invert the isActive value
+    );
+    res.status(200).json({
+      error:false,
+      message:"active status updated successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: true,
+      message: "Internal server error",
+      error,
+    });
+  }
+}
+
 export default {
     login,
     status,
-    getUsers,
+    getUsers, 
     addframes,
     getframes,
+    addCategory,
+    getCategories,
+    updateActive
 }
