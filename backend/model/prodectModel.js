@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const frameSchema = new mongoose.Schema({
+const productSchema = new mongoose.Schema({
     productname: {
         type: String,
         required: true
@@ -14,9 +14,12 @@ const frameSchema = new mongoose.Schema({
     },
     image: {
         type: String
+    },
+    category: {
+        type:String 
     }
 });
 
-const FrameDb = mongoose.model("Frames", frameSchema);
+const ProductDb = mongoose.model("Product", productSchema);
 
-export default FrameDb;
+export default ProductDb;
