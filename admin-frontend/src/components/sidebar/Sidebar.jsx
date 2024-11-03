@@ -36,8 +36,8 @@ function Sidebar() {
       img: user,
     },
     {
-      path: "/admin/home/frame",
-      display: "Frames",
+      path: "/admin/home/product",
+      display: "Products",
       img: frame,
     },
     {

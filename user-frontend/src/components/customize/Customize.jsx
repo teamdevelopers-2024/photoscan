@@ -4,6 +4,13 @@ import Previews from "../Preview/Preview";
 import blackBorder from "../../assets/frames/black-frame.png";
 import oakBorder from "../../assets/frames/oak-frame.png";
 import whiteBorder from "../../assets/frames/white-frame.png";
+import threedblack from "../../assets/frames/black_frame.jpg";
+import threedoak from "../../assets/frames/oak_frame.jpg";
+import threedwhite from "../../assets/frames/white_frame.jpg";
+import imgPtr from '../../assets/frames/oriantaion-portrait.jpg';
+import imgLan from '../../assets/frames/oriantaion-lanscape.jpg';
+import imgSqr from '../../assets/frames/oriantation-square.jpg';
+import chooseimage from '../../assets/choose_image.png';
 
 const Customize = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -12,10 +19,12 @@ const Customize = () => {
   const [imageCount, setImageCount] = useState(2);
   const [paperType, setPaperType] = useState("matte");
   const [frameColor, setFrameColor] = useState("Black");
-  const [width, setWidth] = useState(0); // State variable for width
-  const [height, setHeight] = useState(0); // State variable for height
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+  const [selectedFrame, setSelectedFrame] = useState(blackBorder);
+  const [uploadedImages, setUploadedImages] = useState(Array(4).fill(chooseimage));
 
-  // Dummy images for the carousel
+  const borderlist = [blackBorder, oakBorder, whiteBorder];
   const images = [
     "https://placeimg.com/640/480/nature",
     "https://placeimg.com/640/480/tech",
@@ -23,19 +32,19 @@ const Customize = () => {
     "https://placeimg.com/640/480/people",
   ];
 
-  // Dummy images for frame orientations
   const frameOrientationImages = {
     Landscape: "https://placeimg.com/150/100/nature",
     Portrait: "https://placeimg.com/100/150/nature",
     Square: "https://placeimg.com/150/150/nature",
   };
 
-  // Define the frame colors
   const frameColors = [
-    { name: "Black", image: blackBorder },
-    { name: "Oak", image: oakBorder },
-    { name: "White", image: whiteBorder },
+    { name: "Black", image: threedblack },
+    { name: "Oak", image: threedoak },
+    { name: "White", image: threedwhite },
   ];
+
+  const imgOriantation = [imgLan, imgPtr, imgSqr];
 
   const goToPrevious = () => {
     const isFirstSlide = currentIndex === 0;
@@ -58,230 +67,217 @@ const Customize = () => {
   };
 
   const getFrameDimensions = () => {
-    setImageCount(1)
-    console.log("image oreintation ", frameOrientation)
+
     let frameWidth = 0;
     let frameHeight = 0;
 
+    let baseWidth = 150;
+    let baseHeight = 150;
+
+    const isMediumScreen = window.innerWidth >= 768;
+    
+    if (isMediumScreen && frameOrientation !== "Landscape") {
+      
+      baseWidth = 200;
+      baseHeight = 200;
+    }
+    if (imageCount === 1 || imageCount === 2 && frameOrientation === "Square") {
+      baseHeight = 300
+      baseWidth = 300
+    }
+
     if (frameOrientation === "Landscape" && imageOrientation === "Landscape-Portrait") {
-      // Landscape image dimensions
-      const imageWidth = 150;
-      const imageHeight = 225;
+      frameWidth = baseWidth;
+      frameHeight = baseHeight * 1.5;
+    } else if (frameOrientation === "Landscape" && imageOrientation === "Landscape-Landscape") {
+      frameWidth = baseWidth * 1.6;
+      frameHeight = baseHeight * .9;
 
-      frameWidth = imageWidth; // Remove margin
-      frameHeight = imageHeight; // Remove margin
+    } else if (frameOrientation === "Portrait" && imageOrientation === "Portrait-Portrait") {
+      frameWidth = baseWidth * 0.9;
+      frameHeight = baseHeight * 1.2;
+    } else if (frameOrientation === "Portrait" && imageOrientation === "Portrait-Landscape") {
+      frameWidth = baseWidth * 1.2;
+      frameHeight = baseHeight * 0.8;
+    } else {
+      frameWidth = baseWidth;
+      frameHeight = baseHeight;
     }
-    else if (frameOrientation === "Landscape" && imageOrientation === "Landscape-Landscape") {
-      // Landscape image dimensions
-      const imageWidth = 160;
-      const imageHeight = 107;
-
-      frameWidth = imageWidth; // Remove margin
-      frameHeight = imageHeight; // Remove margin
-    }
-    else if (frameOrientation === "Portrait" && imageOrientation === "Portrait-Portrait") {
-      // Portrait image dimensions
-      const imageWidth = 140;
-      const imageHeight = 180;
-
-      frameWidth = imageWidth; // Remove margin
-      frameHeight = imageHeight; // Remove margin
-    }
-    else if (frameOrientation === "Portrait" && imageOrientation === "Portrait-Landscape") {
-      // Portrait image dimensions
-      const imageWidth = 180;
-      const imageHeight = 120;
-
-      frameWidth = imageWidth; // Remove margin
-      frameHeight = imageHeight; // Remove margin
-    }
-    else {
-      const imageWidth = 100;
-      const imageHeight = 100;
-      frameWidth = imageWidth;
-      frameHeight = imageHeight;
-    }
-
 
     return { widthF: `${frameWidth}px`, heightF: `${frameHeight}px` };
   };
 
   useEffect(() => {
-    setImageOrientation(`${frameOrientation}-Landscape`)
-    setImageCount(1)
-  }, [frameOrientation])
+    setImageOrientation(`${frameOrientation}-Landscape`);
+    setImageCount(1);
+  }, [frameOrientation]);
 
   useEffect(() => {
+    setImageCount(imageCount)
     const { widthF, heightF } = getFrameDimensions();
-    setWidth(widthF)
-    setHeight(heightF)
-
-  }, [frameOrientation, imageOrientation])
+    setWidth(widthF);
+    setHeight(heightF);
+    setImageOrientation(imageOrientation)
+  }, [ imageOrientation, imageCount]);
 
   const getImageGridClass = () => {
     if (frameOrientation === "Square") {
-      if (imageCount === 2) return "grid-cols-2 grid-rows-1";
-      if (imageCount === 3) return "grid-cols-2 grid-rows-2";
-      if (imageCount === 4) return "grid-rows-2 grid-cols-2";
-      // Additional configurations for higher counts
+      if (imageCount === 2) return "grid grid-cols-2 grid-rows-1";
+      if (imageCount === 3) return "grid grid-cols-2 grid-rows-2";
+      if (imageCount === 4) return "grid grid-rows-2 grid-cols-2";
     }
-    return "flex flex-col"; // Default for non-square layouts
+    if (frameOrientation === "Landscape") {
+      return `grid grid-cols-${imageCount}`
+    }
+    return `grid grid-rows-${imageCount}`;
   };
 
-  console.log("height : ", width, height)
+  const handleImageUpload = (index, event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setUploadedImages((prev) => {
+          const newImages = [...prev];
+          newImages[index] = reader.result; // Set the uploaded image as the new state
+          return newImages;
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <>
       <header>
         <Header />
       </header>
-      <div className="flex md:flex bg-gray-100 ">
-        {/* Left side: Photo frame */}
+      <div className="justify-evenly md:flex md:bg-gray-100">
         <div className="flex flex-col items-center justify-evenly">
           <div
-            style={{ borderImage: `url(${oakBorder})10 round`, }}
-            className="border-8 bg-white flex items-center justify-around h-auto w-auto"
+            style={{ borderImage: `url(${selectedFrame}) 10 round` }}
+            className="border-8 bg-white flex items-center justify-around drop-shadow-2xl shadow-gray-600 h-auto w-auto"
           >
-            <div className={` grid ${getImageGridClass()} pl-2 pb-2`}>
+            <div className={`${getImageGridClass()} pl-2 pb-2`}>
               {Array.from({ length: imageCount }, (_, index) => (
                 <div
                   key={index}
-                  style={{ width: width, height: height }}
-                  className={`border border-gray-300 flex items-center justify-center bg-black mb-0 m-2 ml-0`}
+                  className="border cursor-pointer border-gray-300 flex items-center justify-center mb-0 m-2 ml-0"
+                  style={{
+                    width: width,
+                    height: height,
+                    backgroundImage: `url(${uploadedImages[index]})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
                 >
-                  {/* <img
-                    src={images[(currentIndex + index) % images.length]}
-                    alt={`Image ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  /> */}
+                  {/* Hidden input for image upload */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id={`file-input-${index}`} // Unique id for each input
+                    onChange={(event) => handleImageUpload(index, event)}
+                    className="hidden"
+                  />
+                  <label htmlFor={`file-input-${index}`} className="w-full h-full flex items-center justify-center">
+                    {/* Optional: Add a preview of the image */}
+                    {uploadedImages[index] === chooseimage ? (
+                      <span className="text-gray-500 cursor-pointer">Click to upload</span>
+                    ) : null}
+                  </label>
                 </div>
               ))}
+
             </div>
-          </div>
-          <div className="flex justify-center w-full">
-            <Previews />
           </div>
         </div>
 
-        {/* Right side: Carousel with layer underneath */}
-        <div className=" flex flex-col items-center justify-center relative">
+        <div className="flex flex-col items-center justify-center relative">
           <div className="flex mt-10">
             <div className="w-auto bg-white shadow-lg rounded-lg p-6 flex flex-col items-center justify-center z-10">
-              <div className="w-full flex h-64 justify-evenly items-center">
-                <button
-                  onClick={goToPrevious}
-                  className="h-12 transform -translate-y-1/2 p-2 text-xl bg-white bg-opacity-75 rounded-full shadow-md hover:bg-opacity-100"
-                >
-                  &lt;
-                </button>
-                <div className="relative flex items-center justify-center w-64 h-64 bg-white rounded-lg shadow-lg p-4">
-                  {images.length > 0 ? (
-                    <div className="relative flex items-center justify-center w-full h-full">
-                      <img
-                        src={images[currentIndex]}
-                        alt={`Slide ${currentIndex}`}
-                        className="w-3/4 h-auto object-contain"
-                      />
-                    </div>
-                  ) : (
-                    <p>No images to display</p>
-                  )}
-                </div>
-                <button
-                  onClick={goToNext}
-                  className="h-12 transform -translate-y-1/2 p-2 text-xl bg-white bg-opacity-75 rounded-full shadow-md hover:bg-opacity-100"
-                >
-                  &gt;
-                </button>
-              </div>
-
-              {/* Frame Orientation Controls */}
               <div className="mt-8 space-y-8 w-full px-6 z-10 relative">
-                {/* Frame Orientation Selection */}
                 <div>
                   <h2 className="text-xl font-bold mb-2">Frame Orientation</h2>
                   <div className="flex space-x-4">
-                    {["Landscape", "Portrait", "Square"].map((orientation) => (
+                    {["Landscape", "Portrait", "Square"].map((orientation, index) => (
                       <div
                         key={orientation}
                         onClick={() => setFrameOrientation(orientation)}
-                        className={`p-4 border rounded-lg cursor-pointer ${frameOrientation === orientation
-                          ? "border-blue-500 bg-blue-100"
-                          : "border-gray-300"
+                        className={`p-4 border rounded-lg cursor-pointer ${frameOrientation === orientation ? "border-blue-500 bg-blue-100" : "border-gray-300"
                           }`}
                       >
-                        <img
-                          src={frameOrientationImages[orientation]}
-                          alt={orientation}
-                          className="w-full h-auto object-contain"
-                        />
+                        <img src={imgOriantation[index]} alt={orientation} className="w-20 h-20 object-contain" />
                         <div className="text-center mt-2">{orientation}</div>
                       </div>
                     ))}
                   </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold mb-2">Image Orientation</h2>
-                  <div className="flex space-x-4">
-                    {[`${frameOrientation}-Landscape`, `${frameOrientation}-Portrait`].map((orientation) => (
-                      <div key={orientation} onClick={() => setImageOrientation(orientation)}
-                        className={`p-4 border rounded-lg cursor-pointer ${imageOrientation === orientation ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}>
-                        <div className="text-center">{orientation}</div>
-                      </div>
-                    ))}
+                {frameOrientation !== "Square" &&
+                  <div>
+                    <h2 className="text-xl font-bold mb-2">Image Orientation</h2>
+                    <div className="flex space-x-4">
+                      {[`${frameOrientation}-Landscape`, `${frameOrientation}-Portrait`].map((orientation) => (
+                        <div
+                          key={orientation}
+                          onClick={() => setImageOrientation(orientation)}
+                          className={`p-4 border rounded-lg cursor-pointer ${imageOrientation === orientation ? "border-blue-500 bg-blue-100" : "border-gray-300"
+                            }`}
+                        >
+                          <div className="text-center">{orientation}</div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-
-
+                }
                 <div>
                   <h2 className="text-xl font-bold mb-2">Image Count</h2>
                   <div className="flex space-x-4">
-                    {[1, 2, 3, 4].map((count) => (
-                      <div key={count} onClick={() => setImageCount(count)}
-                        className={`p-4 border rounded-lg cursor-pointer ${imageCount === count ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}>
-                        <div className="text-center">{count}</div>
+                    {Array.from({ length: 4 }, (_, count) => (
+                      <div
+                        key={count}
+                        onClick={() => setImageCount(count + 1)}
+                        className={`p-4 border rounded-lg cursor-pointer ${imageCount === count + 1 ? "border-blue-500 bg-blue-100" : "border-gray-300"
+                          }`}
+                      >
+                        <div className="text-center">{count + 1}</div>
                       </div>
                     ))}
                   </div>
                 </div>
-              </div>
-
-              {/* Product Details Section */}
-              <div className="product-details mt-8 flex flex-col gap-5">
-                <div className="paper-type flex justify-between mt-4 gap-5">
-                  <button
-                    className={`bg-black text-gray-800 font-bold py-2 px-4 rounded hover:bg-gray-400 ${paperType === "matte"
-                      ? "bg-gray-800 text-white"
-                      : "bg-white"
-                      }`}
-                    onClick={() => handlePaperChange("matte")}
-                  >
-                    MATTE
-                  </button>
-                  <button
-                    className={`bg-black text-gray-800 font-bold py-2 px-4 rounded hover:bg-gray-400 ${paperType === "glossy"
-                      ? "bg-gray-800 text-white"
-                      : "bg-white"
-                      }`}
-                    onClick={() => handlePaperChange("glossy")}
-                  >
-                    GLOSSY
-                  </button>
+                <div>
+                  <h2 className="text-xl font-bold mb-2">Paper Type</h2>
+                  <div className="flex space-x-4">
+                    {["matte", "glossy"].map((type) => (
+                      <div
+                        key={type}
+                        onClick={() => handlePaperChange(type)}
+                        className={`p-4 border rounded-lg cursor-pointer ${paperType === type ? "border-blue-500 bg-blue-100" : "border-gray-300"
+                          }`}
+                      >
+                        <div className="text-center">{type}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="frame-color flex justify-between mt-4 gap-5">
-                  {frameColors.map((color) => (
-                    <button
-                      key={color.name}
-                      onClick={() => handleFrameChange(color.name)}
-                      className={`flex items-center justify-center w-24 h-24 rounded-full border-2 border-gray-300 ${frameColor === color.name ? "ring-2 ring-blue-500" : ""
-                        }`}
-                      style={{ backgroundColor: color.backgroundColor }}
-                    >
-                      {frameColor === color.name && (
-                        <span className="text-white font-bold">Selected</span>
-                      )}
-                    </button>
-                  ))}
+                <div>
+                  <h2 className="text-xl font-bold mb-2">Frame Color</h2>
+                  <div className="flex space-x-4">
+                    {frameColors.map((frame, index) => (
+                      <div
+                        key={frame.name}
+                        onClick={() => {
+                          handleFrameChange(frame.name)
+                          setSelectedFrame(borderlist[index])
+                        }}
+                        className={`p-4 border rounded-lg cursor-pointer ${frameColor === frame.name ? "border-blue-500 bg-blue-100" : "border-gray-300"
+                          }`}
+                      >
+                        <img src={frame.image} alt={frame.name} className="w-20 h-20 object-contain" />
+                        <div className="text-center mt-2">{frame.name}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
