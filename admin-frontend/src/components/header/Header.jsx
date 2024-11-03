@@ -35,7 +35,7 @@ function Header() {
     const pathMapping = {
       '/admin/home': 'Dashboard',
       '/admin/home/user': 'User',
-      '/admin/home/frame': 'Frames',
+      '/admin/home/product': 'Products',
       '/admin/home/momento': 'Momento',
       '/admin/home/order': 'Order',
       '/admin/home/expense': 'Expense Tracker',

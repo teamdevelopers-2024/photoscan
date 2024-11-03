@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './MainFrame.css';
+import './MainProduct.css';
 import AddProductModal from '../productModal/ProductModal'; // Import the modal component
 import api from '../../../services/api';
 

@@ -68,13 +68,10 @@ function Previews(props) {
     <section className=" ">
       <div {...getRootProps({className: 'dropzone'})}>
         <input {...getInputProps()} />
-        <div className="mt-4 p-4 border-dashed border-2 border-gray-400 w-64 h-32 flex items-center justify-center">
+        <div className="p-4 border-dashed border-2 border-gray-400 w-64 h-24 mt-28 flex items-center justify-center">
             Drag & Drop Photos Here
           </div>
       </div>
-      <aside style={thumbsContainer}>
-        {thumbs}
-      </aside>
     </section>
   );
 }
