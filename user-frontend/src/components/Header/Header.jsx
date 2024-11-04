@@ -5,6 +5,8 @@ import {
   FaShoppingCart,
   FaBars,
   FaTimes,
+  FaChevronRight,
+  FaChevronDown,
 } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
 import CartDropdown from "../cartDropdown/CardDropdown";
@@ -21,9 +23,25 @@ const Header = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
-  const [isproducthover, setIsproducthover] = useState(false);
+  const [isProductHover, setIsProductHover] = useState(false);
+  const [subCategoryIndex, setSubCategoryIndex] = useState(null);
   const navigate = useNavigate();
   const headerRef = useRef(null);
+
+  const categories = [
+    {
+      name: "MOMENTOS",
+      subcategories: ["Photo Frames", "Wall Art", "Custom Prints"],
+    },
+    {
+      name: "JEWELLERY",
+      subcategories: ["Necklaces", "Bracelets", "Earrings"],
+    },
+    {
+      name: "KEY CHAIN",
+      subcategories: ["Metal Keychains", "Plastic Keychains", "Leather Keychains"],
+    },
+  ];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleCartDropdown = () => setIsCartDropdownOpen(!isCartDropdownOpen);
@@ -32,6 +50,8 @@ const Header = () => {
     const handleClickOutside = (event) => {
       if (headerRef.current && !headerRef.current.contains(event.target)) {
         setIsCartDropdownOpen(false);
+        setSubCategoryIndex(null);
+        setIsProductHover(false); // Close product hover on outside click
       }
     };
 
@@ -39,7 +59,7 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleUserClick = async (e) => {
+  const handleUserClick = (e) => {
     e.preventDefault();
     navigate("/profile");
   };
@@ -48,7 +68,7 @@ const Header = () => {
     <>
       <header
         ref={headerRef}
-        className="flex  justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
+        className="flex justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
       >
         <Link to="/">
           <div className="w-[8rem] md:w-[12rem]">
@@ -61,9 +81,7 @@ const Header = () => {
               <li
                 key={index}
                 className="relative cursor-pointer hover:text-[#4d4d4d]"
-                onMouseEnter={() =>
-                  menu.name === "Products" && setIsproducthover(true)
-                }
+                onMouseEnter={() => menu.name === "Products" && setIsProductHover(true)}
               >
                 <Link to={menu.route} className="block">
                   {menu.name}
@@ -112,10 +130,7 @@ const Header = () => {
             </div>
             <ul className="flex flex-col items-center space-y-4">
               {menus.map((menu, index) => (
-                <li
-                  key={index}
-                  className="cursor-pointer hover:text-[#4d4d4d] text-xl"
-                >
+                <li key={index} className="cursor-pointer hover:text-[#4d4d4d] text-xl">
                   {menu.name.toUpperCase()}
                 </li>
               ))}
@@ -131,45 +146,51 @@ const Header = () => {
         </div>
       </header>
 
+      {/* Responsive Product Categories Dropdown */}
       <div
-        className={`w-full text-[#666666] text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300
-    ${isproducthover ? "" : "hidden"}
-  `}
-        onMouseEnter={() => setIsproducthover(true)}
-        onMouseLeave={() => setIsproducthover(false)}
+        className={`w-full text-[#666666] text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${
+          isProductHover ? "" : "hidden"
+        }`}
+        onMouseEnter={() => setIsProductHover(true)}
+        onMouseLeave={() => {
+          setIsProductHover(false);
+          setSubCategoryIndex(null); // Reset subcategory index on hover out
+        }}
       >
-<div className="flex w-4/5 justify-center border border-gray-300 bg-white items-start space-x-4 py-4 px-5">
-  {[
-    { title: `MOMENTOS`, items: ["Mini Moments", "Digital Moments"] },
-    { title: `JEWELLERY`, items: ["Necklaces", "Bracelets"] },
-    { title: `KEY CHAIN`, items: ["Metal Keychains", "Plastic Keychains"] },
-    { title: `BED SHEET & PILLOW`, items: ["Cotton Sheets", "Silk Sheets"] },
-    { title: `LAMP`, items: ["Table Lamps", "Ceiling Lamps"] },
-    { title: `BOTTLE`, items: ["Plastic Bottles", "Metal Bottles"] },
-    { title: `WALLET`, items: ["Leather Wallets", "Fabric Wallets"] },
-    { title: `MUG`, items: ["Ceramic Mugs", "Glass Mugs"] },
-    { title: `DAIRY`, items: ["Personal Diaries", "Office Diaries"] },
-    { title: `CARD HOLDER`, items: ["Leather Holders", "Plastic Holders"] },
-    { title: `PEN`, items: ["Ball Pens", "Fountain Pens"] },
-    { title: `COMBO GIFT SET`, items: ["Gift Set 1", "Gift Set 2"] }
-  ].map((category, index) => (
-    <div key={index} className="relative cursor-pointer">
-      <div className="font-bold text-[12px]">{category.title}</div> {/* Main title slightly smaller */}
-      <div className="mt-2 bg-white text-[10px]"> {/* Item text slightly smaller */}
-        {category.items.map((item, idx) => (
-          <div key={idx} className="px-2 py-1 hover:bg-gray-100 cursor-pointer relative group">
-            {item}
-            <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-[80%]"></span>
-          </div>
-        ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full max-w-screen-md border border-gray-300 bg-white py-4 px-5">
+          {categories.map((category, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-start cursor-pointer hover:text-[#4d4d4d] text-left relative"
+              onMouseEnter={() => setSubCategoryIndex(index)} // Set the index on hover
+              onMouseLeave={() => setSubCategoryIndex(null)} // Clear the index on mouse leave
+            >
+              <div className="flex items-center">
+                <span className="font-bold text-[12px]">{category.name}</span>
+                {subCategoryIndex === index ? (
+                  <FaChevronDown className="ml-2 text-[10px]" />
+                ) : (
+                  <FaChevronRight className="ml-2 text-[10px]" />
+                )}
+              </div>
+              {/* Subcategories appear directly below the category div */}
+              {subCategoryIndex === index && (
+                <div className="bg-white  mt-1  p-2  w-full">
+                  {category.subcategories.map((sub, subIndex) => (
+                    <div
+                      key={subIndex}
+                      className="text-[10px] cursor-pointer hover:text-[#4d4d4d] py-1"
+                    >
+                      {sub}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  ))}
-</div>
 
-
-
-      </div>
       <div className="w-full h-[72px]"></div>
     </>
   );
