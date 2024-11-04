@@ -8,7 +8,6 @@ const AdminFrame = lazy(() => import("../components/mainComponents/mainFrame/Mai
 const AdminMomento = lazy(() => import("../components/mainComponents/mainMomento/MainMomento"));
 const AdminOrder = lazy(() => import("../components/mainComponents/mainOrder/MainOrder"));
 const AdminBanner = lazy(() => import("../components/mainComponents/mainBanner/MainBanner"));
-const AdminExpense = lazy(() => import("../components/mainComponents/mainExpense/MainExpense"));
 
 function Componentroutes() {
   return (
@@ -21,7 +20,6 @@ function Componentroutes() {
             <Route path="/admin/frame" element={<AdminFrame />} />
             <Route path="/admin/momento" element={<AdminMomento />} />
             <Route path="/admin/order" element={<AdminOrder />} />
-            <Route path="/admin/expense" element={<AdminExpense />} />
             <Route path="/admin/banner" element={<AdminBanner />} />
           </Route>
         </Routes>

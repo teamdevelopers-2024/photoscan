@@ -17,4 +17,5 @@ router.get('/getframes',adminAuth,adminController.getframes)
 router.get("/getCategories",adminAuth , adminController.getCategories)
 
 router.put("/updateActive",adminAuth, adminController.updateActive)
+router.put("/blockUser",adminAuth, adminController.blockUser)
 export default router

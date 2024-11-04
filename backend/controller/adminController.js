@@ -223,6 +223,35 @@ async function updateActive(req,res) {
   }
 }
 
+
+
+async function blockUser(req,res) {
+  try {
+    const {id} = req.body
+    if(!id){
+      return res.status(400).json({
+        error:true ,
+        message:"id is required"
+      })
+    }
+
+    const current = await UserDb.findOne({_id:id})
+    const newStatus = !current.isBlocked
+    await UserDb.updateOne({_id:id},{$set:{isBlocked:newStatus}})
+    res.status(200).json({
+      error:false,
+      message:"user blocked successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: true,
+      message: "Internal server error",
+      error,
+    });
+  }
+}
+
 export default {
     login,
     status,
@@ -231,5 +260,6 @@ export default {
     getframes,
     addCategory,
     getCategories,
-    updateActive
+    updateActive,
+    blockUser
 }

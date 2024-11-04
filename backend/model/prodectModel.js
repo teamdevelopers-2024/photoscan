@@ -17,6 +17,9 @@ const productSchema = new mongoose.Schema({
     },
     category: {
         type:String 
+    },
+    sizes:{
+        type:Array
     }
 });
 

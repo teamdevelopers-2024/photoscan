@@ -11,7 +11,6 @@ import AdminProduct from "../components/mainComponents/mainProduct/MainProduct";
 import AdminCategory from "../components/mainComponents/mainCategory/Category";
 import AdminOrder from "../components/mainComponents/mainOrder/MainOrder";
 import AdminBanner from "../components/mainComponents/mainBanner/MainBanner";
-import AdminExpense from "../components/mainComponents/mainExpense/MainExpense";
 
 function Layoutroutes() {
   return (
@@ -25,7 +24,6 @@ function Layoutroutes() {
             <Route path="product" element={<AdminProduct />} />
             <Route path="category" element={<AdminCategory />} />
             <Route path="order" element={<AdminOrder />} />
-            <Route path="expense" element={<AdminExpense />} />
             <Route path="banner" element={<AdminBanner />} />
           </Route>
         </Route>
