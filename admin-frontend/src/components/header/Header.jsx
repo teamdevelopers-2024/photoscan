@@ -6,14 +6,17 @@ import icon2 from '../../assets/images/person_13924070.png';
 import icon3 from '../../assets/images/log-out_10024508.png';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import api from '../../services/api';
 
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [path, setPath] = useState('');
 
-  const logout = () => {
-    navigate('/');
+  const logout = async() => {
+    const result=await api.logout();
+    if(result){
+      navigate('/');
     const Toast = Swal.mixin({
       toast: true,
       position: "top-end",
@@ -29,6 +32,24 @@ function Header() {
       icon: "success",
       title: "Logged Out Successfully"
     });
+    }else{
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "error",
+        title: "Cannot logout"
+      });
+    }
+    
   };
 
   useEffect(() => {
