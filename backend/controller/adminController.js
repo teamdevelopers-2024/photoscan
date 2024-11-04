@@ -146,24 +146,38 @@ const getUsers = async (req, res) => {
 
 
 
-async function addCategory(req,res) {
+async function addCategory(req, res) {
   try {
-    const {name , image} = req.body
-    if(!name){
-       return res.status(400).json({
-        error:true,
-        message:"name and image is required"
-       })
+    const { name, subcategories } = req.body;
+
+    // Check if name is provided
+    if (!name) {
+      return res.status(400).json({
+        error: true,
+        message: "Name is required",
+      });
     }
+
+    // Validate subcategories as an array
+    if (subcategories && !Array.isArray(subcategories)) {
+      return res.status(400).json({
+        error: true,
+        message: "Subcategories should be an array",
+      });
+    }
+
+  
     await CategoryDb.create({
-      name:name
-    })
+      name: name,
+      subcategories: subcategories, // save the subcategories array
+    });
+
     res.status(200).json({
-      error:false,
-      message:"Category Added Successfully..!"
-    })
+      error: false,
+      message: "Category added successfully!",
+    });
   } catch (error) {
-    console.log(error)
+    console.error(error);
     res.status(500).json({
       error: true,
       message: "Internal server error",
@@ -171,6 +185,7 @@ async function addCategory(req,res) {
     });
   }
 }
+
 
 
 
