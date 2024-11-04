@@ -5,6 +5,7 @@ import sideImage from "../../assets/WhatsApp Image 2024-08-21 at 16.59.30_7503ed
 import Loader from "../../components/loader/Loader";
 import { loginValidation } from "../../services/userServices";
 import api from "../../services/api";
+import Swal from 'sweetalert2';
 
 export default function Login() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -42,6 +43,20 @@ export default function Login() {
               password : `*${data.message}`
             }
             setErrors(err)
+           }else if(data.message == 'The User Is Blocked'){
+            Swal.fire({
+              icon: 'error', // Type of alert (error, warning, success, info)
+              title: 'Blocked!',
+              text: 'you are currently blocked.',
+              position: 'top-center', // Position of the toast
+              showConfirmButton: false, // Hide the confirm button
+              timer: 3000, // Duration for the toast to be visible (in milliseconds)
+              toast: true, // Set to true to show it as a toast
+              timerProgressBar: true, // Show a timer progress bar
+              customClass: {
+                container: 'my-swal-toast', // Custom class for styling if needed
+              },
+            });          
            }
            return
         }

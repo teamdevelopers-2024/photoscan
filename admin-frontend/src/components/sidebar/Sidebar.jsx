@@ -51,11 +51,6 @@ function Sidebar() {
       img: order,
     },
     {
-      path: "/admin/home/expense",
-      display: "Expense",
-      img: expense,
-    },
-    {
       path: "/admin/home/banner",
       display: "Banner",
       img: banner,

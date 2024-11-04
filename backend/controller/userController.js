@@ -41,6 +41,14 @@ const login = async (req, res) => {
         field: 'password'
       });
     }
+
+
+    if(isUser.isBlocked == true){
+      return res.status(400).json({
+        error:true,
+        message:"The User Is Blocked"
+      })
+    }
     // Generate tokens
     const tokens = await generateToken(isUser);
     const { accessToken, refreshToken } = tokens;

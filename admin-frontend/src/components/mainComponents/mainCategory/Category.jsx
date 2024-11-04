@@ -1,84 +1,92 @@
-import React, { act, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropertyDetailsModal from '../../modal/Modal';
 import AddCategoryModal from '../../AddCategory/AddCategoryModal';
 import api from '../../../services/api';
 import Loader from '../../Loader/Loader';
-import { XMarkIcon, CheckCircleIcon } from '@heroicons/react/24/solid'; 
+import { XMarkIcon, CheckCircleIcon } from '@heroicons/react/24/solid';
 import Swal from 'sweetalert2';
 
 function MainMomento() {
-  const [categories, setCategories] = useState([])
-  const [addModal, setAddModal] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [activeStatus, setActiveStatus] = useState(true)
-  const [isUpdate , setIsUpdate ] = useState(false)
+  const [categories, setCategories] = useState([]);
+  const [addModal, setAddModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [activeStatus, setActiveStatus] = useState(true);
+  const [isUpdate, setIsUpdate] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        setLoading(true)
-        const result = await api.getCategories(activeStatus)
+        setLoading(true);
+        const result = await api.getCategories(activeStatus);
         if (!result.error) {
-          setCategories(result.data)
+          setCategories(result.data);
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchCategories()
-  }, [activeStatus,isUpdate])
+    fetchCategories();
+  }, [activeStatus, isUpdate]);
 
-  const handleAction = async(id) => {
+  const handleAction = async (id) => {
+    const confirmation = await Swal.fire({
+      title: `Are you sure you want to ${activeStatus ? 'hide' : 'show'} this category?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: `Yes, ${activeStatus ? 'hide' : 'show'} it!`,
+    });
+
+    if (confirmation.isConfirmed) {
       try {
-        setLoading(true)
-        const result = await api.updateActive(id)
-        if(!result.error){
+        setLoading(true);
+        const result = await api.updateActive(id);
+        if (!result.error) {
           Swal.fire({
             icon: 'success',
-            title: `Category ${activeStatus == true ? 'Hidded' : 'showed'} Successfully!`,
+            title: `Category ${activeStatus ? 'hidden' : 'shown'} successfully!`,
             position: 'top',
             timer: 2000,
             showConfirmButton: false,
-            toast: true
-        });
+            toast: true,
+          });
+          setIsUpdate(!isUpdate);
         }
       } catch (error) {
-        console.log(error)
-      }finally {
-         setIsUpdate(!isUpdate)
-        setLoading(false)
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
+    }
   };
 
   return (
     <>
       {loading && <Loader />}
-      <div className="m-4 p-4 bg-transparent rounded-lg shadow-lg">
-        <div className='flex justify-between'>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Categories</h2>
-          <div className='flex gap-5'>
+      <div className="m-4 bg-white p-6 rounded-lg shadow-lg">
+        <div className="flex justify-between mb-4">
+          <h2 className="text-2xl font-semibold text-gray-800">Categories</h2>
+          <div className="flex gap-4">
             <button
               onClick={() => setActiveStatus(!activeStatus)}
-              className={`mb-3 flex items-center gap-2 rounded px-4 py-2 transition duration-150 
-      ${activeStatus
-                  ? 'bg-yellow-600 text-white hover:bg-yellow-700'  // Active styles
-                  : 'bg-gray-300 text-gray-500 hover:bg-gray-400'   // Inactive styles
-                }`}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 font-semibold transition duration-150 
+      ${activeStatus ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
             >
               {activeStatus ? (
-                <CheckCircleIcon className="w-5 h-5 text-green-500" />  // Icon when active
+                <CheckCircleIcon className="w-5 h-5 text-green-500" />
               ) : (
-                <XMarkIcon className="w-5 h-5 text-red-500" />          // Icon when inactive
+                <XMarkIcon className="w-5 h-5 text-red-500" />
               )}
               Unlisted Categories
             </button>
 
             <button
               onClick={() => setAddModal(true)}
-              className="text-white mb-3 bg-green-600 rounded px-4 py-2 hover:bg-green-700 transition duration-150"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-150"
             >
               Add Category
             </button>
@@ -86,29 +94,26 @@ function MainMomento() {
         </div>
 
         <div className="overflow-x-auto max-h-[550px]">
-          <table className="min-w-full border border-gray-300">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="border border-gray-400 p-3 text-center">Image</th>
-                <th className="border border-gray-400 p-3 text-center">Category Name</th>
-                <th className="border border-gray-400 p-3 text-center">Item Count</th>
-                <th className="border border-gray-400 p-3 text-center">Action</th>
+          <table className="min-w-full border-collapse bg-white rounded-lg shadow-md">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="p-4 text-center font-medium text-gray-600 border-b border-gray-300">Category Name</th>
+                <th className="p-4 text-center font-medium text-gray-600 border-b border-gray-300">Item Count</th>
+                <th className="p-4 text-center font-medium text-gray-600 border-b border-gray-300">Action</th>
               </tr>
             </thead>
             <tbody>
               {categories.map((category) => (
-                <tr key={category.id} className="hover:bg-gray-100 transition duration-150">
-                  <td className="border border-gray-400 p-3">
-                    <img src={category.image} alt={category.name} className="w-16 h-16 object-cover" />
-                  </td>
-                  <td className="border font-bold border-gray-400 p-3 text-gray-700">{category.name}</td>
-                  <td className="border font-bold border-gray-400 p-3 text-gray-700">{category.count}</td>
-                  <td className="border border-gray-400 p-3 flex justify-center">
+                <tr key={category.id} className="hover:bg-gray-50 transition duration-150">
+                  <td className="p-4 text-center text-gray-700 font-semibold border-b border-gray-300">{category.name}</td>
+                  <td className="p-4 text-center text-gray-700 font-semibold border-b border-gray-300">{category.count}</td>
+                  <td className="p-4 text-center border-b border-gray-300">
                     <button
                       onClick={() => handleAction(category._id)}
-                      className={`text-white z-10 ${activeStatus ? 'bg-yellow-600' : 'bg-green-600'} rounded px-4 py-2 hover:bg-blue-700 transition duration-150`}
+                      className={`text-white px-4 py-2 rounded-lg transition duration-150
+                      ${activeStatus ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'}`}
                     >
-                      {activeStatus ? 'Hide':'Show'}
+                      {activeStatus ? 'Hide' : 'Show'}
                     </button>
                     <PropertyDetailsModal />
                   </td>

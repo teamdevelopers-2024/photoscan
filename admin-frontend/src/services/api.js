@@ -95,6 +95,18 @@ async function updateActive(id) {
     }
 }
 
+
+
+async function blockUser(id) {
+    try {
+        const response = await apiClient.put("/blockUser",{id:id})
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
+
 export default {
     checkAdmin,
     getUsers,
@@ -102,5 +114,6 @@ export default {
     getFrames,
     addCategory,
     getCategories,
-    updateActive
+    updateActive,
+    blockUser
 };
