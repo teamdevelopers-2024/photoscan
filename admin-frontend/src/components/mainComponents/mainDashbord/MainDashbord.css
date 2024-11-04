@@ -101,3 +101,172 @@
     transform: rotateY(1440deg);
     transition: 2s;
 }
+.dash-main {
+  padding: 2rem;
+  background-color: #f0f4f8;
+}
+
+.cards-container {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.info-card {
+  width: 15rem;
+  height: 8rem;
+  border-radius: 1rem;
+  color: #ffffff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Updated muted color gradients */
+.gradient-grayblue {
+  background: linear-gradient(135deg, #596275, #8395a7);
+}
+
+.gradient-teal {
+  background: linear-gradient(135deg, #4b6584, #778ca3);
+}
+
+.gradient-gray {
+  background: linear-gradient(135deg, #84817a, #a5b1c2);
+}
+
+.dash-main-body {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.chart-container {
+  width: 45%;
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+/* General Page Styling */
+.dash-main {
+    font-family: Arial, sans-serif;
+    color: #333;
+    padding: 2rem;
+    background: #f8f9fa;  /* Light background for contrast */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .cards-container {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Card Styling */
+  .info-card {
+    padding: 1.5rem;
+    border-radius: 10px;
+    flex: 1;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .info-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .gradient-grayblue {
+    background: linear-gradient(135deg, #556080, #6c7a96);
+  }
+  
+  .gradient-teal {
+    background: linear-gradient(135deg, #20c997, #17a2b8);
+  }
+  
+  .gradient-gray {
+    background: linear-gradient(135deg, #adb5bd, #868e96);
+  }
+  
+  /* Chart Container */
+  .dash-main-body {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .chart-container {
+    flex: 1;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+  }
+  
+  .chart-container canvas {
+    max-height: 400px; /* Set max height for charts */
+  }
+  
+  /* Filter Styling */
+  .filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+  }
+  
+  .filters label {
+    font-weight: bold;
+    color: #495057;
+  }
+  
+  .filters select {
+    margin-left: 0.5rem;
+    padding: 0.3rem;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    background-color: #f1f3f5;
+    color: #495057;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .cards-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .dash-main-body {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  .year-display {
+    text-align: center;
+    margin-bottom: 10px; /* Space between the year and the chart */
+  }
+  
