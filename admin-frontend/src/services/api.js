@@ -106,6 +106,15 @@ async function blockUser(id) {
         return error.response.data
     }
 }
+async function logout() {
+    try {
+        const response = await apiClient.get("/logout")
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
 
 export default {
     checkAdmin,
@@ -115,5 +124,6 @@ export default {
     addCategory,
     getCategories,
     updateActive,
-    blockUser
+    blockUser,
+    logout,
 };

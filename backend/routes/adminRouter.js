@@ -15,6 +15,7 @@ router.get('/status',adminController.status)
 router.get('/getUsers',adminAuth,adminController.getUsers)
 router.get('/getframes',adminAuth,adminController.getframes)
 router.get("/getCategories",adminAuth , adminController.getCategories)
+router.get('/logout',adminController.logout)
 
 router.put("/updateActive",adminAuth, adminController.updateActive)
 router.put("/blockUser",adminAuth, adminController.blockUser)

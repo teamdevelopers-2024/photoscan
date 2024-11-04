@@ -222,6 +222,21 @@ async function updateActive(req,res) {
     });
   }
 }
+async function logout(req,res){
+  try {
+    req.session.isAdmin = false
+    res.status(200).json({
+      error:false,
+      message:"admin logged out successfully"
+    })
+  } catch (error) {
+    res.status(500).json({
+      error: true,
+      message: "Internal server error",
+      error,
+    });
+  }
+}
 
 
 
@@ -261,5 +276,6 @@ export default {
     addCategory,
     getCategories,
     updateActive,
-    blockUser
+    blockUser,
+    logout,
 }
