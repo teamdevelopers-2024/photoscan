@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Modal from 'react-modal';
 import api from '../../../services/api';
+import Swal from 'sweetalert2';
 
 Modal.setAppElement('#root');
 
@@ -16,11 +17,10 @@ const AddProductModal = ({ closeModal }) => {
   const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
 
-  // Fetch categories when the modal opens
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await api.getCategories(true);  // Assuming the endpoint is api.getCategories
+        const response = await api.getCategories(true);
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -28,53 +28,80 @@ const AddProductModal = ({ closeModal }) => {
     };
     fetchCategories();
   }, []);
-
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
   const handleSubmit = async (e) => {
+
     e.preventDefault();
-    if (images.length > 0) {
-      try {
-        const uploadedImageUrls = [];
-        
-        for (let image of images) {
-          const formData = new FormData();
-          formData.append('file', image);
-          formData.append('upload_preset', 'cloud_name');
-          
-          const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload', {
-            method: 'POST',
-            body: formData,
-          });
-
-          const uploadData = await uploadResponse.json();
-          if (uploadResponse.ok) {
-            uploadedImageUrls.push(uploadData.secure_url);
-          } else {
-            console.error('Image upload failed:', uploadData);
-          }
+  
+    if (!productName || !category || !sizeList.length || !actualPrice || !offerPrice) {
+      console.error("Please fill in all required fields.");
+      return;
+    }
+  
+    try {
+      const uploadedImageUrls = [];
+  
+      // Upload each image to Cloudinary
+      for (const image of images) {
+        const formData = new FormData();
+        formData.append('file', image);
+        formData.append('upload_preset', 'cloud_name');
+  
+        const response = await fetch('https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload', {
+          method: 'POST',
+          body: formData,
+        });
+  
+        const data = await response.json();
+        if (response.ok) {
+          uploadedImageUrls.push(data.secure_url);
+        } else {
+          console.error('Image upload failed:', data);
         }
-
-        const productData = {
-          productName,
-          category,
-          size: sizeList,
-          description,
-          actualPrice: Number(actualPrice),
-          offerPrice: Number(offerPrice),
-          images: uploadedImageUrls,
-        };
-
-        const response = await api.addFrames(productData);
-        console.log('Response:', response);
-
-        if (response) closeModal();
-      } catch (error) {
-        console.error('Error uploading images:', error);
       }
-    } else {
-      console.error('No images selected');
+  
+      // Create the product payload
+      const productData = {
+        productName,
+        category,
+        sizes: sizeList,  // use sizes instead of sizeList if required by API
+        description,
+        actualPrice: Number(actualPrice),
+        offerPrice: Number(offerPrice),
+        images: uploadedImageUrls,  // image URLs for the product
+      };
+  
+      // Save the product data to the database
+      const result = await api.addProduct(productData);  // Use the correct API function here
+      console.log('Product saved:', result);
+  
+      if (result) {
+         Toast.fire({
+          icon: "success",
+          title: "Product added successfully",
+        });
+        return closeModal(); // Close the modal on success
+      }else{
+        return Toast.fire({
+          icon: "error",
+          title: "Error while adding the product",
+        });
+      }
+  
+    } catch (error) {
+      console.error('Error saving product:', error);
     }
   };
-
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     setImages((prevImages) => [...prevImages, ...files]);
@@ -82,16 +109,6 @@ const AddProductModal = ({ closeModal }) => {
 
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-
-    // Reset the file input if all images are removed, else update the input's files
-    const newFileList = images.filter((_, i) => i !== index);
-    const dataTransfer = new DataTransfer();
-    newFileList.forEach((file) => dataTransfer.items.add(file));
-    fileInputRef.current.files = dataTransfer.files;
-  };
-
-  const handleSizeInputChange = (e) => {
-    setSize(e.target.value);
   };
 
   const addSizeToList = () => {
@@ -140,20 +157,34 @@ const AddProductModal = ({ closeModal }) => {
             </select>
           </div>
 
-          {/* Size */}
+          {/* Size (Conditional) */}
           <div>
             <label className="block text-sm font-medium mb-1">Size:</label>
-            {category === 'Frames' ? (
+            {category === 'FRAMES' ? (
               <div className="flex items-center space-x-2">
                 <select
                   value={size}
-                  onChange={handleSizeInputChange}
+                  onChange={(e) => setSize(e.target.value)}
                   className="p-2 border border-gray-300 rounded"
                 >
                   <option value="">Select Frame Size</option>
-                  <option value="small">Small</option>
-                  <option value="medium">Medium</option>
-                  <option value="large">Large</option>
+                  <option value="6x4">6x4</option>
+                  <option value="6x8">6x8</option>
+                  <option value="12x8">12x8</option>
+                  <option value="12x10">12x10</option>
+                  <option value="12x12">12x12</option>
+                  <option value="12x15">12x15</option>
+                  <option value="12x18">12x18</option>
+                  <option value="10x8">10x8</option>
+                  <option value="15x10">15x10</option>
+                  <option value="16x16">16x16</option>
+                  <option value="16x20">16x20</option>
+                  <option value="16x24">16x24</option>
+                  <option value="24x18">24x18</option>
+                  <option value="24x36">24x36</option>
+                  <option value="24x20">24x20</option>
+                  <option value="30x20">30x20</option>
+                  <option value="24x30">24x30</option>
                 </select>
                 <button
                   type="button"
@@ -164,13 +195,23 @@ const AddProductModal = ({ closeModal }) => {
                 </button>
               </div>
             ) : (
+              <div className="flex items-center space-x-2">
               <input
                 type="text"
                 value={size}
-                onChange={handleSizeInputChange}
+                onChange={(e) => setSize(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded"
                 placeholder="Enter size and press Enter"
               />
+              <button
+                  type="button"
+                  onClick={addSizeToList}
+                  className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
+                >
+                  Add Size
+                </button>
+
+              </div>
             )}
             <div className="mt-2">
               {sizeList.map((s, index) => (
@@ -181,8 +222,8 @@ const AddProductModal = ({ closeModal }) => {
             </div>
           </div>
 
-          {/* Description */}
-          <div>
+           {/* Description */}
+           <div>
             <label className="block text-sm font-medium mb-1">Description:</label>
             <textarea
               value={description}
@@ -247,8 +288,6 @@ const AddProductModal = ({ closeModal }) => {
               ))}
             </div>
           </div>
-
-          {/* Submit & Close Buttons */}
           <div className="flex justify-between mt-4">
             <button
               type="submit"

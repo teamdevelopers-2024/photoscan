@@ -72,11 +72,32 @@ const getBanners = async () => {
         return null;
     }
 };
+const getProducts = async () => {
+    console.log('Fetching Banners...');
+    
+    try {
+        const response = await apiClient.get('/getproducts');
+        console.log('Fetched Products:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting Products:', error);
+        return null;
+    }
+};
 
 
 async function addCategory(body) {
     try {
         const response = await apiClient.post("/addCategory",body)
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
+async function addProduct(body) {
+    try {
+        const response = await apiClient.post("/addproduct",body)
         return response.data
     } catch (error) {
         console.log(error)
@@ -168,6 +189,7 @@ export default {
     checkAdmin,
     getUsers,
     addBanner,
+    addProduct,
     getBanners,
     getCategories,
     getOffers,
@@ -177,5 +199,6 @@ export default {
     deleteOffer,
     blockUser,
     logout,
-    deleteBanner
+    deleteBanner,
+    getProducts,
 };
