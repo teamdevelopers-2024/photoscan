@@ -35,11 +35,11 @@ const getUsers = async (limit, page) => {
 };
 
 
-const addFrames = async (data) => {
-    console.log('Adding Frame:', data);
+const addBanner = async (data) => {
+    console.log('Adding Banner:', data);
     
     try {
-        const response = await apiClient.post('/addframes', { data });
+        const response = await apiClient.post('/addbanner', { data });
         console.log('Add Frame Response:', response.data);
         return response.data;
     } catch (error) {
@@ -47,16 +47,28 @@ const addFrames = async (data) => {
         return null;
     }
 };
-
-const getFrames = async () => {
-    console.log('Fetching Frames...');
+const deleteBanner = async (publicId) => {
+    console.log('deleting Banner:', publicId);
     
     try {
-        const response = await apiClient.get('/getframes');
-        console.log('Fetched Frames:', response.data);
+        const response = await apiClient.post('/deletebanner', { publicId });
+        console.log('Deleted banner sucessfully:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Error getting frames:', error);
+        console.error('Error adding frame:', error);
+        return null;
+    }
+};
+
+const getBanners = async () => {
+    console.log('Fetching Banners...');
+    
+    try {
+        const response = await apiClient.get('/getbanners');
+        console.log('Fetched Banners:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting Banners:', error);
         return null;
     }
 };
@@ -119,11 +131,12 @@ async function logout() {
 export default {
     checkAdmin,
     getUsers,
-    addFrames,
-    getFrames,
+    addBanner,
+    getBanners,
     addCategory,
     getCategories,
     updateActive,
     blockUser,
     logout,
+    deleteBanner
 };

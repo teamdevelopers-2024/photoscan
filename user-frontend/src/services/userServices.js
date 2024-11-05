@@ -47,7 +47,6 @@ export function registerValidation(details){
 export function loginValidation(details) {
   const { email, password } = details;
   const errors = {};
-  console.log('not problem')
 
   // Check if email is defined and not empty
   if (email === undefined || email === null || !email.trim()) {
@@ -55,6 +54,28 @@ export function loginValidation(details) {
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
     errors.email = "*Invalid email address";
   }
+
+  // Check if password is defined and not empty
+  if (password === undefined || password === null || !password.trim()) {
+    errors.password = "*Password is required";
+  } else if (password.length < 6) {
+    errors.password = "*Password must be at least 6 characters";
+  }
+
+  return errors;
+}
+
+
+export function passResetValidation(details) {
+  const errors = {};
+  console.log("passReset",details);
+  console.log("hi, im in passResetValidation");
+  
+  
+
+  const {password} = details
+  console.log("passs",password);
+  
 
   // Check if password is defined and not empty
   if (password === undefined || password === null || !password.trim()) {

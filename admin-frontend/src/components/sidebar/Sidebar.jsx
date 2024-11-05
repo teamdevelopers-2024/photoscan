@@ -3,12 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import dash from "../../assets/images/dashboard_2329087.png";
 import user from "../../assets/images/person_13924070.png";
 import frame from "../../assets/images/frame.png";
-import momento from "../../assets/images/trophy.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTable } from "@fortawesome/free-solid-svg-icons";
-import expense from "../../assets/images/expence.png";
 import banner from "../../assets/images/banner.png";
 import order from "../../assets/images/shopping-bag_1008010.png";
+import offer from "../../assets/images/offer.png";
 
 function Sidebar() {
   const [activeButton, setActiveButton] = useState(null);
@@ -54,6 +53,11 @@ function Sidebar() {
       path: "/admin/home/banner",
       display: "Banner",
       img: banner,
+    },
+    {
+      path: "/admin/home/offer",
+      display: "Offer",
+      img: offer,
     },
   ];
   

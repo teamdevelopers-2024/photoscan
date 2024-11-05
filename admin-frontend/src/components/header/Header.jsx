@@ -61,6 +61,7 @@ function Header() {
       '/admin/home/order': 'Order',
       '/admin/home/expense': 'Expense Tracker',
       '/admin/home/banner': 'Banner Management',
+      '/admin/home/offer': 'Offer Management',
     };
 
     setPath(pathMapping[location.pathname] || '');

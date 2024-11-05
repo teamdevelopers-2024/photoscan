@@ -20,6 +20,7 @@ import ForgotPass from "../pages/forgtoPass/ForgotPass";
 import MomentoPage from "../pages/momentoPage/MomentoPage";
 import FramePage from "../pages/framePage/FramePage";
 import Customize from "../components/customize/Customize";
+import NewPassword from "../pages/New Password/NewPassword";
 
 export default function Layoutroutes() {
     return (
@@ -56,6 +57,7 @@ export default function Layoutroutes() {
                 <Route path="/momentopage" element={<MomentoPage />} />
                 <Route path="/framepage" element={<FramePage />} />
                 <Route path="/customise" element={<Customize/>} />
+                <Route path="/resetpassword" element={<NewPassword />} />
             </Routes>
         </Router>
     );
