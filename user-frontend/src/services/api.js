@@ -3,7 +3,7 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;  // Ensure cookies are sent with requests
 
 // const apiClient = axios.create({
-//   baseURL: 'https://photoscanapi.codeandclick.in/user',
+//   baseURL: 'https://api.photoscan.co.in/user',
 //   headers: {
 //     'Content-Type': 'application/json',
 //   },
