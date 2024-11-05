@@ -32,9 +32,9 @@ const login = async (req, res) => {
         field: 'email'
       });
     }
-    const passResult = await argon2.verify(isUser.password , password)
-    
-    if(!passResult){
+    const passResult = await argon2.verify(isUser.password, password)
+
+    if (!passResult) {
       return res.status(400).json({
         error: true,
         message: 'incorrect password',
@@ -43,10 +43,10 @@ const login = async (req, res) => {
     }
 
 
-    if(isUser.isBlocked == true){
+    if (isUser.isBlocked == true) {
       return res.status(400).json({
-        error:true,
-        message:"The User Is Blocked"
+        error: true,
+        message: "The User Is Blocked"
       })
     }
     // Generate tokens
@@ -58,7 +58,7 @@ const login = async (req, res) => {
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict', 
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
     });
 
@@ -66,7 +66,7 @@ const login = async (req, res) => {
       httpOnly: true,
       path: '/user/refresh-token',
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict', 
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
     });
 
@@ -92,7 +92,7 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   try {
-    const { email, password, firstName , lastName, confirmPassword,  phoneNumber } = req.body;
+    const { email, password, firstName, lastName, confirmPassword, phoneNumber } = req.body;
     console.log('coming here')
     const errors = await registerValidation(req.body)
     if (errors.length > 0) {
@@ -251,13 +251,13 @@ const checkAuthenticate = async (req, res) => {
 
       // Check if the refresh token exists in the database
       const tokenInDb = await TokenDb.findOne({ userId: userId });
-      const user = await UserDb.findOne({_id:userId})
+      const user = await UserDb.findOne({ _id: userId })
       if (tokenInDb) {
         console.log('User authenticated successfully');
         return res.status(200).json({
           error: false,
           message: 'User authenticated',
-          user:user
+          user: user
         });
       } else {
         return res.status(401).json({
@@ -356,13 +356,76 @@ const logout = async (req, res) => {
       sameSite: 'strict'
     });
     await UserDb.updateOne({ _id: data.userId }, { $set: { active: false } })
-    await TokenDb.deleteOne({ userId: data.userId , token : req.cookies.refreshToken })
+    await TokenDb.deleteOne({ userId: data.userId, token: req.cookies.refreshToken })
     res.status(200).json({ error: false, message: 'Logged out successfully' });
   } catch (error) {
     console.error('Error during logout:', error);
     res.status(500).json({ error: true, message: 'Logout failed' });
   }
 }
+
+const resetOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const isEmail = await isEmailisExist(email)
+
+    if (!isEmail) {
+      return res.status(400).json({
+        error: true,
+        message: 'user not found'
+      })
+    }
+
+    // Check if email is valid
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({ error: true, message: 'invalid email address' });
+    }
+
+    const result = await sendOPTVerificationEmail(email)
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error in getOtp:', error);
+    res.status(500).json({ error: true, message: 'An error occurred while processing your request' });
+  }
+};
+
+const newPass = async (req, res) => {
+  const { password, email } = req.body;
+
+  if (!password) {
+    return res.status(400).json({error:true, message: 'Password is required.' });
+  }
+
+  try {
+    // Find the user by email
+    const user = await UserDb.findOne({ email }); 
+    if (!user) {
+      return res.status(404).json({error:true, message: 'User not found.' });
+    }
+
+    // Compare new password with existing password
+    const isSamePassword = await argon2.verify(user.password, password);
+    
+    if (isSamePassword) {
+      
+      return res.status(400).json({ error:true, message: 'New password cannot be the same as the old password.' });
+    }
+
+    // Hash the new password using Argon2
+    const hashedPassword = await argon2.hash(password);
+
+    // Update the user's password in the database
+    user.password = hashedPassword; // Update the user's password field
+    await user.save(); // Save the user document
+
+    res.status(200).json({error:false, message: 'Password updated successfully!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error:true, message: 'An error occurred while updating the password.' });
+  }
+};
+
 
 
 export default {
@@ -372,5 +435,7 @@ export default {
   verifyOtp,
   checkAuthenticate,
   verifyRefreshToken,
-  logout
+  logout,
+  resetOtp,
+  newPass
 }
