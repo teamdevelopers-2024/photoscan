@@ -31,7 +31,7 @@ const ProfileSidebar = ({ setActiveSection, activeSection }) => {
   };
 
   return (
-    <aside className={`w-64 fixed h-[90vh] p-6 shadow-lg transition-colors duration-300 rounded-lg flex flex-col`}>
+    <aside className={`w-64 h-[90vh] p-6 shadow-lg transition-colors duration-300 rounded-lg flex flex-col`}>
       <div className="relative top-5">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Profile Menu</h2>
