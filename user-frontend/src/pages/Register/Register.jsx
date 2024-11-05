@@ -53,42 +53,42 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoader(true)
-    try {
-      const formErrors = await registerValidation({ email, firstName , lastName, phoneNumber, password, confirmPassword ,isVerify });
-      if (Object.keys(formErrors).length === 0) {
-        // If no errors, proceed with form submission or further processing
-        const userData = {
-          firstName,
-          lastName,
-          email,
-          phoneNumber,
-          password,
-          confirmPassword
-        };
-  
-        const result = await api.userRegister(userData);
-        if (result.error) {
-          let errorField = await findErrorField(result);
-          errorField = errorField.toString();
-          const error = {
-            [errorField]: `*${result.message}`
+      try {
+        const formErrors = await registerValidation({ email, firstName , lastName, phoneNumber, password, confirmPassword ,isVerify });
+        if (Object.keys(formErrors).length === 0) {
+          // If no errors, proceed with form submission or further processing
+          const userData = {
+            firstName,
+            lastName,
+            email,
+            phoneNumber,  
+            password,
+            confirmPassword
           };
-          console.log(error);
-          setErrors(error);
+    
+          const result = await api.userRegister(userData);
+          if (result.error) {
+            let errorField = await findErrorField(result);
+            errorField = errorField.toString();
+            const error = {
+              [errorField]: `*${result.message}`
+            };
+            console.log(error);
+            setErrors(error);
+          } else {
+            navigate('/')
+            console.log("User Data:", userData);
+          }
         } else {
-          navigate('/')
-          console.log("User Data:", userData);
+          // Set errors state to show validation messages
+          setErrors(formErrors);
         }
-      } else {
-        // Set errors state to show validation messages
-        setErrors(formErrors);
+      } catch (error) {
+        console.log(error)
+      }finally{
+        setLoader(false)
       }
-    } catch (error) {
-      console.log(error)
-    }finally{
-      setLoader(false)
-    }
-   
+    
   };
 
   const isOpen = () => setOtpModal(true);

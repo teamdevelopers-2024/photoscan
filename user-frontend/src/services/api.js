@@ -87,13 +87,23 @@ const getOtp = async (email) => {
     return error.response.data;
   }
 };
-
+  
 const verifyOtp = async (email, otp) => {
   try {
     const response = await apiClient.post('/verifyOtp', { email, otp });
     return response.data;
   } catch (error) {
     console.error('Failed to verify OTP:', error);
+    return error.response.data;
+  }
+};
+
+const editProfile = async (profileData) => {
+  try {
+    const response = await apiClient.put('/editProfile', profileData);
+    return response.data;  // Assuming the backend responds with the updated user info
+  } catch (error) {
+    console.error('Profile update failed:', error);
     return error.response.data;
   }
 };
@@ -172,6 +182,7 @@ export default {
   getOtp,
   verifyOtp,
   checkAuthenticate,
+  editProfile,
   logout,
   resetOtp,
   newPass,
