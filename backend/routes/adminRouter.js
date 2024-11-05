@@ -22,7 +22,7 @@ router.get("/getCategories",adminAuth , adminController.getCategories)
 router.get("/getOffers",adminAuth,adminController.getOffers)
 router.get('/logout',adminController.logout)
 
-router.put("/updateActive",adminAuth, adminController.updateActive)
+router.put("/updateActive",adminAuth, adminController.categoryActive)
 router.put("/blockUser",adminAuth, adminController.blockUser)
 
 router.delete("/deleteOffer", adminController.deleteOffer)

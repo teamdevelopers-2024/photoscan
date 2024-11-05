@@ -112,7 +112,10 @@ const addProduct = async (req, res) => {
               description,
               actualPrice,
               offerPrice,
-              images // assuming `images` is an array field in your schema
+              images,
+              status:true,
+              catoffer:0,
+              catstatus:true
           });
 
           // Save the new product to the database
@@ -272,6 +275,7 @@ async function addOffer(req, res) {
       discountPercentage: discountPercentage,
       categoryName: categoryName,
     });
+    await productDB.updateMany({category:categoryName},{catoffer:discountPercentage});
     res.status(200).json({
       error: false,
       message: "Offer added successfully!",
@@ -317,7 +321,10 @@ const deleteOffer = async (req, res) => {
 
     // Find and delete the offer by ID
     console.log('offer deleted')
+    const categoryName=await OfferDb.findOne({_id:id});
     const deletedOffer = await OfferDb.findByIdAndDelete(id);
+    
+    await productDB.updateMany({category:categoryName.categoryName},{catoffer:0})
 
     if (!deletedOffer) {
       return res.status(404).json({
@@ -374,13 +381,17 @@ async function getCategories(req, res) {
 
 
 
-async function updateActive(req, res) {
+async function categoryActive(req, res) {
   try {
     const id = req.query.id
-    await CategoryDb.updateOne(
+    const data = await CategoryDb.findOneAndUpdate(
       { _id: id },
       [{ $set: { isActive: { $not: "$isActive" } } }]  // Use aggregation to invert the isActive value
     );
+    const  activeststus=!data.isActive
+
+    await productDB.updateMany({category:data.name},{catstatus:activeststus});
+
     res.status(200).json({
       error: false,
       message: "active status updated successfully"
@@ -447,7 +458,7 @@ export default {
     getBanners,
     addCategory,
     getCategories,
-    updateActive,
+    categoryActive,
     blockUser,
     logout,
     deleteBanner,
