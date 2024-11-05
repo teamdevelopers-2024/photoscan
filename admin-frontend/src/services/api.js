@@ -47,6 +47,18 @@ const addBanner = async (data) => {
         return null;
     }
 };
+const deleteBanner = async (publicId) => {
+    console.log('deleting Banner:', publicId);
+    
+    try {
+        const response = await apiClient.post('/deletebanner', { publicId });
+        console.log('Deleted banner sucessfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error adding frame:', error);
+        return null;
+    }
+};
 
 const getBanners = async () => {
     console.log('Fetching Banners...');
@@ -126,5 +138,5 @@ export default {
     updateActive,
     blockUser,
     logout,
-    deleteBanner,
+    deleteBanner
 };
