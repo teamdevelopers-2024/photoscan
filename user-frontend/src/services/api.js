@@ -51,10 +51,10 @@ apiClient.interceptors.response.use(
 
     return Promise.reject(error);  // If error is not due to expired token or refresh fails
   }
-);1
+); 1
 
 // Example login function
- const userLogin = async (email, password) => {
+const userLogin = async (email, password) => {
   try {
     const response = await apiClient.post('/login', { email, password });
     return response.data;  // Tokens should be set in cookies by backend
@@ -77,10 +77,10 @@ const userRegister = async (details) => {
 
 const getOtp = async (email) => {
   try {
-    
+
     const response = await apiClient.post('/getOtp', { email });
     console.log(response.data);
-    
+
     return response.data;
   } catch (error) {
     console.error('Failed to get OTP:', error);
@@ -111,10 +111,10 @@ const checkAuthenticate = async () => {
     return error.response.data;
   }
 };
- 
 
 
-const logout = async ()=>{
+
+const logout = async () => {
   try {
     const response = await apiClient.delete('/logout')
     console.log(response.data)
@@ -127,10 +127,10 @@ const logout = async ()=>{
 
 const resetOtp = async (email) => {
   try {
-    
+
     const response = await apiClient.post('/resetOtp', { email });
     console.log(response.data);
-    
+
     return response.data;
   } catch (error) {
     console.error('Failed to get OTP:', error);
@@ -140,10 +140,25 @@ const resetOtp = async (email) => {
 
 const newPass = async (email, password) => {
   try {
-    
+
     const response = await apiClient.post('/newPass', { email, password });
     console.log(response.data);
-    
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get Password:', error);
+    return error.response.data;
+  }
+};
+
+const changePass = async (body) => {
+  try {
+
+    const response = await apiClient.post('/changePass', {
+      body
+    });
+    console.log(response.data);
+
     return response.data;
   } catch (error) {
     console.error('Failed to get Password:', error);
@@ -159,5 +174,6 @@ export default {
   checkAuthenticate,
   logout,
   resetOtp,
-  newPass
+  newPass,
+  changePass
 };
