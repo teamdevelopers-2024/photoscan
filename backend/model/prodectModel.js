@@ -27,6 +27,15 @@ const productSchema = new mongoose.Schema({
     ,
     sizes:{
         type:Array
+    },
+    status:{
+        type:Boolean
+    },
+    catoffer:{
+        type:Number
+    },
+    catstatus:{
+        type:Boolean
     }
 });
 

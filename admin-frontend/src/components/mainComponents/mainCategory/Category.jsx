@@ -81,12 +81,11 @@ function MainMomento() {
               className={`flex items-center gap-2 rounded-lg px-4 py-2 font-semibold transition duration-150 
       ${activeStatus ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'bg-gray-400 text-white hover:bg-gray-500'}`}
             >
-              {activeStatus ? (
-                <CheckCircleIcon className="w-5 h-5 text-green-500" />
+              {!activeStatus ? (
+                'Listed categories'
               ) : (
-                <XMarkIcon className="w-5 h-5 text-red-500" />
+                 'Unlisted categories'
               )}
-              Unlisted Categories
             </button>
 
             <button
