@@ -138,7 +138,7 @@ function MainMomento() {
           </table>
         </div>
       </div>
-      <AddCategoryModal isOpen={addModal} onClose={() => setAddModal(false)} />
+      <AddCategoryModal isOpen={addModal} setIsUpdate={setIsUpdate} onClose={() => setAddModal(false)} />
     </>
   );
 }

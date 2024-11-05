@@ -3,7 +3,7 @@ import api from '../../services/api';
 import Swal from 'sweetalert2';
 import Loader from '../Loader/Loader';
 
-const AddCategoryModal = ({ isOpen, onClose }) => {
+const AddCategoryModal = ({ isOpen,setIsUpdate, onClose }) => {
     const [name, setName] = useState('');
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
@@ -58,6 +58,10 @@ const AddCategoryModal = ({ isOpen, onClose }) => {
                     setErrors({});
                     onClose();
                 } else {
+                    if(result.message == 'already exists'){
+                        setErrors({name:"This Category is already exists"})
+                        return
+                    }
                     Swal.fire({
                         icon: 'error',
                         title: 'Error Adding Category!',
@@ -68,6 +72,7 @@ const AddCategoryModal = ({ isOpen, onClose }) => {
                     });
                 }
             }
+            setIsUpdate((prev)=> !prev)
         } catch (error) {
             console.log(error);
         } finally {
@@ -89,7 +94,7 @@ const AddCategoryModal = ({ isOpen, onClose }) => {
                             <input
                                 type="text"
                                 className={`border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 w-full focus:ring-2 focus:ring-blue-500`}
-                                value={name}
+                                value={name.toUpperCase()}
                                 onChange={handleNameChange}
                                 placeholder="Enter category name"
                             />
