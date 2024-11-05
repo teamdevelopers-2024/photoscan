@@ -3,7 +3,7 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;  // Ensure cookies are sent with requests
 
 // const apiClient = axios.create({
-//   baseURL: 'https://photoscanapi.codeandclick.in/user',
+//   baseURL: 'https://api.photoscan.co.in/user',
 //   headers: {
 //     'Content-Type': 'application/json',
 //   },
@@ -51,10 +51,10 @@ apiClient.interceptors.response.use(
 
     return Promise.reject(error);  // If error is not due to expired token or refresh fails
   }
-);1
+); 1
 
 // Example login function
- const userLogin = async (email, password) => {
+const userLogin = async (email, password) => {
   try {
     const response = await apiClient.post('/login', { email, password });
     return response.data;  // Tokens should be set in cookies by backend
@@ -77,20 +77,33 @@ const userRegister = async (details) => {
 
 const getOtp = async (email) => {
   try {
+
     const response = await apiClient.post('/getOtp', { email });
+    console.log(response.data);
+
     return response.data;
   } catch (error) {
     console.error('Failed to get OTP:', error);
     return error.response.data;
   }
 };
-
+  
 const verifyOtp = async (email, otp) => {
   try {
     const response = await apiClient.post('/verifyOtp', { email, otp });
     return response.data;
   } catch (error) {
     console.error('Failed to verify OTP:', error);
+    return error.response.data;
+  }
+};
+
+const editProfile = async (profileData) => {
+  try {
+    const response = await apiClient.put('/editProfile', profileData);
+    return response.data;  // Assuming the backend responds with the updated user info
+  } catch (error) {
+    console.error('Profile update failed:', error);
     return error.response.data;
   }
 };
@@ -108,10 +121,10 @@ const checkAuthenticate = async () => {
     return error.response.data;
   }
 };
- 
 
 
-const logout = async ()=>{
+
+const logout = async () => {
   try {
     const response = await apiClient.delete('/logout')
     console.log(response.data)
@@ -122,11 +135,56 @@ const logout = async ()=>{
   }
 }
 
+const resetOtp = async (email) => {
+  try {
+
+    const response = await apiClient.post('/resetOtp', { email });
+    console.log(response.data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get OTP:', error);
+    return error.response.data;
+  }
+};
+
+const newPass = async (email, password) => {
+  try {
+
+    const response = await apiClient.post('/newPass', { email, password });
+    console.log(response.data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get Password:', error);
+    return error.response.data;
+  }
+};
+
+const changePass = async (body) => {
+  try {
+
+    const response = await apiClient.post('/changePass', {
+      body
+    });
+    console.log(response.data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get Password:', error);
+    return error.response.data;
+  }
+};
+
 export default {
   userLogin,
   userRegister,
   getOtp,
   verifyOtp,
   checkAuthenticate,
-  logout
+  editProfile,
+  logout,
+  resetOtp,
+  newPass,
+  changePass
 };

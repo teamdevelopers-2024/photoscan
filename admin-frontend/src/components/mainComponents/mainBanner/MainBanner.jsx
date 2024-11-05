@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './MainBanner.css';
-import api from '../../../services/api';
-import Swal from 'sweetalert2';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./MainBanner.css";
+import api from "../../../services/api";
+import Swal from "sweetalert2";
 
 function MainBanner() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -35,7 +35,7 @@ function MainBanner() {
     didOpen: (toast) => {
       toast.onmouseenter = Swal.stopTimer;
       toast.onmouseleave = Swal.resumeTimer;
-    }
+    },
   });
 
   const handleFormSubmit = async (event) => {
@@ -44,7 +44,7 @@ function MainBanner() {
     if (!selectedFile) {
       return Toast.fire({
         icon: "error",
-        title: "Image not selected"
+        title: "Image not selected",
       });
     }
 
@@ -66,20 +66,23 @@ function MainBanner() {
 
       const bannerData = {
         imageUrl,
-        publicId
+        publicId,
       };
 
       const response = await api.addBanner(bannerData);
       if (response) {
-        setBanners((prevBanners) => [...prevBanners, { image: imageUrl, publicId }]);
+        setBanners((prevBanners) => [
+          ...prevBanners,
+          { image: imageUrl, publicId },
+        ]);
         Toast.fire({
           icon: "success",
-          title: "Banner uploaded successfully"
+          title: "Banner uploaded successfully",
         });
       } else {
         Toast.fire({
           icon: "error",
-          title: "Error uploading banner"
+          title: "Error uploading banner",
         });
       }
     } catch (error) {
@@ -99,13 +102,13 @@ function MainBanner() {
 
       Toast.fire({
         icon: "success",
-        title: "Banner deleted successfully"
+        title: "Banner deleted successfully",
       });
     } catch (error) {
       console.error("Error deleting banner:", error);
       Toast.fire({
         icon: "error",
-        title: "Error deleting banner"
+        title: "Error deleting banner",
       });
     }
   };
@@ -117,9 +120,22 @@ function MainBanner() {
           <div className="order bg-white p-6 rounded-lg shadow-md w-full">
             <form onSubmit={handleFormSubmit} className="space-y-4">
               <div className="custom-file flex flex-col space-y-2">
-                <label className="custom-file-label text-gray-600" htmlFor="image">Choose file</label>
-                <input type="file" className="custom-file-input" id="image" name="image" onChange={handleFileChange} />
+                <label
+                  className="w-[10%] custom-file-label cursor-pointer bg-blue-600 text-white rounded-md font-medium px-4 py-2 hover:bg-blue-700 transition-all text-center"
+                  htmlFor="image"
+                >
+                  Choose file
+                </label>
+                <input
+                  type="file"
+                  className="custom-file-input hidden"
+                  id="image"
+                  name="image"
+                  accept="image/*" // This limits selection to image files only
+                  onChange={handleFileChange}
+                />
               </div>
+
               <button
                 type="submit"
                 className="w-full bg-gray-100 text-black font-semibold py-2 rounded shadow-md hover:bg-gray-200"
@@ -138,15 +154,18 @@ function MainBanner() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-[200px]">
                 {banners.slice(-3).map((banner, index) => (
-                  <div key={index} className="card w-full my-2 shadow-lg rounded-lg overflow-hidden h-[220px]">
+                  <div
+                    key={index}
+                    className="card w-full my-2 shadow-lg rounded-lg overflow-hidden h-[220px]"
+                  >
                     <div className="h-[180px] w-full">
-                    <img
-                      src={banner.image}
-                      alt={`Banner ${index + 1}`}
-                      className=""
-                    />
+                      <img
+                        src={banner.image}
+                        alt={`Banner ${index + 1}`}
+                        className=""
+                      />
                     </div>
-                    
+
                     <button
                       onClick={() => handleDelete(banner.publicId)}
                       className="w-full bg-red-500 text-white font-semibold py-1 mt-2 rounded-b"
@@ -154,7 +173,6 @@ function MainBanner() {
                       Delete
                     </button>
                   </div>
-                  
                 ))}
               </div>
             </div>

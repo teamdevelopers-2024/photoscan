@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { XMarkIcon } from '@heroicons/react/24/solid';
+import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
-const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp }) => {
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp, errorMessage }) => {
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [timer, setTimer] = useState(60);
+  const [otpError, setOtpError] = useState("");
+  const [isUserTyping, setIsUserTyping] = useState(false);
 
   useEffect(() => {
     let interval = null;
@@ -33,6 +35,8 @@ const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp }) => {
     }
 
     setOtp(newOtp);
+    setOtpError("");
+    setIsUserTyping(true);
 
     // Move focus to the next input
     if (index < otp.length - 1 && value) {
@@ -41,9 +45,9 @@ const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp }) => {
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === 'Backspace') {
+    if (e.key === "Backspace") {
       // Move focus to the previous input
-      if (otp[index] === '') {
+      if (otp[index] === "") {
         e.target.previousSibling?.focus();
       }
     }
@@ -57,15 +61,30 @@ const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(otp.join('')); // Pass the OTP as a single string
+    if (otp.every((digit) => digit === "")) {
+      setOtpError("Please enter the OTP"); // Set error message
+      return; // Prevent submission
+    }
+    onSubmit(otp.join(""));
+    setOtpError("");
   };
+
+  useEffect(() => {
+    // Reset error message state when user types in any OTP field
+    if (isUserTyping && errorMessage) {
+      setIsUserTyping(false); // Reset typing state after user has typed
+    }
+  }, [errorMessage, isUserTyping]);
 
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex items-center justify-center z-50">
       {/* Background overlay */}
-      <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50"
+        onClick={onClose}
+      ></div>
 
       {/* Modal content with animation */}
       <div className="relative bg-white p-10 rounded-lg shadow-lg max-w-md mx-auto z-10 transform transition-transform duration-300 ease-out animate-fade-in-scale">
@@ -79,7 +98,17 @@ const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp }) => {
         </button>
 
         <h2 className="text-2xl font-bold mb-4 text-center">Enter OTP</h2>
-        <p className="text-center text-lg mb-6">Please enter the 6-digit OTP sent to your email.</p>
+        <p className="text-center text-lg mb-6">
+          Please enter the 6-digit OTP sent to your email.
+        </p>
+        {otpError && (
+          <p className="text-red-600 text-sm text-center mb-4">{otpError}</p>
+        )}
+        {!isUserTyping && errorMessage && (
+          <p className="text-red-600 text-sm text-center mb-4">
+            {errorMessage}
+          </p>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="flex space-x-4 justify-center mb-9">
             {otp.map((value, index) => (

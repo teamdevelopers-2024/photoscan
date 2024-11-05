@@ -16,11 +16,20 @@ const userSlice = createSlice({
     removeUser: (state) => {
       state.user = null;
     },
+    // New reducer to update user data
+    updateUserData: (state, action) => {
+      if (state.user) {
+        state.user = {
+          ...state.user,
+          ...action.payload,
+        };
+      }
+    },
   },
 });
 
 // Export actions
-export const { setUser, removeUser } = userSlice.actions;
+export const { setUser, removeUser, updateUserData } = userSlice.actions;
 
 // Export reducer
 export default userSlice.reducer;
