@@ -394,22 +394,22 @@ const newPass = async (req, res) => {
   const { password, email } = req.body;
 
   if (!password) {
-    return res.status(400).json({error:true, message: 'Password is required.' });
+    return res.status(400).json({ error: true, message: 'Password is required.' });
   }
 
   try {
     // Find the user by email
-    const user = await UserDb.findOne({ email }); 
+    const user = await UserDb.findOne({ email });
     if (!user) {
-      return res.status(404).json({error:true, message: 'User not found.' });
+      return res.status(404).json({ error: true, message: 'User not found.' });
     }
 
     // Compare new password with existing password
     const isSamePassword = await argon2.verify(user.password, password);
-    
+
     if (isSamePassword) {
-      
-      return res.status(400).json({ error:true, message: 'New password cannot be the same as the old password.' });
+
+      return res.status(400).json({ error: true, message: 'New password cannot be the same as the old password.' });
     }
 
     // Hash the new password using Argon2
@@ -419,10 +419,56 @@ const newPass = async (req, res) => {
     user.password = hashedPassword; // Update the user's password field
     await user.save(); // Save the user document
 
-    res.status(200).json({error:false, message: 'Password updated successfully!' });
+    res.status(200).json({ error: false, message: 'Password updated successfully!' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({error:true, message: 'An error occurred while updating the password.' });
+    res.status(500).json({ error: true, message: 'An error occurred while updating the password.' });
+  }
+};
+
+const changePass = async (req, res) => {
+  const { email, currentPassword, newPassword, confirmPassword } = req.body.body.formData;
+
+  // Check for required fields
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return res.status(400).json({ error: true, message: 'All fields are required.' });
+  }
+
+  // Check if new password and confirm password match
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ error: true, message: 'New password and confirmation do not match.' });
+  }
+
+  try {
+    // Find the user by email
+    const user = await UserDb.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: true, message: 'User not found.' });
+    }
+
+    // Verify the current password
+    const isCurrentPasswordValid = await argon2.verify(user.password, currentPassword);
+    if (!isCurrentPasswordValid) {
+      return res.status(400).json({ error: true, message: 'Current password is incorrect.' });
+    }
+
+    // Compare new password with existing password
+    const isSamePassword = await argon2.verify(user.password, newPassword);
+    if (isSamePassword) {
+      return res.status(400).json({ error: true, message: 'New password cannot be the same as the old password.' });
+    }
+
+    // Hash the new password using Argon2
+    const hashedPassword = await argon2.hash(newPassword);
+
+    // Update the user's password in the database
+    user.password = hashedPassword; // Update the user's password field
+    await user.save(); // Save the user document
+
+    res.status(200).json({ error: false, message: 'Password updated successfully!' });
+  } catch (error) {
+    console.error("Error in changePass:", error); // Log the error for debugging
+    res.status(500).json({ error: true, message: 'An error occurred while updating the password.' });
   }
 };
 
@@ -437,5 +483,6 @@ export default {
   verifyRefreshToken,
   logout,
   resetOtp,
-  newPass
+  newPass,
+  changePass
 }
