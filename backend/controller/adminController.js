@@ -41,16 +41,6 @@ const login = async (req,res)=>{
             message:"internel server error"
         })
     }
-    if (password != isPassword) {
-      return res
-        .status(400)
-        .json({ error: true, message: "password is incorrect" })
-    }
-    req.session.isAdmin = true
-    res.status(200).json({
-      error: false,
-      message: "admin logged in successfully"
-    })
   }
 
 
@@ -456,14 +446,14 @@ export default {
     addBanner,
     getBanners,
     addCategory,
-    addOffer,
-    getOffers,
     getCategories,
     updateActive,
     blockUser,
     logout,
     deleteBanner,
-    deleteOffer,
     addProduct,
     getProducts,
+    getOffers,
+    addOffer,
+    deleteOffer
 }
