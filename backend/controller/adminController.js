@@ -1,8 +1,14 @@
 
 import BannerDb from "../model/bannerModal.js";
 import CategoryDb from "../model/Category.js";
-import ProductDb from "../model/prodectModel.js";
 import UserDb from "../model/userModel.js";
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: 'dpjzt7zwf',
+  api_key: '442368726761269',
+  api_secret: 'DueiTABSuPgrkBrs5OJeSBQMNTQ',
+});
 
 
 
@@ -96,6 +102,17 @@ const getBanners = async (req, res) => {
     // Handle errors and send an error response
     console.error('Error fetching banners:', error);
     res.status(500).json({ error: 'Internal Server Error. Error while getting Banners' });
+  }
+};
+const deleteBanner = async (req, res) => {
+  const publicId=req.body.publicId;
+  try {
+    const result1 = await BannerDb.deleteOne({publicId:publicId})
+    const result = await cloudinary.uploader.destroy(publicId);
+    res.status(200).json({ success: true, result,result1 });
+  } catch (error) {
+    console.error("Error deleting image from Cloudinary:", error);
+    res.status(500).json({ success: false, error });
   }
 };
 
@@ -292,4 +309,5 @@ export default {
     updateActive,
     blockUser,
     logout,
+    deleteBanner,
 }
