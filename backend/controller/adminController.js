@@ -1,4 +1,5 @@
 
+import BannerDb from "../model/bannerModal.js";
 import CategoryDb from "../model/Category.js";
 import ProductDb from "../model/prodectModel.js";
 import UserDb from "../model/userModel.js";
@@ -52,7 +53,7 @@ const status = async (req, res) => {
       res.status(401).json({ loggedIn: false });
     }
   };
-  const addframes = async (req, res) => {
+  const addBanner = async (req, res) => {
     if (req.body) {
         try {
           
@@ -61,22 +62,20 @@ const status = async (req, res) => {
             console.log(data);
 
             // Create a new frame document
-            const newFrame = new ProductDb({
-                productname: data.productName,
-                productdescription: data.description,
-                productprice: data.price,
-                image: data.image
+            const newBanner = new BannerDb({
+                image: data.imageUrl,
+                publicId:data.publicId
             });
 
             // Save the new frame to the database
-            await newFrame.save();
+            await newBanner.save();
 
             // Send success response
-            res.status(201).json({ message: 'Product saved successfully' });
+            res.status(201).json({ message: 'Banner added successfully' });
 
         } catch (error) {
             // Log the error and send a response with the error details
-            console.error('Error saving product:', error);
+            console.error('Error saving banner:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     } else {
@@ -86,17 +85,17 @@ const status = async (req, res) => {
     }
 };
 
-const getframes = async (req, res) => {
+const getBanners = async (req, res) => {
   try {
     // Retrieve all frames from the database
-    const data = await ProductDb.find();
+    const data = await BannerDb.find();
     
     // Send a success response with the retrieved data
     res.status(200).json(data);
   } catch (error) {
     // Handle errors and send an error response
-    console.error('Error fetching frames:', error);
-    res.status(500).json({ error: 'Internal Server Error. Error while getting frames' });
+    console.error('Error fetching banners:', error);
+    res.status(500).json({ error: 'Internal Server Error. Error while getting Banners' });
   }
 };
 
@@ -271,8 +270,8 @@ export default {
     login,
     status,
     getUsers, 
-    addframes,
-    getframes,
+    addBanner,
+    getBanners,
     addCategory,
     getCategories,
     updateActive,

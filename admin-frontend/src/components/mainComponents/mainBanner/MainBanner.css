@@ -17,6 +17,17 @@ table {
     border-collapse: collapse;
 }
 
+.user-main{
+    margin: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.388);
+    width: 97%;
+    height: 89%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+}
+
 th, td {
     border: 1px solid #c3bdbd;
     padding: 8px;
