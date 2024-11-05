@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
 import CartDropdown from "../cartDropdown/CardDropdown";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import "./Header.css";
 
 const Header = () => {
@@ -26,6 +26,7 @@ const Header = () => {
   const [isProductHover, setIsProductHover] = useState(false);
   const [subCategoryIndex, setSubCategoryIndex] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const headerRef = useRef(null);
 
   const categories = [
@@ -39,7 +40,11 @@ const Header = () => {
     },
     {
       name: "KEY CHAIN",
-      subcategories: ["Metal Keychains", "Plastic Keychains", "Leather Keychains"],
+      subcategories: [
+        "Metal Keychains",
+        "Plastic Keychains",
+        "Leather Keychains",
+      ],
     },
   ];
 
@@ -80,8 +85,12 @@ const Header = () => {
             {menus.map((menu, index) => (
               <li
                 key={index}
-                className="relative cursor-pointer hover:text-[#4d4d4d]"
-                onMouseEnter={() => menu.name === "Products" && setIsProductHover(true)}
+                className={`header-menu-item block hover:text-[#4d4d4d] ${
+                  location.pathname === menu.route ? "active" : ""
+                }`}
+                onMouseEnter={() =>
+                  menu.name === "Products" && setIsProductHover(true)
+                }
               >
                 <Link to={menu.route} className="block">
                   {menu.name}
@@ -128,13 +137,25 @@ const Header = () => {
             <div className="flex justify-center mb-8">
               <img className="w-[8rem] md:w-[12rem]" src={logo} alt="logo" />
             </div>
-            <ul className="flex flex-col items-center space-y-4">
+
+            <ul className="flex justify-center items-center gap-4 md:gap-5 relative">
               {menus.map((menu, index) => (
-                <li key={index} className="cursor-pointer hover:text-[#4d4d4d] text-xl">
-                  {menu.name.toUpperCase()}
+                <li
+                  key={index}
+                  className={`relative ${
+                    menu.route === location.pathname ? "active" : ""
+                  }`}
+                  onMouseEnter={() =>
+                    menu.name === "Products" && setIsProductHover(true)
+                  }
+                >
+                  <Link to={menu.route} className="header-menu-item block">
+                    {menu.name}
+                  </Link>
                 </li>
               ))}
             </ul>
+
             <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
               <FaUser className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
