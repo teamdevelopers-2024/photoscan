@@ -84,6 +84,42 @@ async function getCategories(active) {
     }
 }
 
+const getOffers = async () => {
+    console.log('Fetching Offers...');
+    
+    try {
+        const response = await apiClient.get('/getOffers');
+        console.log('Fetched Offers:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting Offers:', error);
+        return null;
+    }
+};
+
+async function addOffer(newOffer){
+    try{
+        const response = await apiClient.post('/addOffer',newOffer)
+        return response.data;
+    }
+    catch(error){
+        console.log(error)
+        return error.response.data;
+    }
+}
+const deleteOffer = async (id) => {
+    console.log('Deleting Offer:', { id });
+    
+    try {
+        const response = await apiClient.delete(`/deleteOffer?id=${id}`);
+        console.log('Delete Offer Response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting offer:', error);
+        return null;
+    }
+};
+
 
 async function updateActive(id) {
     try {
@@ -121,10 +157,13 @@ export default {
     getUsers,
     addBanner,
     getBanners,
-    addCategory,
     getCategories,
+    getOffers,
+    addCategory,
+    addOffer,
     updateActive,
+    deleteOffer,
     blockUser,
     logout,
-    deleteBanner,
+    // deleteBanner,
 };
