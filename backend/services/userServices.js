@@ -4,35 +4,35 @@ import OtpDb from '../model/otpModel.js';
 import jwt from 'jsonwebtoken'
 
 
-export async function loginValidation(email, password , res) {
+export async function loginValidation(email, password, res) {
 
 
     if (!email) {
-       return res.status(400).json({
-            error:true ,
-            message:'email is required',
-            field:'email'
+        return res.status(400).json({
+            error: true,
+            message: 'email is required',
+            field: 'email'
         })
     } else if (!validator.isEmail(email)) {
-       return res.status(400).json({
-            error:true ,
-            message:'invalid email address',
-            field:'email'
+        return res.status(400).json({
+            error: true,
+            message: 'invalid email address',
+            field: 'email'
         })
     }
 
     // Password validation
     if (!password) {
         return res.status(400).json({
-            error:true ,
-            message:'password is required',
-            field:'password'
+            error: true,
+            message: 'password is required',
+            field: 'password'
         })
     } else if (!validator.isLength(password, { min: 6 })) {
         return res.status(400).json({
-            error:true ,
-            message:'password must need 6 or more letters',
-            field:'password'
+            error: true,
+            message: 'password must need 6 or more letters',
+            field: 'password'
         })
     }
 
@@ -44,19 +44,19 @@ export async function loginValidation(email, password , res) {
 
 
 
-export async function registerValidation(body,res){
+export async function registerValidation(body, res) {
     try {
         console.log(body)
-        const { email, password, firstName,lastName, confirmPassword } = body;
-        
+        const { email, password, firstName, lastName, confirmPassword } = body;
+
         // Validation checks
         let errors = [];
-        
-        if(!email || !validator.isEmail(email)){
+
+        if (!email || !validator.isEmail(email)) {
             errors.push('invalid email or email not found')
         }
 
-         if (!firstName || validator.isEmpty(firstName.trim())) {
+        if (!firstName || validator.isEmpty(firstName.trim())) {
             errors.push('user name is required.');
         }
 
@@ -77,10 +77,10 @@ export async function registerValidation(body,res){
 
 
 
-export async function isEmailisExist( email ){
+export async function isEmailisExist(email) {
     try {
-            const result = await UserDb.findOne({ email:email})
-            return result
+        const result = await UserDb.findOne({ email: email })
+        return result
     } catch (error) {
         console.log(error)
     }
@@ -89,25 +89,25 @@ export async function isEmailisExist( email ){
 
 
 export async function isverifyOtp(email) {
-    try{
+    try {
         console.log(email);
-        const result=await OtpDb.findOne({userEmail:email})
+        const result = await OtpDb.findOne({ userEmail: email })
         return result
     }
-    catch(error){
+    catch (error) {
         console.log(error);
     }
-    
+
 }
 
 
 
 
-export async function decodeToken(token){
+export async function decodeToken(token) {
     try {
-     const result =  jwt.verify(token,process.env.ACCESS_TOKEN_PRIVAT_KEY)
-     console.log('decode result :  ' ,result)
-     return result
+        const result = jwt.verify(token, process.env.ACCESS_TOKEN_PRIVAT_KEY)
+        console.log('decode result :  ', result)
+        return result
     } catch (error) {
         console.log(error)
     }
