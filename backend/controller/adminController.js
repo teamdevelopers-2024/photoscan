@@ -2,6 +2,7 @@
 import BannerDb from "../model/bannerModal.js";
 import CategoryDb from "../model/Category.js";
 import UserDb from "../model/userModel.js";
+import productDB from "../model/prodectModel.js"
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
@@ -9,9 +10,6 @@ cloudinary.config({
   api_key: '442368726761269',
   api_secret: 'DueiTABSuPgrkBrs5OJeSBQMNTQ',
 });
-
-
-
 const login = async (req,res)=>{
     try {
         const {email , password } = req.body
@@ -90,6 +88,47 @@ const status = async (req, res) => {
         res.status(400).json({ error: 'Request body is missing' });
     }
 };
+const addProduct = async (req, res) => {
+  if (req.body) {
+      try {
+          // Extract properties from request body
+          const {
+              productName,
+              category,
+              sizes, 
+              description,
+              actualPrice,
+              offerPrice,
+              images 
+          } = req.body;
+          // Create a new product document
+          const newProduct = new productDB({
+              productName,
+              category,
+              sizes,
+              description,
+              actualPrice,
+              offerPrice,
+              images // assuming `images` is an array field in your schema
+          });
+
+          // Save the new product to the database
+          await newProduct.save();
+
+          // Send success response
+          res.status(201).json({ message: 'Product added successfully' });
+
+      } catch (error) {
+          // Log the error and send a response with the error details
+          console.error('Error saving product:', error);
+          res.status(500).json({ error: 'Internal Server Error' });
+      }
+  } else {
+      // Send a response indicating that the request body is missing
+      console.error('Request body is missing');
+      res.status(400).json({ error: 'Request body is missing' });
+  }
+};
 
 const getBanners = async (req, res) => {
   try {
@@ -102,6 +141,19 @@ const getBanners = async (req, res) => {
     // Handle errors and send an error response
     console.error('Error fetching banners:', error);
     res.status(500).json({ error: 'Internal Server Error. Error while getting Banners' });
+  }
+};
+const getProducts = async (req, res) => {
+  try {
+    // Retrieve all frames from the database
+    const data = await productDB.find();
+    
+    // Send a success response with the retrieved data
+    res.status(200).json(data);
+  } catch (error) {
+    // Handle errors and send an error response
+    console.error('Error fetching Products:', error);
+    res.status(500).json({ error: 'Internal Server Error. Error while getting Products' });
   }
 };
 const deleteBanner = async (req, res) => {
@@ -310,4 +362,6 @@ export default {
     blockUser,
     logout,
     deleteBanner,
+    addProduct,
+    getProducts,
 }
