@@ -51,14 +51,7 @@ const login = async (req,res)=>{
       error: false,
       message: "admin logged in successfully"
     })
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      error: true,
-      message: "internel server error"
-    })
   }
-}
 
 
 
@@ -463,11 +456,14 @@ export default {
     addBanner,
     getBanners,
     addCategory,
+    addOffer,
+    getOffers,
     getCategories,
     updateActive,
     blockUser,
     logout,
     deleteBanner,
+    deleteOffer,
     addProduct,
     getProducts,
 }
