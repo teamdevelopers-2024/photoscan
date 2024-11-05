@@ -7,6 +7,7 @@ import adminAuth from '../middlewares/adminAuth.js'
 console.log('getting here')
 router.post('/login',adminController.login)
 router.post('/addbanner',adminController.addBanner)
+router.post('/deletebanner',adminController.deleteBanner)
 router.post("/addCategory",adminAuth , adminController.addCategory)
 
 
