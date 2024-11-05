@@ -6,11 +6,10 @@ import { decodeToken, isEmailisExist, isverifyOtp, loginValidation, registerVali
 import { sendOPTVerificationEmail } from "../services/generateOtp.js";
 import OtpDb from "../model/otpModel.js";
 import TokenDb from "../model/tokenMode.js";
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+import mongoose from "mongoose"; // Ensure mongoose is imported
 import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
-import "dotenv/config"
-import path from "path";
-
+import "dotenv/config";
 
 const login = async (req, res) => {
   try {
@@ -18,12 +17,10 @@ const login = async (req, res) => {
 
     // Validate the login input
     const result = await loginValidation(email, password, res);
-    console.log(password)
     if (result !== false) return;
 
     // Find the user in the database
     const isUser = await UserDb.findOne({ email: email });
-
 
     if (!isUser) {
       return res.status(400).json({
@@ -32,29 +29,28 @@ const login = async (req, res) => {
         field: 'email'
       });
     }
-    const passResult = await argon2.verify(isUser.password , password)
+    const passResult = await argon2.verify(isUser.password, password);
     
-    if(!passResult){
+    if (!passResult) {
       return res.status(400).json({
         error: true,
-        message: 'incorrect password',
+        message: 'Incorrect password',
         field: 'password'
       });
     }
 
-
-    if(isUser.isBlocked == true){
+    if (isUser.isBlocked) {
       return res.status(400).json({
-        error:true,
-        message:"The User Is Blocked"
-      })
+        error: true,
+        message: "The User Is Blocked"
+      });
     }
+
     // Generate tokens
     const tokens = await generateToken(isUser);
     const { accessToken, refreshToken } = tokens;
 
     // Set the tokens as HTTP-only cookies
-    // Set a cookie that expires in 30 days
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
@@ -69,7 +65,6 @@ const login = async (req, res) => {
       sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict', 
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
     });
-
 
     // Respond with a success message
     res.status(200).json({
@@ -86,43 +81,32 @@ const login = async (req, res) => {
   }
 };
 
-
-
-
-
 const register = async (req, res) => {
   try {
-    const { email, password, firstName , lastName, confirmPassword,  phoneNumber } = req.body;
-    console.log('coming here')
-    const errors = await registerValidation(req.body)
+    const { email, password, firstName, lastName, confirmPassword, phoneNumber } = req.body;
+
+    const errors = await registerValidation(req.body);
     if (errors.length > 0) {
       return res.status(400).json({ error: true, message: errors[0] });
     }
 
-
     const result = await isEmailisExist(email, "user");
-
     if (result) {
       return res.status(409).json({ error: true, field: 'email', message: "User already exists" });
     }
 
-
-    const hashedpassword = await argon2.hash(password);
-
-
+    const hashedPassword = await argon2.hash(password);
     const newUser = new UserDb({
       email,
-      password: hashedpassword, // Note: you should hash the password before saving it
+      password: hashedPassword, // Note: you should hash the password before saving it
       firstName,
       lastName,
       phoneNumber: phoneNumber
     });
 
-    console.log(newUser);
     const token = await generateToken(newUser);
-    console.log(token);
+    
     // Set the tokens as HTTP-only cookies
-    // Set a cookie that expires in 30 days
     res.cookie('accessToken', token.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
@@ -144,33 +128,30 @@ const register = async (req, res) => {
       message: "User registered successfully.",
       user: newUser,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", error: error });
   }
-}
-
+};
 
 const getOtp = async (req, res) => {
   try {
     const { email } = req.body;
-    const isEmail = await isEmailisExist(email)
+    const isEmail = await isEmailisExist(email);
 
     if (isEmail) {
       return res.status(400).json({
         error: true,
-        message: 'user is already exist'
-      })
+        message: 'User already exists'
+      });
     }
 
     // Check if email is valid
     if (!validator.isEmail(email)) {
-      return res.status(400).json({ error: true, message: 'invalid email address' });
+      return res.status(400).json({ error: true, message: 'Invalid email address' });
     }
 
-    const result = await sendOPTVerificationEmail(email)
-
+    const result = await sendOPTVerificationEmail(email);
     res.status(200).json(result);
   } catch (error) {
     console.error('Error in getOtp:', error);
@@ -178,13 +159,9 @@ const getOtp = async (req, res) => {
   }
 };
 
-
 const verifyOtp = async (req, res) => {
   try {
     const { otp, email } = req.body;
-    console.log(req.body);
-
-    console.log(otp, email);
     const result = await isverifyOtp(email);
     if (result) {
       const otpResult = await argon2.verify(result.otp, otp);
@@ -193,18 +170,18 @@ const verifyOtp = async (req, res) => {
         await OtpDb.deleteOne({ userEmail: email });
         res.status(200).json({
           error: false,
-          message: "otp successfully verified",
+          message: "OTP successfully verified",
         });
       } else {
         res.status(400).json({
           error: true,
-          message: "Invalid Otp",
+          message: "Invalid OTP",
         });
       }
     } else {
       res.status(403).json({
         error: true,
-        message: "otp is expired please resent otp",
+        message: "OTP is expired, please resend OTP",
       });
     }
   } catch (error) {
@@ -214,20 +191,13 @@ const verifyOtp = async (req, res) => {
       message: "Internal Server error",
     });
   }
-}
-
-
-
+};
 
 const checkAuthenticate = async (req, res) => {
   try {
-    // Extract accessToken from cookies
     const accessToken = req.cookies.accessToken;
-    console.log(req.cookies)
     const id = req.query.id;
-    console.log('Access Token from Cookie:', accessToken);
 
-    // Verify the access token
     if (!accessToken) {
       return res.status(400).json({
         error: true,
@@ -235,7 +205,6 @@ const checkAuthenticate = async (req, res) => {
       });
     }
 
-    // Use the secret key to verify the JWT
     const secretKey = process.env.ACCESS_TOKEN_PRIVAT_KEY;
 
     jwt.verify(accessToken, secretKey, async (err, decoded) => {
@@ -246,18 +215,14 @@ const checkAuthenticate = async (req, res) => {
         });
       }
 
-      // Extract userId from decoded token
       const userId = decoded.userId;
-
-      // Check if the refresh token exists in the database
       const tokenInDb = await TokenDb.findOne({ userId: userId });
-      const user = await UserDb.findOne({_id:userId})
+      const user = await UserDb.findOne({ _id: userId });
       if (tokenInDb) {
-        console.log('User authenticated successfully');
         return res.status(200).json({
           error: false,
           message: 'User authenticated',
-          user:user
+          user: user
         });
       } else {
         return res.status(401).json({
@@ -275,13 +240,9 @@ const checkAuthenticate = async (req, res) => {
   }
 };
 
-
-
 const verifyRefreshToken = async (req, res) => {
   try {
-    // Extract refreshToken from cookies
     const refreshToken = req.cookies.refreshToken;
-    console.log('Inside refreshToken verification function');
 
     if (!refreshToken) {
       return res.status(400).json({
@@ -302,7 +263,6 @@ const verifyRefreshToken = async (req, res) => {
       sameSite: 'Strict', // Prevent CSRF
     });
 
-
     res.status(200).json(result);
   } catch (error) {
     console.error('Error verifying refresh token:', error);
@@ -313,58 +273,110 @@ const verifyRefreshToken = async (req, res) => {
   }
 };
 
-
-
-
 const fetchUser = async (req, res) => {
   try {
-    const token = req.cookies.accessToken
-    const userDetails = await decodeToken(token)
-    const user = await UserDb.findOne({ _id: userDetails.userId })
-    if (!user) {
+    const token = req.cookies.accessToken;
+    if (!token) {
       return res.status(400).json({
         error: true,
-        message: "token is invalid or user is not exist "
-      })
+        message: "Access token is required",
+      });
     }
+
+    const decoded = decodeToken(token);
+    const user = await UserDb.findById(decoded.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: true,
+        message: "User does not exist",
+      });
+    }
+
+    return res.status(200).json({
+      error: false,
+      message: "User fetched successfully",
+      user: user,
+    });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return res.status(500).json({
+      error: true,
+      message: 'Internal server error',
+    });
+  }
+};
+
+const logout = async (req, res) => {
+  try {
+    const accessToken = req.cookies.accessToken;
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!accessToken || !refreshToken) {
+      return res.status(400).json({
+        error: true,
+        message: 'Tokens are required for logout',
+      });
+    }
+
+    // Clear the cookies
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
 
     res.status(200).json({
       error: false,
-      data: user
-    })
+      message: 'User logged out successfully',
+    });
   } catch (error) {
+    console.error('Error during logout:', error);
     res.status(500).json({
       error: true,
       message: 'Internal server error',
     });
   }
-}
+};
 
+const editProfile = async (req, res) => {
+  const { currentEmail, updatedField, updatedValue } = req.body; // Destructure the fields from req.body
 
-const logout = async (req, res) => {
-  try {
+  console.log('Request Body:', req.body);
 
-    const data = await decodeToken(req.cookies.accessToken)
-    res.clearCookie('accessToken', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Set to true if you use HTTPS
-      sameSite: 'strict'
-    });
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Set to true if you use HTTPS
-      sameSite: 'strict'
-    });
-    await UserDb.updateOne({ _id: data.userId }, { $set: { active: false } })
-    await TokenDb.deleteOne({ userId: data.userId , token : req.cookies.refreshToken })
-    res.status(200).json({ error: false, message: 'Logged out successfully' });
-  } catch (error) {
-    console.error('Error during logout:', error);
-    res.status(500).json({ error: true, message: 'Logout failed' });
+  // Check if currentEmail is provided
+  if (!currentEmail || !updatedField || !updatedValue) {
+    return res.status(400).json({ message: 'Current email, field to update, and new value are required.' });
   }
-}
+
+  try {
+    // Update user details in the database based on the email
+    const updateData = {};
+    updateData[updatedField] = updatedValue; // Set the field to update with the new value
+
+    // Update user details in the database
+    const updatedUser = await UserDb.findOneAndUpdate(
+      { email: currentEmail }, // Find user by currentEmail
+      { $set: updateData }, // Use $set to update only the specified field
+      { new: true, runValidators: true } // Return the updated document and apply schema validation
+    );
+
+    console.log('Updated Fields:', updateData);
+
+    // Check if user was found and updated
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'User updated successfully',
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: 'Failed to update user', error });
+  }
+};
 
 
+// Export the controller
 export default {
   login,
   register,
@@ -372,5 +384,7 @@ export default {
   verifyOtp,
   checkAuthenticate,
   verifyRefreshToken,
-  logout
+  logout,
+  editProfile,
+  fetchUser
 }
