@@ -77,7 +77,10 @@ const userRegister = async (details) => {
 
 const getOtp = async (email) => {
   try {
+    
     const response = await apiClient.post('/getOtp', { email });
+    console.log(response.data);
+    
     return response.data;
   } catch (error) {
     console.error('Failed to get OTP:', error);
@@ -122,11 +125,39 @@ const logout = async ()=>{
   }
 }
 
+const resetOtp = async (email) => {
+  try {
+    
+    const response = await apiClient.post('/resetOtp', { email });
+    console.log(response.data);
+    
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get OTP:', error);
+    return error.response.data;
+  }
+};
+
+const newPass = async (email, password) => {
+  try {
+    
+    const response = await apiClient.post('/newPass', { email, password });
+    console.log(response.data);
+    
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get Password:', error);
+    return error.response.data;
+  }
+};
+
 export default {
   userLogin,
   userRegister,
   getOtp,
   verifyOtp,
   checkAuthenticate,
-  logout
+  logout,
+  resetOtp,
+  newPass
 };
