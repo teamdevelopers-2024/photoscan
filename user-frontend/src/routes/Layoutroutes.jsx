@@ -52,7 +52,6 @@ export default function Layoutroutes() {
                 <Route path="/about" element={<Aboutus />} />
                 <Route path="/momentos" element={<MomentoListing />} />
                 <Route path="/frames" element={<FrameListing />} />
-                <Route path="/productpage" element={<SingleProduct />} />
                 <Route path="*" element={<PageNotFound />} />
                 <Route path="/momentopage" element={<MomentoPage />} />
                 <Route path="/framepage" element={<FramePage />} />

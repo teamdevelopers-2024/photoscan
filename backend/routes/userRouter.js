@@ -14,6 +14,7 @@ router.post('/newPass', userController.newPass)
 router.post('/changePass', userController.changePass)
 
 router.get('/checkAuthenticate', userController.checkAuthenticate)
+router.get('/getMomentos', userController.getMomentos)
 
 
 router.delete('/logout', userController.logout)

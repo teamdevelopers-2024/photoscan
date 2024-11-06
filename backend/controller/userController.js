@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken';
 import mongoose from "mongoose"; // Ensure mongoose is imported
 import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
 import "dotenv/config";
+import ProductDb from "../model/prodectModel.js";
 
 const login = async (req, res) => {
   try {
@@ -62,7 +63,7 @@ const login = async (req, res) => {
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      path: '/user/refresh-token',
+      // path: '/user/refresh-token',
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
       sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
@@ -318,12 +319,22 @@ const logout = async (req, res) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
+    //refresh token not available from cookie
+
     if (!accessToken || !refreshToken) {
       return res.status(400).json({
         error: true,
         message: 'Tokens are required for logout',
       });
     }
+
+
+    // if (!accessToken ) {
+    //   return res.status(400).json({
+    //     error: true,
+    //     message: 'Tokens are required for logout',
+    //   });
+    // }
 
     // Clear the cookies
     res.clearCookie('accessToken');
@@ -494,6 +505,23 @@ const changePass = async (req, res) => {
   }
 };
 
+const getMomentos = async (req, res) => {
+  try {
+
+    const products = await ProductDb.find();
+    console.log(products);
+    
+
+    res.status(200).json({error: false, message: 'Momentos fetched successfully', momentos: products})
+
+    
+
+    } catch (error) {
+    console.error("Error in find momentos:", error); // Log the error for debugging
+    res.status(500).json({ error: true, message: 'An error occurred while finding momentos.' });
+  }
+};
+
 
 
 // Export the controller
@@ -509,5 +537,6 @@ export default {
   fetchUser,
   resetOtp,
   newPass,
-  changePass
+  changePass,
+  getMomentos,
 }

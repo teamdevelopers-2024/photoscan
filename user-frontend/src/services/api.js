@@ -176,6 +176,19 @@ const changePass = async (body) => {
   }
 };
 
+
+const getMomentos = async () => {
+  try {
+
+    const response = await apiClient.get('/getMomentos');
+    console.log("Fetched Momentos",response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get fetch momentos:', error);
+    return error.response.data;
+  }
+};
+
 export default {
   userLogin,
   userRegister,
@@ -186,5 +199,6 @@ export default {
   logout,
   resetOtp,
   newPass,
-  changePass
+  changePass,
+  getMomentos
 };
