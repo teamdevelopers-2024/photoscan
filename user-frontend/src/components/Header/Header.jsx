@@ -190,8 +190,6 @@ const Header = () => {
           ))}
         </div>
       </div>
-
-      <div className="w-full h-[72px]"></div>
     </>
   );
 };

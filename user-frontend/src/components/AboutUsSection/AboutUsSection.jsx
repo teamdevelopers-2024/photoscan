@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import img2 from "../../assets/aboutus/image2.png"
 
 export default function AboutUsSection() {
   useEffect(() => {
@@ -19,9 +20,9 @@ export default function AboutUsSection() {
           data-aos="fade-right"
           className="md:w-1/2 md:pr-8 mb-8 md:mb-0"
         >
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">About Us</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Vision</h2>
           <p className="text-lg text-gray-700 leading-relaxed">
-            We are committed to providing you with the best fashion news and trends. Our team of experts is dedicated to curating the most relevant and exciting content to keep you updated with the latest styles, tips, and insights from the world of fashion. Stay tuned for regular updates and articles that will help you stay ahead of the curve.
+           We at PHOTOSCAN believes that customer is evrything and try to meet and exceed customer satisfaction.Our vision is to the leader in the personalized gifts,photo framing and momentos industry in the region with no compromise in quality and at the same time offering affordable prices.
           </p>
         </div>
         <div
@@ -29,7 +30,7 @@ export default function AboutUsSection() {
           className="md:w-1/2"
         >
           <img
-            src="https://i.postimg.cc/9MXPK7RT/news2.jpg"
+            src={img2}
             alt="About Us"
             className="w-full h-auto object-cover rounded-lg shadow-lg"
           />

@@ -35,11 +35,11 @@ const getUsers = async (limit, page) => {
 };
 
 
-const addFrames = async (data) => {
-    console.log('Adding Frame:', data);
+const addBanner = async (data) => {
+    console.log('Adding Banner:', data);
     
     try {
-        const response = await apiClient.post('/addframes', { data });
+        const response = await apiClient.post('/addbanner', { data });
         console.log('Add Frame Response:', response.data);
         return response.data;
     } catch (error) {
@@ -47,16 +47,40 @@ const addFrames = async (data) => {
         return null;
     }
 };
-
-const getFrames = async () => {
-    console.log('Fetching Frames...');
+const deleteBanner = async (publicId) => {
+    console.log('deleting Banner:', publicId);
     
     try {
-        const response = await apiClient.get('/getframes');
-        console.log('Fetched Frames:', response.data);
+        const response = await apiClient.post('/deletebanner', { publicId });
+        console.log('Deleted banner sucessfully:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Error getting frames:', error);
+        console.error('Error adding frame:', error);
+        return null;
+    }
+};
+
+const getBanners = async () => {
+    console.log('Fetching Banners...');
+    
+    try {
+        const response = await apiClient.get('/getbanners');
+        console.log('Fetched Banners:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting Banners:', error);
+        return null;
+    }
+};
+const getProducts = async () => {
+    console.log('Fetching Banners...');
+    
+    try {
+        const response = await apiClient.get('/getproducts');
+        console.log('Fetched Products:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting Products:', error);
         return null;
     }
 };
@@ -65,6 +89,15 @@ const getFrames = async () => {
 async function addCategory(body) {
     try {
         const response = await apiClient.post("/addCategory",body)
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
+async function addProduct(body) {
+    try {
+        const response = await apiClient.post("/addproduct",body)
         return response.data
     } catch (error) {
         console.log(error)
@@ -83,6 +116,42 @@ async function getCategories(active) {
       return error.response.data  
     }
 }
+
+const getOffers = async () => {
+    console.log('Fetching Offers...');
+    
+    try {
+        const response = await apiClient.get('/getOffers');
+        console.log('Fetched Offers:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting Offers:', error);
+        return null;
+    }
+};
+
+async function addOffer(newOffer){
+    try{
+        const response = await apiClient.post('/addOffer',newOffer)
+        return response.data;
+    }
+    catch(error){
+        console.log(error)
+        return error.response.data;
+    }
+}
+const deleteOffer = async (id) => {
+    console.log('Deleting Offer:', { id });
+    
+    try {
+        const response = await apiClient.delete(`/deleteOffer?id=${id}`);
+        console.log('Delete Offer Response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting offer:', error);
+        return null;
+    }
+};
 
 
 async function updateActive(id) {
@@ -116,14 +185,32 @@ async function logout() {
     }
 }
 
+
+async function updateFeatured(id , detail) {
+    try {
+        const response = await apiClient.post("/updateFeatured",{id,detail})
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
+
 export default {
     checkAdmin,
     getUsers,
-    addFrames,
-    getFrames,
-    addCategory,
+    addBanner,
+    addProduct,
+    getBanners,
     getCategories,
+    getOffers,
+    addCategory,
+    addOffer,
     updateActive,
+    deleteOffer,
     blockUser,
     logout,
+    deleteBanner,
+    getProducts,
+    updateFeatured
 };

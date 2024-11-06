@@ -7,21 +7,8 @@ export default function ContactUs(){
         <>
         <Header />
         <div className="bg-gray-50">
-          {/* HEADING-BANNER START */}
-          <div className="bg-cover bg-center py-16 bg-opacity-50 bg-gray-900">
-            <div className="container mx-auto">
-              <div className="text-center">
-                <h2 className="text-3xl font-bold text-white ">Contact Us</h2>
-                {/* <div className="text-gray-400 pt-4">
-                  <a href="#" className="text-white hover:underline">Home</a> / Contact Us
-                </div> */}
-              </div>
-            </div>
-          </div>
-          {/* HEADING-BANNER END */}
-    
           {/* CONTACT-US AREA START */}
-          <div className="py-20">
+          <div>
             <div className="container mx-auto bg-white p-8 shadow-lg">
               <div className="flex flex-col lg:flex-row">
                 <div className="lg:w-1/3 mb-8 lg:mb-0">
