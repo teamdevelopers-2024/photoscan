@@ -14,11 +14,8 @@ router.post('/newPass', userController.newPass)
 router.post('/changePass', userController.changePass)
 
 router.get('/checkAuthenticate', userController.checkAuthenticate)
-<<<<<<< HEAD
 router.get('/getMomentos', userController.getMomentos)
-=======
 router.get("/getBanners",userController.getBanners)
->>>>>>> 277d307d224fd3ff5d983661cfb3bd0f1cf7ff2d
 
 
 router.delete('/logout', userController.logout)

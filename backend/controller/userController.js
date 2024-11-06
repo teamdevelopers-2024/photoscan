@@ -64,10 +64,6 @@ const login = async (req, res) => {
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-<<<<<<< HEAD
-      // path: '/user/refresh-token',
-=======
->>>>>>> 277d307d224fd3ff5d983661cfb3bd0f1cf7ff2d
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
       sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
@@ -323,13 +319,7 @@ const logout = async (req, res) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
-<<<<<<< HEAD
-    //refresh token not available from cookie
-
-    if (!accessToken || !refreshToken) {
-=======
     if (!accessToken) {
->>>>>>> 277d307d224fd3ff5d983661cfb3bd0f1cf7ff2d
       return res.status(400).json({
         error: true,
         message: 'Tokens are required for logout',
@@ -569,9 +559,6 @@ export default {
   resetOtp,
   newPass,
   changePass,
-<<<<<<< HEAD
   getMomentos,
-=======
   getBanners
->>>>>>> 277d307d224fd3ff5d983661cfb3bd0f1cf7ff2d
 }
