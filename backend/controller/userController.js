@@ -8,6 +8,7 @@ import OtpDb from "../model/otpModel.js";
 import TokenDb from "../model/tokenMode.js";
 import jwt from 'jsonwebtoken';
 import mongoose from "mongoose"; // Ensure mongoose is imported
+import BannerDb from "../model/bannerModal.js";
 import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
 import "dotenv/config";
 import ProductDb from "../model/prodectModel.js";
@@ -63,7 +64,10 @@ const login = async (req, res) => {
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
+<<<<<<< HEAD
       // path: '/user/refresh-token',
+=======
+>>>>>>> 277d307d224fd3ff5d983661cfb3bd0f1cf7ff2d
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
       sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
@@ -319,9 +323,13 @@ const logout = async (req, res) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
+<<<<<<< HEAD
     //refresh token not available from cookie
 
     if (!accessToken || !refreshToken) {
+=======
+    if (!accessToken) {
+>>>>>>> 277d307d224fd3ff5d983661cfb3bd0f1cf7ff2d
       return res.status(400).json({
         error: true,
         message: 'Tokens are required for logout',
@@ -338,7 +346,11 @@ const logout = async (req, res) => {
 
     // Clear the cookies
     res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie('refreshToken', {
+      path: '/user/refresh-token', // Must match the path where the cookie was set
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
+    });
 
     res.status(200).json({
       error: false,
@@ -524,6 +536,25 @@ const getMomentos = async (req, res) => {
 
 
 
+async function getBanners(req,res) {
+  try {
+    const banners = await BannerDb.find()
+    const datas = banners.map((item)=>{
+      return item.image
+    })
+    console.log(banners)
+    res.status(200).json({
+      error:false,
+      data:datas,
+      message:"Banners fetched successfullly"
+    })
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: true, message: 'An error occurred while fetching banners.' });
+  }
+}
+
+
 // Export the controller
 export default {
   login,
@@ -538,5 +569,9 @@ export default {
   resetOtp,
   newPass,
   changePass,
+<<<<<<< HEAD
   getMomentos,
+=======
+  getBanners
+>>>>>>> 277d307d224fd3ff5d983661cfb3bd0f1cf7ff2d
 }

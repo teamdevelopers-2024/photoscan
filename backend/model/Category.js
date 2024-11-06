@@ -4,7 +4,9 @@ const categorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
+      unique: true,      // Ensure the name is unique
+      uppercase: true     // Automatically convert to uppercase
     },
     isActive: {
       type: Boolean,
@@ -18,7 +20,8 @@ const categorySchema = new mongoose.Schema(
       {
         name: {
           type: String,
-          required: true
+          required: true,
+          uppercase: true
         },
         isActive: {
           type: Boolean,
@@ -35,6 +38,16 @@ const categorySchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+categorySchema.pre("save", function (next) {
+  this.name = this.name.toUpperCase();
+  if (this.subcategories) {
+    this.subcategories.forEach((subcategory) => {
+      subcategory.name = subcategory.name.toUpperCase();
+    });
+  }
+  next();
+});
 
 const CategoryDb = mongoose.model("Category", categorySchema);
 

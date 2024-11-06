@@ -112,7 +112,10 @@ const addProduct = async (req, res) => {
               description,
               actualPrice,
               offerPrice,
-              images // assuming `images` is an array field in your schema
+              images,
+              status:true,
+              catoffer:0,
+              catstatus:true
           });
 
           // Save the new product to the database
@@ -219,8 +222,9 @@ const getUsers = async (req, res) => {
 
 async function addCategory(req, res) {
   try {
-    const { name, subcategories } = req.body;
-
+    let { name, subcategories } = req.body;
+    name = name.toUpperCase();
+    
     // Check if name is provided
     if (!name) {
       return res.status(400).json({
@@ -229,18 +233,31 @@ async function addCategory(req, res) {
       });
     }
 
-    // Validate subcategories as an array
-    if (subcategories && !Array.isArray(subcategories)) {
+    // Check if the category name already exists
+    const exist = await CategoryDb.findOne({ name: name });
+    if (exist) {
       return res.status(400).json({
         error: true,
-        message: "Subcategories should be an array",
+        message: "Category already exists",
       });
+    }
+
+    // Validate and process subcategories if provided
+    if (subcategories) {
+      if (!Array.isArray(subcategories)) {
+        return res.status(400).json({
+          error: true,
+          message: "Subcategories should be an array",
+        });
+      }
+      // Convert subcategory names to uppercase and remove duplicates
+      subcategories = [...new Set(subcategories.map(sub => sub.toUpperCase()))];
     }
 
 
     await CategoryDb.create({
       name: name,
-      subcategories: subcategories, // save the subcategories array
+      subcategories: subcategories.map(sub => ({ name: sub })), // save each as an object with a `name` property
     });
 
     res.status(200).json({
@@ -272,6 +289,7 @@ async function addOffer(req, res) {
       discountPercentage: discountPercentage,
       categoryName: categoryName,
     });
+    await productDB.updateMany({category:categoryName},{catoffer:discountPercentage});
     res.status(200).json({
       error: false,
       message: "Offer added successfully!",
@@ -317,7 +335,10 @@ const deleteOffer = async (req, res) => {
 
     // Find and delete the offer by ID
     console.log('offer deleted')
+    const categoryName=await OfferDb.findOne({_id:id});
     const deletedOffer = await OfferDb.findByIdAndDelete(id);
+    
+    await productDB.updateMany({category:categoryName.categoryName},{catoffer:0})
 
     if (!deletedOffer) {
       return res.status(404).json({
@@ -374,13 +395,17 @@ async function getCategories(req, res) {
 
 
 
-async function updateActive(req, res) {
+async function categoryActive(req, res) {
   try {
     const id = req.query.id
-    await CategoryDb.updateOne(
+    const data = await CategoryDb.findOneAndUpdate(
       { _id: id },
       [{ $set: { isActive: { $not: "$isActive" } } }]  // Use aggregation to invert the isActive value
     );
+    const  activeststus=!data.isActive
+
+    await productDB.updateMany({category:data.name},{catstatus:activeststus});
+
     res.status(200).json({
       error: false,
       message: "active status updated successfully"
@@ -439,6 +464,25 @@ async function blockUser(req, res) {
   }
 }
 
+async function updateFeatured(req,res) {
+  try {
+    const {id , detail} = req.body  
+    console.log(id ,detail)
+    await productDB.updateOne({_id:id },{$set:detail})
+    res.status(200).json({
+      error:false,
+      message:"successfull"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error:false,
+      message:"internel Server error"
+    })
+  }
+
+}
+
 export default {
     login,
     status,
@@ -447,7 +491,7 @@ export default {
     getBanners,
     addCategory,
     getCategories,
-    updateActive,
+    categoryActive,
     blockUser,
     logout,
     deleteBanner,
@@ -455,5 +499,6 @@ export default {
     getProducts,
     getOffers,
     addOffer,
-    deleteOffer
+    deleteOffer,
+    updateFeatured
 }

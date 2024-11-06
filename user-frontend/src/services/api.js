@@ -177,6 +177,18 @@ const changePass = async (body) => {
 };
 
 
+
+async function getBanners() {
+  try {
+    const response = await apiClient.get('/getBanners');
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return error.response.data;
+  }
+}
+
+
 const getMomentos = async () => {
   try {
 
@@ -200,5 +212,6 @@ export default {
   resetOtp,
   newPass,
   changePass,
+  getBanners,
   getMomentos
 };
