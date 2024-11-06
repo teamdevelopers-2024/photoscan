@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Modal from 'react-modal';
 import api from '../../../services/api';
 import Swal from 'sweetalert2';
+import Loader from '../../Loader/Loader';
 
 Modal.setAppElement('#root');
 
@@ -16,12 +17,15 @@ const AddProductModal = ({ closeModal }) => {
   const [offerPrice, setOfferPrice] = useState('');
   const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
+  const [loading , setLoading ] = useState(false)
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        setLoading(true)
         const response = await api.getCategories(true);
         setCategories(response.data);
+        setLoading(false)
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -50,6 +54,7 @@ const AddProductModal = ({ closeModal }) => {
   
     try {
       const uploadedImageUrls = [];
+      setLoading(true)
   
       // Upload each image to Cloudinary
       for (const image of images) {
@@ -100,6 +105,8 @@ const AddProductModal = ({ closeModal }) => {
   
     } catch (error) {
       console.error('Error saving product:', error);
+    } finally {
+      setLoading(false)
     }
   };
   const handleImageChange = (e) => {
@@ -126,6 +133,7 @@ const AddProductModal = ({ closeModal }) => {
       className="fixed inset-0 flex items-center justify-center p-4"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50"
     >
+      {loading && <Loader/>}
       <div className="w-full max-w-lg h-full max-h-[90vh] overflow-y-auto p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

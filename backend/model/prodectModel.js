@@ -36,6 +36,10 @@ const productSchema = new mongoose.Schema({
     },
     catstatus:{
         type:Boolean
+    },
+    isFeatured:{
+        type:Boolean,
+        default:false
     }
 });
 

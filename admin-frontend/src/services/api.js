@@ -185,6 +185,17 @@ async function logout() {
     }
 }
 
+
+async function updateFeatured(id , detail) {
+    try {
+        const response = await apiClient.post("/updateFeatured",{id,detail})
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
+
 export default {
     checkAdmin,
     getUsers,
@@ -201,4 +212,5 @@ export default {
     logout,
     deleteBanner,
     getProducts,
+    updateFeatured
 };

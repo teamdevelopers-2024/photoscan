@@ -176,6 +176,18 @@ const changePass = async (body) => {
   }
 };
 
+
+
+async function getBanners() {
+  try {
+    const response = await apiClient.get('/getBanners');
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return error.response.data;
+  }
+}
+
 export default {
   userLogin,
   userRegister,
@@ -186,5 +198,6 @@ export default {
   logout,
   resetOtp,
   newPass,
-  changePass
+  changePass,
+  getBanners
 };

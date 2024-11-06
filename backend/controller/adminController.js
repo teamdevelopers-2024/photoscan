@@ -222,8 +222,9 @@ const getUsers = async (req, res) => {
 
 async function addCategory(req, res) {
   try {
-    const { name, subcategories } = req.body;
-
+    let { name, subcategories } = req.body;
+    name = name.toUpperCase();
+    
     // Check if name is provided
     if (!name) {
       return res.status(400).json({
@@ -232,18 +233,31 @@ async function addCategory(req, res) {
       });
     }
 
-    // Validate subcategories as an array
-    if (subcategories && !Array.isArray(subcategories)) {
+    // Check if the category name already exists
+    const exist = await CategoryDb.findOne({ name: name });
+    if (exist) {
       return res.status(400).json({
         error: true,
-        message: "Subcategories should be an array",
+        message: "Category already exists",
       });
+    }
+
+    // Validate and process subcategories if provided
+    if (subcategories) {
+      if (!Array.isArray(subcategories)) {
+        return res.status(400).json({
+          error: true,
+          message: "Subcategories should be an array",
+        });
+      }
+      // Convert subcategory names to uppercase and remove duplicates
+      subcategories = [...new Set(subcategories.map(sub => sub.toUpperCase()))];
     }
 
 
     await CategoryDb.create({
       name: name,
-      subcategories: subcategories, // save the subcategories array
+      subcategories: subcategories.map(sub => ({ name: sub })), // save each as an object with a `name` property
     });
 
     res.status(200).json({
@@ -450,6 +464,25 @@ async function blockUser(req, res) {
   }
 }
 
+async function updateFeatured(req,res) {
+  try {
+    const {id , detail} = req.body  
+    console.log(id ,detail)
+    await productDB.updateOne({_id:id },{$set:detail})
+    res.status(200).json({
+      error:false,
+      message:"successfull"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error:false,
+      message:"internel Server error"
+    })
+  }
+
+}
+
 export default {
     login,
     status,
@@ -466,5 +499,6 @@ export default {
     getProducts,
     getOffers,
     addOffer,
-    deleteOffer
+    deleteOffer,
+    updateFeatured
 }

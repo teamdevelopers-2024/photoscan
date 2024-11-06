@@ -8,6 +8,7 @@ import OtpDb from "../model/otpModel.js";
 import TokenDb from "../model/tokenMode.js";
 import jwt from 'jsonwebtoken';
 import mongoose from "mongoose"; // Ensure mongoose is imported
+import BannerDb from "../model/bannerModal.js";
 import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
 import "dotenv/config";
 
@@ -317,7 +318,7 @@ const logout = async (req, res) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
-    if (!accessToken || !refreshToken) {
+    if (!accessToken) {
       return res.status(400).json({
         error: true,
         message: 'Tokens are required for logout',
@@ -326,7 +327,11 @@ const logout = async (req, res) => {
 
     // Clear the cookies
     res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie('refreshToken', {
+      path: '/user/refresh-token', // Must match the path where the cookie was set
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
+    });
 
     res.status(200).json({
       error: false,
@@ -495,6 +500,25 @@ const changePass = async (req, res) => {
 
 
 
+async function getBanners(req,res) {
+  try {
+    const banners = await BannerDb.find()
+    const datas = banners.map((item)=>{
+      return item.image
+    })
+    console.log(banners)
+    res.status(200).json({
+      error:false,
+      data:datas,
+      message:"Banners fetched successfullly"
+    })
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: true, message: 'An error occurred while fetching banners.' });
+  }
+}
+
+
 // Export the controller
 export default {
   login,
@@ -508,5 +532,6 @@ export default {
   fetchUser,
   resetOtp,
   newPass,
-  changePass
+  changePass,
+  getBanners
 }

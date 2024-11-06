@@ -11,7 +11,7 @@ router.post('/addproduct',adminController.addProduct)
 router.post('/deletebanner',adminController.deleteBanner)
 router.post("/addCategory",adminAuth , adminController.addCategory)
 router.post("/addOffer",adminController.addOffer)
-
+router.post("/updateFeatured",adminAuth, adminController.updateFeatured)
 
 
 router.get('/status',adminController.status)
