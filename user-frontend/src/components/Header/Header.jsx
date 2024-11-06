@@ -5,13 +5,12 @@ import {
   FaShoppingCart,
   FaBars,
   FaTimes,
-  FaChevronRight,
-  FaChevronDown,
 } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
 import CartDropdown from "../cartDropdown/CardDropdown";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import "./Header.css";
+import api from '../../services/api.js';
 
 const Header = () => {
   const menus = [
@@ -24,39 +23,34 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
   const [isProductHover, setIsProductHover] = useState(false);
-  const [subCategoryIndex, setSubCategoryIndex] = useState(null);
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const headerRef = useRef(null);
-
-  const categories = [
-    {
-      name: "MOMENTOS",
-      subcategories: ["Photo Frames", "Wall Art", "Custom Prints"],
-    },
-    {
-      name: "JEWELLERY",
-      subcategories: ["Necklaces", "Bracelets", "Earrings"],
-    },
-    {
-      name: "KEY CHAIN",
-      subcategories: [
-        "Metal Keychains",
-        "Plastic Keychains",
-        "Leather Keychains",
-      ],
-    },
-  ];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleCartDropdown = () => setIsCartDropdownOpen(!isCartDropdownOpen);
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try { 
+        const data = await api.getCategories(true);
+        // Limit categories to four and each category's subcategories to ten
+        const limitedCategories = data.data.slice(0, 4).map(category => ({
+          ...category,
+          subcategories: category.subcategories.slice(0, 10),
+        }));
+        setCategories(limitedCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
+
     const handleClickOutside = (event) => {
       if (headerRef.current && !headerRef.current.contains(event.target)) {
         setIsCartDropdownOpen(false);
-        setSubCategoryIndex(null);
-        setIsProductHover(false); // Close product hover on outside click
+        setIsProductHover(false); 
       }
     };
 
@@ -167,50 +161,27 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Responsive Product Categories Dropdown */}
-      <div
-        className={`w-full text-[#666666] text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${
-          isProductHover ? "" : "hidden"
-        }`}
-        onMouseEnter={() => setIsProductHover(true)}
-        onMouseLeave={() => {
-          setIsProductHover(false);
-          setSubCategoryIndex(null); // Reset subcategory index on hover out
-        }}
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full max-w-screen-md border border-gray-300 bg-white py-4 px-5">
-          {categories.map((category, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-start cursor-pointer hover:text-[#4d4d4d] text-left relative"
-              onMouseEnter={() => setSubCategoryIndex(index)} // Set the index on hover
-              onMouseLeave={() => setSubCategoryIndex(null)} // Clear the index on mouse leave
-            >
-              <div className="flex items-center">
+      {isProductHover && (
+        <div
+          className="w-full text-[#666666] text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300"
+          onMouseLeave={() => setIsProductHover(false)}
+        >
+          <div className="flex gap-4 w-full max-w-[300px] border border-gray-300 bg-white py-4 px-5 ml-5">
+            {categories.map((category, index) => (
+              <div key={index} className="flex flex-col items-start text-center">
                 <span className="font-bold text-[12px]">{category.name}</span>
-                {subCategoryIndex === index ? (
-                  <FaChevronDown className="ml-2 text-[10px]" />
-                ) : (
-                  <FaChevronRight className="ml-2 text-[10px]" />
-                )}
-              </div>
-              {/* Subcategories appear directly below the category div */}
-              {subCategoryIndex === index && (
-                <div className="bg-white  mt-1  p-2  w-full">
-                  {category.subcategories.map((sub, subIndex) => (
-                    <div
-                      key={subIndex}
-                      className="text-[10px] cursor-pointer hover:text-[#4d4d4d] py-1"
-                    >
-                      {sub}
-                    </div>
+                <ul className="mt-1 mr-1 text-[11px] text-gray-500">
+                  {category.subcategories?.map((subcategory, idx) => (
+                    <li key={idx} className="hover:text-[#4d4d4d] cursor-pointer">
+                      {subcategory.name}
+                    </li>
                   ))}
-                </div>
-              )}
-            </div>
-          ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="w-full h-[72px]"></div>
     </>

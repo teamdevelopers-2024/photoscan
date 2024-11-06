@@ -176,10 +176,21 @@ const changePass = async (body) => {
   }
 };
 
+const getCategories = async (active) => {
+  try {
+      const response = await apiClient.get(`/getCategories?active=${active}`)
+      return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data  
+  }
+}
+
 export default {
   userLogin,
   userRegister,
   getOtp,
+  getCategories,
   verifyOtp,
   checkAuthenticate,
   editProfile,

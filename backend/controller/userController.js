@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken';
 import mongoose from "mongoose"; // Ensure mongoose is imported
 import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
 import "dotenv/config";
+import CategoryDb from "../model/Category.js";
 
 const login = async (req, res) => {
   try {
@@ -496,11 +497,41 @@ const changePass = async (req, res) => {
 
 
 
+const getCategories = async (req, res) => {
+  try {
+    let obj = {}
+    const active = req.query.active
+    console.log(active)
+    if (active) {
+      obj = {
+        isActive: active
+      }
+    }
+    const data = await CategoryDb.find(obj)
+    console.log(data)
+    res.status(200).json({
+      error: false,
+      data: data
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: true,
+      message: "Internal server error",
+      error,
+    });
+  }
+}
+
+
+
+
 // Export the controller
 export default {
   login,
   register,
   getOtp,
+  getCategories,
   verifyOtp,
   checkAuthenticate,
   verifyRefreshToken,

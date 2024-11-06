@@ -72,11 +72,32 @@ const getBanners = async () => {
         return null;
     }
 };
+const getProducts = async () => {
+    console.log('Fetching Banners...');
+    
+    try {
+        const response = await apiClient.get('/getproducts');
+        console.log('Fetched Products:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting Products:', error);
+        return null;
+    }
+};
 
 
 async function addCategory(body) {
     try {
         const response = await apiClient.post("/addCategory",body)
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
+async function addProduct(body) {
+    try {
+        const response = await apiClient.post("/addproduct",body)
         return response.data
     } catch (error) {
         console.log(error)
@@ -95,6 +116,42 @@ async function getCategories(active) {
       return error.response.data  
     }
 }
+
+const getOffers = async () => {
+    console.log('Fetching Offers...');
+    
+    try {
+        const response = await apiClient.get('/getOffers');
+        console.log('Fetched Offers:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting Offers:', error);
+        return null;
+    }
+};
+
+async function addOffer(newOffer){
+    try{
+        const response = await apiClient.post('/addOffer',newOffer)
+        return response.data;
+    }
+    catch(error){
+        console.log(error)
+        return error.response.data;
+    }
+}
+const deleteOffer = async (id) => {
+    console.log('Deleting Offer:', { id });
+    
+    try {
+        const response = await apiClient.delete(`/deleteOffer?id=${id}`);
+        console.log('Delete Offer Response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting offer:', error);
+        return null;
+    }
+};
 
 
 async function updateActive(id) {
@@ -132,11 +189,16 @@ export default {
     checkAdmin,
     getUsers,
     addBanner,
+    addProduct,
     getBanners,
-    addCategory,
     getCategories,
+    getOffers,
+    addCategory,
+    addOffer,
     updateActive,
+    deleteOffer,
     blockUser,
     logout,
-    deleteBanner
+    deleteBanner,
+    getProducts,
 };
