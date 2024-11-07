@@ -72,11 +72,11 @@ const getBanners = async () => {
         return null;
     }
 };
-const getProducts = async () => {
+const getProducts = async (isUnlisted) => {
     console.log('Fetching Banners...');
     
     try {
-        const response = await apiClient.get('/getproducts');
+        const response = await apiClient.get(`/getproducts?status=${isUnlisted}`);
         console.log('Fetched Products:', response.data);
         return response.data;
     } catch (error) {
@@ -126,6 +126,18 @@ const getOffers = async () => {
         return response.data;
     } catch (error) {
         console.error('Error getting Offers:', error);
+        return null;
+    }
+};
+const getOrder = async () => {
+    console.log('Fetching Orders...');
+    
+    try {
+        const response = await apiClient.get('/getorder');
+        console.log('Fetched Oders:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting Oders:', error);
         return null;
     }
 };
@@ -196,6 +208,35 @@ async function updateFeatured(id , detail) {
     }
 }
 
+
+async function updateProductStatus(id) {
+    try {
+        const response = await apiClient.put("/updateProductStatus",{id})
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
+async function updateProduct(id,product) {
+    try {
+        const response = await apiClient.post("/updateProduct",{id,product})
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
+async function updateOrderStatus(id,status) {
+    try {
+        const response = await apiClient.post("/updateOrderStatus",{id,status})
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
+
 export default {
     checkAdmin,
     getUsers,
@@ -212,5 +253,9 @@ export default {
     logout,
     deleteBanner,
     getProducts,
-    updateFeatured
+    updateFeatured,
+    updateProductStatus,
+    updateProduct,
+    getOrder,
+    updateOrderStatus
 };

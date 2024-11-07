@@ -6,6 +6,7 @@ import ProductDb from "../model/prodectModel.js";
 import UserDb from "../model/userModel.js";
 import productDB from "../model/prodectModel.js"
 import { v2 as cloudinary } from 'cloudinary';
+import OrderDb from "../model/orderModal.js";
 
 cloudinary.config({
   cloud_name: 'dpjzt7zwf',
@@ -42,15 +43,6 @@ const login = async (req,res)=>{
         })
     }
   }
-
-
-
-
-
-
-
-
-
 const status = async (req, res) => {
   console.log("isAdmin", req.session.isAdmin);
   if (req.session.isAdmin) {
@@ -63,30 +55,20 @@ const status = async (req, res) => {
 const addBanner = async (req, res) => {
   if (req.body) {
     try {
-
-      // Extract properties from request body
       const data = req.body.data;
       console.log(data);
-
-      // Create a new frame document
       const newBanner = new BannerDb({
         image: data.imageUrl,
         publicId: data.publicId
       });
-
-      // Save the new frame to the database
       await newBanner.save();
-
-      // Send success response
       res.status(201).json({ message: 'Banner added successfully' });
 
     } catch (error) {
-      // Log the error and send a response with the error details
       console.error('Error saving banner:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   } else {
-    // Send a response indicating that the request body is missing
     console.error('Request body is missing');
     res.status(400).json({ error: 'Request body is missing' });
   }
@@ -94,7 +76,6 @@ const addBanner = async (req, res) => {
 const addProduct = async (req, res) => {
   if (req.body) {
       try {
-          // Extract properties from request body
           const {
               productName,
               category,
@@ -104,7 +85,6 @@ const addProduct = async (req, res) => {
               offerPrice,
               images 
           } = req.body;
-          // Create a new product document
           const newProduct = new productDB({
               productName,
               category,
@@ -118,19 +98,14 @@ const addProduct = async (req, res) => {
               catstatus:true
           });
 
-          // Save the new product to the database
           await newProduct.save();
-
-          // Send success response
           res.status(201).json({ message: 'Product added successfully' });
 
       } catch (error) {
-          // Log the error and send a response with the error details
           console.error('Error saving product:', error);
           res.status(500).json({ error: 'Internal Server Error' });
       }
   } else {
-      // Send a response indicating that the request body is missing
       console.error('Request body is missing');
       res.status(400).json({ error: 'Request body is missing' });
   }
@@ -138,26 +113,19 @@ const addProduct = async (req, res) => {
 
 const getBanners = async (req, res) => {
   try {
-    // Retrieve all frames from the database
     const data = await BannerDb.find();
-
-    // Send a success response with the retrieved data
     res.status(200).json(data);
   } catch (error) {
-    // Handle errors and send an error response
     console.error('Error fetching banners:', error);
     res.status(500).json({ error: 'Internal Server Error. Error while getting Banners' });
   }
 };
 const getProducts = async (req, res) => {
   try {
-    // Retrieve all frames from the database
-    const data = await productDB.find();
-    
-    // Send a success response with the retrieved data
+    const {status } = req.query
+    const data = await productDB.find({status:status});
     res.status(200).json(data);
   } catch (error) {
-    // Handle errors and send an error response
     console.error('Error fetching Products:', error);
     res.status(500).json({ error: 'Internal Server Error. Error while getting Products' });
   }
@@ -185,7 +153,7 @@ const getUsers = async (req, res) => {
 
     const startIndex = (page - 1) * limit;
 
-    // Fetch users with pagination
+  
     const users = await UserDb.find().skip(startIndex).limit(limit);
     console.log(users);
 
@@ -224,16 +192,12 @@ async function addCategory(req, res) {
   try {
     let { name, subcategories } = req.body;
     name = name.toUpperCase();
-    
-    // Check if name is provided
     if (!name) {
       return res.status(400).json({
         error: true,
         message: "Name is required",
       });
     }
-
-    // Check if the category name already exists
     const exist = await CategoryDb.findOne({ name: name });
     if (exist) {
       return res.status(400).json({
@@ -241,8 +205,6 @@ async function addCategory(req, res) {
         message: "Category already exists",
       });
     }
-
-    // Validate and process subcategories if provided
     if (subcategories) {
       if (!Array.isArray(subcategories)) {
         return res.status(400).json({
@@ -250,14 +212,13 @@ async function addCategory(req, res) {
           message: "Subcategories should be an array",
         });
       }
-      // Convert subcategory names to uppercase and remove duplicates
       subcategories = [...new Set(subcategories.map(sub => sub.toUpperCase()))];
     }
 
 
     await CategoryDb.create({
       name: name,
-      subcategories: subcategories.map(sub => ({ name: sub })), // save each as an object with a `name` property
+      subcategories: subcategories.map(sub => ({ name: sub })),
     });
 
     res.status(200).json({
@@ -309,13 +270,9 @@ async function addOffer(req, res) {
 }
 const getOffers = async (req, res) => {
   try {
-    // Retrieve all frames from the database
     const data = await OfferDb.find();
-
-    // Send a success response with the retrieved data
     res.status(200).json(data);
   } catch (error) {
-    // Handle errors and send an error response
     console.error('Error fetching banners:', error);
     res.status(500).json({ error: 'Internal Server Error. Error while getting Banners' });
   }
@@ -332,8 +289,6 @@ const deleteOffer = async (req, res) => {
         message: "Offer ID is required"
       });
     }
-
-    // Find and delete the offer by ID
     console.log('offer deleted')
     const categoryName=await OfferDb.findOne({_id:id});
     const deletedOffer = await OfferDb.findByIdAndDelete(id);
@@ -400,7 +355,7 @@ async function categoryActive(req, res) {
     const id = req.query.id
     const data = await CategoryDb.findOneAndUpdate(
       { _id: id },
-      [{ $set: { isActive: { $not: "$isActive" } } }]  // Use aggregation to invert the isActive value
+      [{ $set: { isActive: { $not: "$isActive" } } }] 
     );
     const  activeststus=!data.isActive
 
@@ -483,6 +438,92 @@ async function updateFeatured(req,res) {
 
 }
 
+
+async function updateProductStatus(req,res) {
+  try {
+    const {id } = req.body
+    if(!id){
+      return res.status(403).json({
+        error:true ,
+        message:"id is required"
+      })
+    }
+
+    await ProductDb.findOneAndUpdate(
+      { _id: id },
+      [{ $set: { status: { $not: ["$status"] } } }],
+      { new: true }
+    );
+    
+
+    res.status(200).json({
+      error:false,
+      message:"product status updated successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error:false,
+      message:"internel Server error"
+    })
+  }
+}
+async function updateProduct(req,res) {
+  const {id,product } = req.body
+  try {
+    await productDB.updateOne({_id:id},{
+      productName:product.productName,
+      description:product.description,
+      actualPrice:product.actualPrice,
+      offerPrice:product.offerPrice,})
+
+      res.status(200).json({
+        error:false,
+        message:"product  updated successfully"
+      })
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error:false,
+      message:"internel Server error"
+    })
+  }
+}
+async function getOrder(req,res) {
+  try {
+    const Order=await OrderDb.find();
+    res.status(200).json({
+      error: false,
+      data: Order
+    })
+  } catch (error) {
+    res.status(500).json({
+      error:false,
+      message:"internel Server error"
+    })
+  }
+}
+async function updateOrderStatus(req,res) {
+  try {
+    const {id,status}=req.body
+    
+    await OrderDb.updateOne({orderId:id},{status:status});
+    const data=await OrderDb.findOne({orderId:id})
+    console.log(data);
+    
+    res.status(200).json({
+      error: false,
+      data: data
+    })
+  } catch (error) {
+    res.status(500).json({
+      error:false,
+      message:"internel Server error"
+    })
+  }
+}
+
 export default {
     login,
     status,
@@ -500,5 +541,9 @@ export default {
     getOffers,
     addOffer,
     deleteOffer,
-    updateFeatured
+    updateFeatured,
+    updateProductStatus,
+    updateProduct,
+    getOrder,
+    updateOrderStatus
 }
