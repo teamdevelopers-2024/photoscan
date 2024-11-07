@@ -5,13 +5,12 @@ import {
   FaShoppingCart,
   FaBars,
   FaTimes,
-  FaChevronRight,
-  FaChevronDown,
 } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
 import CartDropdown from "../cartDropdown/CardDropdown";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import "./Header.css";
+import api from "../../services/api.js";
 
 const Header = () => {
   const menus = [
@@ -24,38 +23,34 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
   const [isProductHover, setIsProductHover] = useState(false);
-  const [subCategoryIndex, setSubCategoryIndex] = useState(null);
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
   const headerRef = useRef(null);
-
-  const categories = [
-    {
-      name: "MOMENTOS",
-      subcategories: ["Photo Frames", "Wall Art", "Custom Prints"],
-    },
-    {
-      name: "JEWELLERY",
-      subcategories: ["Necklaces", "Bracelets", "Earrings"],
-    },
-    {
-      name: "KEY CHAIN",
-      subcategories: [
-        "Metal Keychains",
-        "Plastic Keychains",
-        "Leather Keychains",
-      ],
-    },
-  ];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleCartDropdown = () => setIsCartDropdownOpen(!isCartDropdownOpen);
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await api.getCategories(true);
+        // Limit categories to four and each category's subcategories to ten
+        const limitedCategories = data.data.slice(0, 4).map((category) => ({
+          ...category,
+          subcategories: category.subcategories.slice(0, 10),
+        }));
+        setCategories(limitedCategories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+
     const handleClickOutside = (event) => {
       if (headerRef.current && !headerRef.current.contains(event.target)) {
         setIsCartDropdownOpen(false);
-        setSubCategoryIndex(null);
-        setIsProductHover(false); // Close product hover on outside click
+        setIsProductHover(false);
       }
     };
 
@@ -138,7 +133,8 @@ const Header = () => {
             <div className="flex justify-center mb-8">
               <img className="w-[8rem] md:w-[12rem]" src={logo} alt="logo" />
             </div>
-            <ul className="flex flex-col items-center space-y-4">
+
+            <ul className="flex justify-center items-center gap-4 md:gap-5 relative">
               {menus.map((menu, index) => (
                 <li
                   key={index}
@@ -148,6 +144,7 @@ const Header = () => {
                 </li>
               ))}
             </ul>
+
             <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
               <FaUser className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
