@@ -2,10 +2,10 @@
 import BannerDb from "../model/bannerModal.js";
 import CategoryDb from "../model/Category.js";
 import OfferDb from "../model/offerModel.js";
-import ProductDb from "../model/prodectModel.js";
 import UserDb from "../model/userModel.js";
 import productDB from "../model/prodectModel.js"
 import { v2 as cloudinary } from 'cloudinary';
+import orderDb from '../model/'
 
 cloudinary.config({
   cloud_name: 'dpjzt7zwf',
@@ -476,19 +476,36 @@ async function updateFeatured(req,res) {
   } catch (error) {
     console.log(error)
     res.status(500).json({
-      error:false,
+      error:true,
       message:"internel Server error"
     })
   }
 
 }
+async function getCardData(req,res){
+  try {
+     const users =  UserDb.length
+     const orders = orderDb
 
+     console.log('this is user length',length)
+     res.status(200).json({
+      error:false,
+      data:length
+     })
+  } catch (error) {
+    res.status(500).json({
+      error:true,
+      message:"internal Server error"
+    })
+  }
+}
 export default {
     login,
     status,
     getUsers, 
     addBanner,
     getBanners,
+    getCardData,
     addCategory,
     getCategories,
     categoryActive,

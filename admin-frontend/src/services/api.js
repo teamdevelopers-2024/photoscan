@@ -195,12 +195,22 @@ async function updateFeatured(id , detail) {
         return error.response.data
     }
 }
+async function getCardData (){
+    try {
+        const response = await apiClient.get("/getCardData")
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return error.response.data
+    }
+}
 
 export default {
     checkAdmin,
     getUsers,
     addBanner,
     addProduct,
+    getCardData,
     getBanners,
     getCategories,
     getOffers,

@@ -16,6 +16,7 @@ router.post("/updateFeatured",adminAuth, adminController.updateFeatured)
 
 router.get('/status',adminController.status)
 router.get('/getUsers',adminAuth,adminController.getUsers)
+router.get('/getCardData',adminAuth,adminController.getCardData)
 router.get('/getbanners',adminAuth,adminController.getBanners)
 router.get('/getproducts',adminAuth,adminController.getProducts)
 router.get("/getCategories",adminAuth , adminController.getCategories)
