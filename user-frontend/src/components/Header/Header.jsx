@@ -39,7 +39,11 @@ const Header = () => {
     },
     {
       name: "KEY CHAIN",
-      subcategories: ["Metal Keychains", "Plastic Keychains", "Leather Keychains"],
+      subcategories: [
+        "Metal Keychains",
+        "Plastic Keychains",
+        "Leather Keychains",
+      ],
     },
   ];
 
@@ -64,6 +68,10 @@ const Header = () => {
     navigate("/profile");
   };
 
+  const handleCatClick = (id) => {
+    navigate(`/products?catid=${id}`);
+  };
+
   return (
     <>
       <header
@@ -81,7 +89,9 @@ const Header = () => {
               <li
                 key={index}
                 className="relative cursor-pointer hover:text-[#4d4d4d]"
-                onMouseEnter={() => menu.name === "Products" && setIsProductHover(true)}
+                onMouseEnter={() =>
+                  menu.name === "Products" && setIsProductHover(true)
+                }
               >
                 <Link to={menu.route} className="block">
                   {menu.name}
@@ -130,7 +140,10 @@ const Header = () => {
             </div>
             <ul className="flex flex-col items-center space-y-4">
               {menus.map((menu, index) => (
-                <li key={index} className="cursor-pointer hover:text-[#4d4d4d] text-xl">
+                <li
+                  key={index}
+                  className="cursor-pointer hover:text-[#4d4d4d] text-xl"
+                >
                   {menu.name.toUpperCase()}
                 </li>
               ))}
@@ -166,15 +179,23 @@ const Header = () => {
               onMouseLeave={() => setSubCategoryIndex(null)} // Clear the index on mouse leave
             >
               <div className="flex items-center">
-                <span className="font-bold text-[12px]">{category.name}</span>
-                {subCategoryIndex === index ? (
+                <span
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCatClick(category._id);
+                  }} // Call the handler with the category ID
+                  className="font-bold text-[12px] cursor-pointer"
+                >
+                  {category.name} {/* Display the category name */}
+                </span>
+                {/* {subCategoryIndex === index ? (
                   <FaChevronDown className="ml-2 text-[10px]" />
                 ) : (
                   <FaChevronRight className="ml-2 text-[10px]" />
-                )}
+                )} */}
               </div>
               {/* Subcategories appear directly below the category div */}
-              {subCategoryIndex === index && (
+              {/* {subCategoryIndex === index && (
                 <div className="bg-white  mt-1  p-2  w-full">
                   {category.subcategories.map((sub, subIndex) => (
                     <div
@@ -185,7 +206,7 @@ const Header = () => {
                     </div>
                   ))}
                 </div>
-              )}
+              )} */}
             </div>
           ))}
         </div>

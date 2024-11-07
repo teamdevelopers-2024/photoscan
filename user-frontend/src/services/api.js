@@ -189,11 +189,10 @@ async function getBanners() {
 }
 
 
-const getMomentos = async () => {
+const getProducts = async () => {
   try {
 
-    const response = await apiClient.get('/getMomentos');
-    console.log("Fetched Momentos",response.data);
+    const response = await apiClient.get('/getProducts');
     return response.data;
   } catch (error) {
     console.error('Failed to get fetch momentos:', error);
@@ -213,5 +212,5 @@ export default {
   newPass,
   changePass,
   getBanners,
-  getMomentos
+  getProducts
 };
