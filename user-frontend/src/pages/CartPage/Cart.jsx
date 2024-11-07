@@ -27,7 +27,7 @@ function Cart() {
   return (
     <>
       <Header />
-      <div className="bg-gray-100 h-[88vh] flex flex-col p-16 md:flex-row">
+      <div className="bg-gray-100 h-[100vh] flex flex-col p-16 md:flex-row">
         <div className="bg-white rounded-lg h-[79vh] custom-scrollbar shadow-lg p-4 flex-1 overflow-y-scroll">
           <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
           <div className="space-y-4">
