@@ -10,7 +10,7 @@ import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 import MyOrder from "../components/MyOrders/MyOrder";
 import Cart from "../pages/CartPage/Cart";
 import Profile from "../pages/Profile/Profile";
-import MomentoListing from "../pages/Momento_Listing/MomentoListing";
+import MomentoListing from "../pages/Products_Listing/ProductsListing";
 import FrameListing from "../pages/Frames_Listing/FrameListing";
 import PageNotFound from "../pages/404/PageNotFound";
 import SingleProduct from "../pages/Single Product/SingleProduct";
@@ -50,9 +50,7 @@ export default function Layoutroutes() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/about" element={<Aboutus />} />
-                <Route path="/momentos" element={<MomentoListing />} />
-                <Route path="/frames" element={<FrameListing />} />
-                <Route path="/productpage" element={<SingleProduct />} />
+                <Route path="/products" element={<MomentoListing />} />
                 <Route path="*" element={<PageNotFound />} />
                 <Route path="/momentopage" element={<MomentoPage />} />
                 <Route path="/framepage" element={<FramePage />} />

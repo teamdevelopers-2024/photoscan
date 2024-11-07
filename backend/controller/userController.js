@@ -8,9 +8,10 @@ import OtpDb from "../model/otpModel.js";
 import TokenDb from "../model/tokenMode.js";
 import jwt from 'jsonwebtoken';
 import mongoose from "mongoose"; // Ensure mongoose is imported
+import BannerDb from "../model/bannerModal.js";
 import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
 import "dotenv/config";
-import CategoryDb from "../model/Category.js";
+import ProductDb from "../model/prodectModel.js";
 
 const login = async (req, res) => {
   try {
@@ -31,7 +32,7 @@ const login = async (req, res) => {
       });
     }
     const passResult = await argon2.verify(isUser.password, password);
-    
+
     if (!passResult) {
       return res.status(400).json({
         error: true,
@@ -110,7 +111,7 @@ const register = async (req, res) => {
     });
 
     const token = await generateToken(newUser);
-    
+
     // Set the tokens as HTTP-only cookies
     res.cookie('accessToken', token.accessToken, {
       httpOnly: true,
@@ -319,16 +320,28 @@ const logout = async (req, res) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
-    if (!accessToken || !refreshToken) {
+    if (!accessToken) {
       return res.status(400).json({
         error: true,
         message: 'Tokens are required for logout',
       });
     }
 
+
+    // if (!accessToken ) {
+    //   return res.status(400).json({
+    //     error: true,
+    //     message: 'Tokens are required for logout',
+    //   });
+    // }
+
     // Clear the cookies
     res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie('refreshToken', {
+      path: '/user/refresh-token', // Must match the path where the cookie was set
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
+    });
 
     res.status(200).json({
       error: false,
@@ -495,35 +508,37 @@ const changePass = async (req, res) => {
   }
 };
 
-
-
-const getCategories = async (req, res) => {
+const getProducts = async (req, res) => {
   try {
-    let obj = {}
-    const active = req.query.active
-    console.log(active)
-    if (active) {
-      obj = {
-        isActive: active
-      }
-    }
-    const data = await CategoryDb.find(obj)
-    console.log(data)
+
+    const products = await ProductDb.find();
+    res.status(200).json({ error: false, message: 'Products fetched successfully', products })
+
+  } catch (error) {
+    console.error("Error in find momentos:", error); // Log the error for debugging
+    res.status(500).json({ error: true, message: 'An error occurred while finding momentos.' });
+  }
+};
+
+
+
+async function getBanners(req, res) {
+  try {
+    const banners = await BannerDb.find()
+    const datas = banners.map((item) => {
+      return item.image
+    })
+    console.log(banners)
     res.status(200).json({
       error: false,
-      data: data
+      data: datas,
+      message: "Banners fetched successfullly"
     })
   } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      error: true,
-      message: "Internal server error",
-      error,
-    });
+    console.error(error);
+    res.status(500).json({ error: true, message: 'An error occurred while fetching banners.' });
   }
 }
-
-
 
 
 // Export the controller
@@ -540,5 +555,7 @@ export default {
   fetchUser,
   resetOtp,
   newPass,
-  changePass
+  changePass,
+  getProducts,
+  getBanners
 }

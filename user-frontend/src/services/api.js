@@ -176,15 +176,29 @@ const changePass = async (body) => {
   }
 };
 
-const getCategories = async (active) => {
+
+
+async function getBanners() {
   try {
-      const response = await apiClient.get(`/getCategories?active=${active}`)
-      return response.data
+    const response = await apiClient.get('/getBanners');
+    return response.data;
   } catch (error) {
-    console.log(error)
-    return error.response.data  
+    console.error(error);
+    return error.response.data;
   }
 }
+
+
+const getProducts = async () => {
+  try {
+
+    const response = await apiClient.get('/getProducts');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get fetch momentos:', error);
+    return error.response.data;
+  }
+};
 
 export default {
   userLogin,
@@ -197,5 +211,7 @@ export default {
   logout,
   resetOtp,
   newPass,
-  changePass
+  changePass,
+  getBanners,
+  getProducts
 };
