@@ -14,6 +14,7 @@ router.post('/newPass', userController.newPass)
 router.post('/changePass', userController.changePass)
 
 router.get('/checkAuthenticate', userController.checkAuthenticate)
+router.get('/getProducts', userController.getProducts)
 router.get("/getBanners",userController.getBanners)
 
 

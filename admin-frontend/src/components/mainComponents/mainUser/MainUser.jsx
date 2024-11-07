@@ -14,7 +14,7 @@ function MainUser() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdate , setIsUpdate ] = useState(false)
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true); // Start loading
       try {

@@ -188,6 +188,18 @@ async function getBanners() {
   }
 }
 
+
+const getProducts = async () => {
+  try {
+
+    const response = await apiClient.get('/getProducts');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get fetch momentos:', error);
+    return error.response.data;
+  }
+};
+
 export default {
   userLogin,
   userRegister,
@@ -199,5 +211,6 @@ export default {
   resetOtp,
   newPass,
   changePass,
-  getBanners
+  getBanners,
+  getProducts
 };

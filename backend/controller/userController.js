@@ -11,6 +11,7 @@ import mongoose from "mongoose"; // Ensure mongoose is imported
 import BannerDb from "../model/bannerModal.js";
 import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
 import "dotenv/config";
+import ProductDb from "../model/prodectModel.js";
 
 const login = async (req, res) => {
   try {
@@ -31,7 +32,7 @@ const login = async (req, res) => {
       });
     }
     const passResult = await argon2.verify(isUser.password, password);
-    
+
     if (!passResult) {
       return res.status(400).json({
         error: true,
@@ -110,7 +111,7 @@ const register = async (req, res) => {
     });
 
     const token = await generateToken(newUser);
-    
+
     // Set the tokens as HTTP-only cookies
     res.cookie('accessToken', token.accessToken, {
       httpOnly: true,
@@ -326,6 +327,14 @@ const logout = async (req, res) => {
       });
     }
 
+
+    // if (!accessToken ) {
+    //   return res.status(400).json({
+    //     error: true,
+    //     message: 'Tokens are required for logout',
+    //   });
+    // }
+
     // Clear the cookies
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken', {
@@ -499,19 +508,31 @@ const changePass = async (req, res) => {
   }
 };
 
+const getProducts = async (req, res) => {
+  try {
+
+    const products = await ProductDb.find();
+    res.status(200).json({ error: false, message: 'Products fetched successfully', products })
+
+  } catch (error) {
+    console.error("Error in find momentos:", error); // Log the error for debugging
+    res.status(500).json({ error: true, message: 'An error occurred while finding momentos.' });
+  }
+};
 
 
-async function getBanners(req,res) {
+
+async function getBanners(req, res) {
   try {
     const banners = await BannerDb.find()
-    const datas = banners.map((item)=>{
+    const datas = banners.map((item) => {
       return item.image
     })
     console.log(banners)
     res.status(200).json({
-      error:false,
-      data:datas,
-      message:"Banners fetched successfullly"
+      error: false,
+      data: datas,
+      message: "Banners fetched successfullly"
     })
   } catch (error) {
     console.error(error);
@@ -534,5 +555,6 @@ export default {
   resetOtp,
   newPass,
   changePass,
+  getProducts,
   getBanners
 }
