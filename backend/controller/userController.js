@@ -511,15 +511,23 @@ const changePass = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
+    const { catName } = req.query; // Extract catName from query parameters
 
-    const products = await ProductDb.find();
-    res.status(200).json({ error: false, message: 'Products fetched successfully', products })
+    let filter = {};
 
+    // If catName is provided, filter products by category
+    if (catName) {
+      filter = { category: catName }; // Adjust this to match the field name in your Product model
+    }
+
+    const products = await ProductDb.find(filter); // Apply filter to find products
+    res.status(200).json({ error: false, message: 'Products fetched successfully', products });
   } catch (error) {
-    console.error("Error in find momentos:", error); // Log the error for debugging
-    res.status(500).json({ error: true, message: 'An error occurred while finding momentos.' });
+    console.error("Error in finding products:", error);
+    res.status(500).json({ error: true, message: 'An error occurred while fetching products.' });
   }
 };
+
 
 
 
@@ -620,5 +628,6 @@ export default {
   getProducts,
   getBanners,
   getSingleProduct,
-  getFeaturedProducts
+  getFeaturedProducts,
+  getCategories
 }

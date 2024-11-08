@@ -30,7 +30,7 @@ export default function ProductFilter() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
         const fetchedProducts = await api.getProducts(catName, currentPage, productsPerPage);
         setProducts(Array.isArray(fetchedProducts.products) ? fetchedProducts.products : []);
         setTotalPages(fetchedProducts.totalPages); // Assuming the API returns totalPages for pagination
@@ -41,10 +41,10 @@ export default function ProductFilter() {
         setLoading(false);
       }
     };
-
+  
     fetchProducts();
-  }, [catName, currentPage]);
-
+  }, [catName, currentPage]); // Fetch products when catName or currentPage changes
+  
 
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
@@ -72,7 +72,7 @@ export default function ProductFilter() {
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2">
             <div className="lg:col-span-3">
-              <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
+              <div className="bg-white p-6 rounded-lg max-h-[820px] shadow-lg mb-6">
               {loading && <Loader product={true} />}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
                   {products.map((product) => (

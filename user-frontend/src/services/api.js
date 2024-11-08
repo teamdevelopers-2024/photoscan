@@ -189,16 +189,22 @@ async function getBanners() {
 }
 
 
-const getProducts = async () => {
+const getProducts = async (catName, currentPage, productsPerPage) => {
   try {
-
-    const response = await apiClient.get('/getProducts');
+    const response = await apiClient.get('/getProducts', {
+      params: {
+        catName, // Pass catName as a query parameter
+        page: currentPage,
+        limit: productsPerPage,
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error('Failed to get fetch momentos:', error);
+    console.error('Failed to fetch products:', error);
     return error.response.data;
   }
 };
+  
 
 
 async function getSingleProduct(id) {
@@ -250,5 +256,6 @@ export default {
   getBanners,
   getProducts,
   getSingleProduct,
-  getFeaturedProducts
+  getFeaturedProducts,
+  getCategories
 };
