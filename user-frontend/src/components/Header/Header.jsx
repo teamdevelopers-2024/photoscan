@@ -15,7 +15,7 @@ import api from "../../services/api.js";
 const Header = () => {
   const menus = [
     { name: "Home", route: "/" },
-    { name: "Products", route: "#" },
+    { name: "Products", route: "/products" },
     { name: "About Us", route: "/about" },
     { name: "Contact Us", route: "/contact" },
   ];
@@ -155,8 +155,6 @@ const Header = () => {
       </header>
 
 
-
-
       <header
         ref={headerRef}
         style={{ visibility: "hidden" }}
@@ -255,12 +253,12 @@ const Header = () => {
           {categories.map((category, index) => (
             <div
               key={category._id}
-              className="flex flex-col items-center cursor-pointer hover:text-[#4d4d4d] text-center"
+              className="flex flex-col items-center cursor-pointer text-center"
             >
-              {/* Category Name with onClick */}
+              {/* Category Name with animated underline effect on hover */}
               <span
-                onMouseDown={() => handleCatClick(category.name)} 
-                className="font-bold z-50 text-[14px] mb-2 cursor-pointer"
+                onMouseDown={() => handleCatClick(category.name)}
+                className="relative font-bold text-[14px] mb-2 cursor-pointer hover:text-[#4d4d4d] transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-[2px] after:bg-[#4d4d4d] hover:after:w-full after:transition-all after:duration-300"
               >
                 {category.name}
               </span>
@@ -270,7 +268,7 @@ const Header = () => {
                 {products[index]?.map((product, subIndex) => (
                   <div
                     key={subIndex}
-                    className="text-[12px] cursor-pointer hover:text-[#4d4d4d] py-1"
+                    className="text-[12px] cursor-pointer hover:text-[#333333] hover:scale-105 transform py-1 transition-all duration-200"
                   >
                     {product.productName}
                   </div>
@@ -280,6 +278,8 @@ const Header = () => {
           ))}
         </div>
       </div>
+
+
 
     </>
   );
