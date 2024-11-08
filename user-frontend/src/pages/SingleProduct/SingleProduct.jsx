@@ -15,6 +15,7 @@ function SingleProduct() {
     currentImage: mainimg,
     fileName: "No file chosen",
     product: null,
+    selectedFile: null, // To hold the selected file
   });
 
   const location = useLocation();
@@ -22,37 +23,59 @@ function SingleProduct() {
   const handleTextChange = (e) =>
     setState((prevState) => ({ ...prevState, textInput: e.target.value }));
 
-  const incrementQuantity = () =>
-    setState((prevState) => ({ ...prevState, quantity: prevState.quantity + 1 }));
-
-  const decrementQuantity = () =>
-    setState((prevState) => ({
-      ...prevState,
-      quantity: Math.max(prevState.quantity - 1, 1),
-    }));
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setState((prevState) => ({
       ...prevState,
       fileName: file ? file.name : "No file chosen",
+      selectedFile: file, // Store the selected file
     }));
   };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get("id");
-    console.log(id);
 
     const fetchItem = async () => {
       const result = await api.getSingleProduct(id);
       if (!result.error) {
         setState((prevState) => ({ ...prevState, product: result.data }));
+      } else {
+        console.error("Error fetching product:", result.error);
       }
     };
 
     fetchItem();
   }, [location.search]);
+
+  const addToCart = async (id) => {
+    const parsedData = JSON.parse(localStorage.getItem("user")); // Change to your actual local storage key
+    const userId = parsedData.user._id; // Extract user ID
+    const productId = id;
+
+    const { textInput, selectedFile } = state;
+
+    // Create a form data object to send file and other information
+    const formData = new FormData();
+    formData.append("userId", userId);
+    formData.append("productId", productId);
+    formData.append("textInput", textInput);
+    if (selectedFile) {
+      formData.append("file", selectedFile); // Append the selected file
+    }
+
+    // Send the request to add the item to the cart
+    try {
+      const response = await api.addToCart(formData);
+      if (response.success) {
+        console.log("Item added to cart successfully!");
+      } else {
+        console.error("Failed to add item to cart:", response.message);
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+    }
+  };
 
   return (
     <>
@@ -64,7 +87,9 @@ function SingleProduct() {
               {/* Product and Thumbnail Images */}
               <img
                 className="mx-auto w-3/4 sm:w-96 sm:h-96 rounded-lg"
-                src={state.product ? state.product.images[0] : state.currentImage}
+                src={
+                  state.product ? state.product.images[0] : state.currentImage
+                }
                 alt="Product"
               />
               <div className="flex justify-center mt-10 space-x-2 sm:space-x-4">
@@ -75,7 +100,12 @@ function SingleProduct() {
                       className="w-20 h-16 sm:w-30 sm:h-30 rounded-lg shadow cursor-pointer"
                       src={pic}
                       alt={`Thumbnail ${idx + 1}`}
-                      onClick={() => setState((prevState) => ({ ...prevState, currentImage: pic }))}
+                      onClick={() =>
+                        setState((prevState) => ({
+                          ...prevState,
+                          currentImage: pic,
+                        }))
+                      }
                     />
                   ))}
               </div>
@@ -88,15 +118,22 @@ function SingleProduct() {
                   {state.product ? state.product.productName : "Product Name"}
                 </div>
                 <div className="text-red-400 font-bold font-['Lato'] text-lg">
-                  {state.product ? `₹ ${state.product.offerPrice.toFixed(2)}` : "$56.20"}
+                  {state.product
+                    ? `₹ ${state.product.offerPrice.toFixed(2)}`
+                    : "$56.20"}
                 </div>
                 <div className="text-stone-500 text-xs font-['Lato']">
-                  Actual Price: {state.product ? `₹ ${state.product.actualPrice.toFixed(2)}` : "$60.00"}
+                  Actual Price:{" "}
+                  {state.product
+                    ? `₹ ${state.product.actualPrice.toFixed(2)}`
+                    : "$60.00"}
                 </div>
                 <div className="text-xs font-['Lato']">
                   <span className="text-stone-500">Availability: </span>
                   <span className="text-lime-600">
-                    {state.product && state.product.status ? "In Stock" : "Out of Stock"}
+                    {state.product && state.product.status
+                      ? "In Stock"
+                      : "Out of Stock"}
                   </span>
                 </div>
                 <div className="text-stone-500 text-xs font-['Lato'] leading-5">
@@ -109,27 +146,17 @@ function SingleProduct() {
                 </div>
               </div>
 
-              <div className="flex gap-10 justify-between">
-                {/* Quantity Selector */}
-                <div className="mt-4 flex items-center justify-center sm:justify-start space-x-2 bg-zinc-300 p-1 rounded-lg">
-                  <button onClick={decrementQuantity} className="px-2">
-                    -
-                  </button>
-                  <span className="text-zinc-500 text-xl font-['Lato']">|</span>
-                  <span className="text-center w-8 text-zinc-500 text-xl font-['Lato']">
-                    {state.quantity}
-                  </span>
-                  <span className="text-zinc-500 text-xl font-['Lato']">|</span>
-                  <button onClick={incrementQuantity} className="px-2">
-                    +
-                  </button>
-                </div>
+              <div className="w-full flex gap-10 justify-between">
+                <button
+                  onClick={() => addToCart(state.product._id)} // Reference the function correctly
+                  className="mt-4 flex items-center justify-center sm:justify-start space-x-2 w-1/2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(188,157,124)]"
+                >
+                  Add to cart
+                </button>
 
                 <div className="flex gap-4">
                   {/* Icons Section */}
                   <div className="mt-4 flex justify-center sm:justify-start space-x-3 bg-zinc-300 p-2 rounded-lg">
-                    <img className="w-5 h-5" src={cart} alt="Cart" />
-                    <span className="text-zinc-500 text-xl font-['Lato']">|</span>
                     <img className="w-5 h-5" src={share} alt="Share" />
                     <span className="text-zinc-500 text-xl font-['Lato']">|</span>
                     <img className="w-6 h-6" src={favourite} alt="Favourite" />

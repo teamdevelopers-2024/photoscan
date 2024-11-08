@@ -10,9 +10,12 @@ import "slick-carousel/slick/slick-theme.css";
 // Import AOS
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useNavigate } from "react-router-dom";
 
 export default function FeaturedProducts() {
   const [products, setProducts] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     AOS.init({ duration: 700, easing: "ease-in", offset: 100, delay: 100 });
@@ -23,12 +26,16 @@ export default function FeaturedProducts() {
     try {
       const response = await api.getFeaturedProducts();
       console.log(response);
-      
+
       console.log(response.featuredProducts);
       setProducts(response.featuredProducts);
     } catch (error) {
       console.error("Error fetching featured products:", error);
     }
+  };
+
+  const hanldeProductClick = (id) => {
+    navigate(`/singleProduct?id=${id}`);
   };
 
   const settings = {
@@ -95,6 +102,7 @@ export default function FeaturedProducts() {
             {products.length > 0 ? (
               products.map((product) => (
                 <div
+                  onClick={() => hanldeProductClick(product._id)}
                   data-aos="fade-up"
                   data-aos-delay={product.aosDelay}
                   key={product._id}
@@ -110,7 +118,7 @@ export default function FeaturedProducts() {
                       {product.productName}
                     </div>
                     <div className="text-[#bd7f37] text-base font-semibold font-['Inter']">
-                      ₹{product.productprice}
+                      ₹{product.productPrice}
                     </div>
                   </div>
                 </div>

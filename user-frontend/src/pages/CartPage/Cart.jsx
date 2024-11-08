@@ -11,6 +11,54 @@ function Cart() {
       image: 'https://via.placeholder.com/100',
     },
     {
+      id: 1,
+      name: 'Product 1',
+      price: 29.99,
+      image: 'https://via.placeholder.com/100',
+    },
+    {
+      id: 1,
+      name: 'Product 1',
+      price: 29.99,
+      image: 'https://via.placeholder.com/100',
+    },
+    {
+      id: 1,
+      name: 'Product 1',
+      price: 29.99,
+      image: 'https://via.placeholder.com/100',
+    },
+    {
+      id: 1,
+      name: 'Product 1',
+      price: 29.99,
+      image: 'https://via.placeholder.com/100',
+    },
+    {
+      id: 1,
+      name: 'Product 1',
+      price: 29.99,
+      image: 'https://via.placeholder.com/100',
+    },
+    {
+      id: 1,
+      name: 'Product 1',
+      price: 29.99,
+      image: 'https://via.placeholder.com/100',
+    },
+    {
+      id: 1,
+      name: 'Product 1',
+      price: 29.99,
+      image: 'https://via.placeholder.com/100',
+    },
+    {
+      id: 1,
+      name: 'Product 1',
+      price: 29.99,
+      image: 'https://via.placeholder.com/100',
+    },
+    {
       id: 2,
       name: 'Product 2',
       price: 49.99,
@@ -27,8 +75,8 @@ function Cart() {
   return (
     <>
       <Header />
-      <div className="bg-gray-100 h-[100vh] flex flex-col p-16 md:flex-row">
-        <div className="bg-white rounded-lg h-[79vh] custom-scrollbar shadow-lg p-4 flex-1 overflow-y-scroll">
+      <div className="bg-gray-100 h-[100vh] flex flex-col p-10 md:flex-row">
+        <div className="bg-white rounded-lg h-[79vh]  shadow-lg p-4 flex-1 overflow-y-scroll">
           <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
           <div className="space-y-4">
             {cartItems.map((item) => (
@@ -42,12 +90,12 @@ function Cart() {
                   <p className="text-sm text-gray-600">Price: ${item.price}</p>
                 </div>
                 <div className="flex items-center space-x-4 mt-2 sm:mt-0">
-                  <button
+                  {/* <button
                     onClick={() => console.log(`Added ${item.name} to wishlist!`)}
                     className="text-blue-500 hover:underline"
                   >
                     Add to Wishlist
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => setCartItems(cartItems.filter((i) => i.id !== item.id))}
                     className="text-red-500 hover:underline"
