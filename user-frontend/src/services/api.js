@@ -212,6 +212,19 @@ async function getSingleProduct(id) {
 }
 
 
+
+async function getFeaturedProducts() {
+  try {
+    const response = await apiClient.get(`/featuredProducts`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
+
+
 async function getCategories(status) {
   try {
     const response = await apiClient.get(`/getCategories?status=${status}`)
@@ -222,11 +235,11 @@ async function getCategories(status) {
   }
 }
 
+
 export default {
   userLogin,
   userRegister,
   getOtp,
-  getCategories,
   verifyOtp,
   checkAuthenticate,
   editProfile,
@@ -236,5 +249,6 @@ export default {
   changePass,
   getBanners,
   getProducts,
-  getSingleProduct
+  getSingleProduct,
+  getFeaturedProducts
 };

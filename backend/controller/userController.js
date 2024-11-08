@@ -542,20 +542,31 @@ async function getBanners(req, res) {
 }
 
 
-async function getSingleProduct(req,res) {
+async function getSingleProduct(req, res) {
   try {
-    const {id} = req.query
-    const data = await ProductDb.findOne({_id:id})
+    const { id } = req.query
+    const data = await ProductDb.findOne({ _id: id })
     console.log(data)
     res.status(200).json({
-      error:false,
-      message:"Product data fetched successfully",
-      data:data
+      error: false,
+      message: "Product data fetched successfully",
+      data: data
     })
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: true, message: 'An error occurred while fetching Product.' });
   }
+}
+
+async function getFeaturedProducts(req,res) {
+  try {
+    const featuredProducts = await ProductDb.find({ isFeatured: true }).limit(4);
+    res.status(200).json({ error: false, message: "Featured Products fetched successfully", featuredProducts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: true, message: "An error occured while fetching featured products" });
+  }
+
 }
 
 
@@ -597,7 +608,6 @@ export default {
   login,
   register,
   getOtp,
-  getCategories,
   verifyOtp,
   checkAuthenticate,
   verifyRefreshToken,
@@ -609,5 +619,6 @@ export default {
   changePass,
   getProducts,
   getBanners,
-  getSingleProduct
+  getSingleProduct,
+  getFeaturedProducts
 }
