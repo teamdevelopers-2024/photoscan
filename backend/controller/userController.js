@@ -540,6 +540,33 @@ async function getBanners(req, res) {
   }
 }
 
+const getCategories = async (req, res)=>{
+  try {
+    let obj = {}
+    const active = req.query.active
+    console.log(active)
+    if (active) {
+      obj = {
+        isActive: active
+      }
+    }
+    const data = await CategoryDb.find(obj)
+    console.log(data)
+    res.status(200).json({
+      error: false,
+      data: data
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: true,
+      message: "Internal server error",
+      error,
+    });
+  }
+}
+
+
 
 // Export the controller
 export default {

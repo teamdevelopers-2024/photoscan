@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "./MainDashbord.css";
+import "./MainDashboard.css";
 import Chart from "chart.js/auto";
 import { Line, Pie } from "react-chartjs-2";
-import CustomDropdown from "./customDropDown"; // Make sure to import the CustomDropdown component
+import CustomDropdown from "./customDropDown.jsx"; // Make sure to import the CustomDropdown component
 import api from "../../../services/api.js"
 
 function MainDashbord() {
@@ -15,6 +15,39 @@ function MainDashbord() {
   const [lineChartRange, setLineChartRange] = useState("Monthly");
   const [pieChartCategory, setPieChartCategory] = useState("All");
   const [currentYearIndex, setCurrentYearIndex] = useState(2);
+  const [totalCustomers,setTotalCustomers] = useState(0)
+  const [totalOrders,setTotalOrders] = useState(0)
+  const [totalSales,setTotalSales] = useState(0)
+  const [salesData, setSalesData] = useState(null);
+  const [montlyDataa,setMontlyData] = useState([])
+  const [yearlyDataa,setYearlyData] = useState([])
+  
+    const fetchCardData = async ()=>{
+      try {
+        const response = await api.getCardData()
+        console.log(response.data.totalCustomers,"from fetchCard Data")
+        setTotalCustomers(response.data.totalCustomers)
+        setTotalOrders(response.data.totalOrders)
+        setTotalSales(response.data.totalSales)
+      } catch (error) {
+        console.log("Error Fetching Card Data", error);
+      }
+    }
+    const fetchSalesData = async () => {
+      try {
+        const response = await api.getGraphData();
+        setSalesData(response.data);
+        setMontlyData(response.data.montlyDataa)
+        setYearlyData(response.data.yearlyDataa)
+      } catch (error) {
+        console.error('Error fetching sales data:', error);
+      }
+    };
+  
+    useEffect(()=>{
+      fetchCardData() 
+      fetchSalesData()
+    },[])
 
   const monthlyData = {
     [currentYear - 2]: [1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000],
@@ -35,11 +68,10 @@ function MainDashbord() {
         borderColor: "rgba(83, 101, 126, 0.8)",
         borderWidth: 2,
         pointBackgroundColor: "rgba(83, 101, 126, 1)",
-        data: lineChartRange === "Monthly" ? monthlyData[yearlyLabels[currentYearIndex]] : [15000, 22000, 18000, 30000, 25000, 35000],
+        data: lineChartRange === "Monthly" ? salesData?.monthlyData[yearlyLabels[currentYearIndex]] : salesData.yearlyData.map((yearData) => yearData.totalSales),
       },
     ],
   };
-
   const pieChartColors = [
     "rgba(76, 86, 106, 0.6)",
     "rgba(108, 122, 137, 0.6)",
@@ -49,12 +81,12 @@ function MainDashbord() {
   const allCategoriesData = [3000, 4500, 2756];
 
   const categoryData = {
-    labels: pieChartCategory === "All" ? ["Trophies", "Frames", "Gifts"] : [pieChartCategory],
+    labels: ["Trophies", "Frames", "Gifts"],
     datasets: [
       {
         label: "Sales Distribution by Category",
-        data: pieChartCategory === "All" ? allCategoriesData : [allCategoriesData[["Trophies", "Frames", "Gifts"].indexOf(pieChartCategory)]],
-        backgroundColor: pieChartCategory === "All" ? pieChartColors : [pieChartColors[["Trophies", "Frames", "Gifts"].indexOf(pieChartCategory)]],
+        data: allCategoriesData,
+        backgroundColor: pieChartColors,
         hoverOffset: 4,
       },
     ],
@@ -67,42 +99,30 @@ function MainDashbord() {
       setCurrentYearIndex(currentYearIndex + 1);
     }
   };
-
-
-  const fetchCardData = async ()=>{
-    try {
-      const response = await api.getCardData()
-      console.log(response,"from fetchCard Data")
-    } catch (error) {
-      console.log("Error Fetching Card Data", error);
-    }
-  }
-  useEffect(()=>{
-    fetchCardData() 
-  },[])
+  if (!salesData) return <div>Loading...</div>;
 
   return (
     <div className="dash-main">
       <div className="cards-container">
         <div className="info-card gradient-grayblue">
           <span className="card-title">Total Customers</span>
-          <span className="card-value">749</span>
+          <span className="card-value">{totalCustomers}</span>
         </div>
         <div className="info-card gradient-gray">
           <span className="card-title">Total Orders</span>
-          <span className="card-value">835</span>
+          <span className="card-value">{totalOrders}</span>
         </div>
         <div className="info-card gradient-teal">
           <span className="card-title">Total Sales ($)</span>
-          <span className="card-value">8,256</span>
+          <span className="card-value">{totalSales}</span>
         </div>
       </div>
 
       <div className="filters">
-        <CustomDropdown
-          lineChartRange={lineChartRange}
-          setLineChartRange={setLineChartRange}
-        />
+        <select value={lineChartRange} onChange={(e) => setLineChartRange(e.target.value)}>
+          <option value="Monthly">Monthly</option>
+          <option value="Yearly">Yearly</option>
+        </select>
       </div>
 
       <div className="dash-main-body">
@@ -133,6 +153,6 @@ function MainDashbord() {
       </div>
     </div>
   );
-}
+};
 
 export default MainDashbord;

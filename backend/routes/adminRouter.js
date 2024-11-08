@@ -18,7 +18,8 @@ router.post("/updateOrderStatus",adminAuth, adminController.updateOrderStatus)
 
 router.get('/status',adminController.status)
 router.get('/getUsers',adminAuth,adminController.getUsers)
-router.get('/getCardData',adminAuth,adminController.getCardData)
+router.get('/getCardData',adminController.getCardData)
+router.get('/getGraphData', adminController.getGraphData);
 router.get('/getbanners',adminAuth,adminController.getBanners)
 router.get('/getproducts',adminAuth,adminController.getProducts)
 router.get("/getCategories",adminAuth , adminController.getCategories)

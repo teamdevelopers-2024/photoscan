@@ -5,7 +5,7 @@ import OfferDb from "../model/offerModel.js";
 import UserDb from "../model/userModel.js";
 import productDB from "../model/prodectModel.js"
 import { v2 as cloudinary } from 'cloudinary';
-import orderDb from '../model/'
+import OrderDb from "../model/orderModal.js";
 
 cloudinary.config({
   cloud_name: 'dpjzt7zwf',
@@ -13,44 +13,35 @@ cloudinary.config({
   api_secret: 'DueiTABSuPgrkBrs5OJeSBQMNTQ',
 });
 
-const login = async (req,res)=>{
-    try {
-        const {email , password } = req.body
-        const isEmail = process.env.ADMIN_USERNAME;
-        const isPassword = process.env.ADMIN_PASSWORD;
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body
+    const isEmail = process.env.ADMIN_USERNAME;
+    const isPassword = process.env.ADMIN_PASSWORD;
 
-        if(email != isEmail){
-            return res
-            .status(400)
-            .json({error:true , message:"email is incorrect"})
-        }
-        if(password != isPassword){
-            return res
-            .status(400)
-            .json({error:true , message:"password is incorrect"})
-        }
-        req.session.isAdmin = true 
-        res.status(200).json({
-            error:false,
-            message:"admin logged in successfully"
-        })
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            error:true , 
-            message:"internel server error"
-        })
+    if (email != isEmail) {
+      return res
+        .status(400)
+        .json({ error: true, message: "email is incorrect" })
     }
+    if (password != isPassword) {
+      return res
+        .status(400)
+        .json({ error: true, message: "password is incorrect" })
+    }
+    req.session.isAdmin = true
+    res.status(200).json({
+      error: false,
+      message: "admin logged in successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: true,
+      message: "internel server error"
+    })
   }
-
-
-
-
-
-
-
-
-
+}
 const status = async (req, res) => {
   console.log("isAdmin", req.session.isAdmin);
   if (req.session.isAdmin) {
@@ -63,111 +54,87 @@ const status = async (req, res) => {
 const addBanner = async (req, res) => {
   if (req.body) {
     try {
-
-      // Extract properties from request body
       const data = req.body.data;
       console.log(data);
-
-      // Create a new frame document
       const newBanner = new BannerDb({
         image: data.imageUrl,
         publicId: data.publicId
       });
-
-      // Save the new frame to the database
       await newBanner.save();
-
-      // Send success response
       res.status(201).json({ message: 'Banner added successfully' });
 
     } catch (error) {
-      // Log the error and send a response with the error details
       console.error('Error saving banner:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   } else {
-    // Send a response indicating that the request body is missing
     console.error('Request body is missing');
     res.status(400).json({ error: 'Request body is missing' });
   }
 };
 const addProduct = async (req, res) => {
   if (req.body) {
-      try {
-          // Extract properties from request body
-          const {
-              productName,
-              category,
-              sizes, 
-              description,
-              actualPrice,
-              offerPrice,
-              images 
-          } = req.body;
-          // Create a new product document
-          const newProduct = new productDB({
-              productName,
-              category,
-              sizes,
-              description,
-              actualPrice,
-              offerPrice,
-              images,
-              status:true,
-              catoffer:0,
-              catstatus:true
-          });
+    try {
+      const {
+        productName,
+        category,
+        sizes,
+        description,
+        actualPrice,
+        offerPrice,
+        images
+      } = req.body;
+      const newProduct = new productDB({
+        productName,
+        category,
+        sizes,
+        description,
+        actualPrice,
+        offerPrice,
+        images,
+        status: true,
+        catoffer: 0,
+        catstatus: true
+      });
 
-          // Save the new product to the database
-          await newProduct.save();
+      await newProduct.save();
+      res.status(201).json({ message: 'Product added successfully' });
 
-          // Send success response
-          res.status(201).json({ message: 'Product added successfully' });
-
-      } catch (error) {
-          // Log the error and send a response with the error details
-          console.error('Error saving product:', error);
-          res.status(500).json({ error: 'Internal Server Error' });
-      }
+    } catch (error) {
+      console.error('Error saving product:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   } else {
-      // Send a response indicating that the request body is missing
-      console.error('Request body is missing');
-      res.status(400).json({ error: 'Request body is missing' });
+    console.error('Request body is missing');
+    res.status(400).json({ error: 'Request body is missing' });
   }
 };
 
 const getBanners = async (req, res) => {
   try {
-    // Retrieve all frames from the database
     const data = await BannerDb.find();
-
-    // Send a success response with the retrieved data
     res.status(200).json(data);
   } catch (error) {
-    // Handle errors and send an error response
     console.error('Error fetching banners:', error);
     res.status(500).json({ error: 'Internal Server Error. Error while getting Banners' });
   }
 };
 const getProducts = async (req, res) => {
   try {
-    // Retrieve all frames from the database
-    const data = await productDB.find();
-    
-    // Send a success response with the retrieved data
+    const { status } = req.query
+    const data = await productDB.find({ status: status });
     res.status(200).json(data);
   } catch (error) {
-    // Handle errors and send an error response
     console.error('Error fetching Products:', error);
     res.status(500).json({ error: 'Internal Server Error. Error while getting Products' });
   }
 };
 const deleteBanner = async (req, res) => {
-  const publicId=req.body.publicId;
+  const publicId = req.body.publicId;
   try {
-    const result1 = await BannerDb.deleteOne({publicId:publicId})
+    const result1 = await BannerDb.deleteOne({ publicId: publicId })
     const result = await cloudinary.uploader.destroy(publicId);
-    res.status(200).json({ success: true, result,result1 });
+    res.status(200).json({ success: true, result, result1 });
   } catch (error) {
     console.error("Error deleting image from Cloudinary:", error);
     res.status(500).json({ success: false, error });
@@ -185,7 +152,7 @@ const getUsers = async (req, res) => {
 
     const startIndex = (page - 1) * limit;
 
-    // Fetch users with pagination
+
     const users = await UserDb.find().skip(startIndex).limit(limit);
     console.log(users);
 
@@ -224,16 +191,12 @@ async function addCategory(req, res) {
   try {
     let { name, subcategories } = req.body;
     name = name.toUpperCase();
-    
-    // Check if name is provided
     if (!name) {
       return res.status(400).json({
         error: true,
         message: "Name is required",
       });
     }
-
-    // Check if the category name already exists
     const exist = await CategoryDb.findOne({ name: name });
     if (exist) {
       return res.status(400).json({
@@ -241,8 +204,6 @@ async function addCategory(req, res) {
         message: "Category already exists",
       });
     }
-
-    // Validate and process subcategories if provided
     if (subcategories) {
       if (!Array.isArray(subcategories)) {
         return res.status(400).json({
@@ -250,14 +211,13 @@ async function addCategory(req, res) {
           message: "Subcategories should be an array",
         });
       }
-      // Convert subcategory names to uppercase and remove duplicates
       subcategories = [...new Set(subcategories.map(sub => sub.toUpperCase()))];
     }
 
 
     await CategoryDb.create({
       name: name,
-      subcategories: subcategories.map(sub => ({ name: sub })), // save each as an object with a `name` property
+      subcategories: subcategories.map(sub => ({ name: sub })),
     });
 
     res.status(200).json({
@@ -289,7 +249,7 @@ async function addOffer(req, res) {
       discountPercentage: discountPercentage,
       categoryName: categoryName,
     });
-    await productDB.updateMany({category:categoryName},{catoffer:discountPercentage});
+    await productDB.updateMany({ category: categoryName }, { catoffer: discountPercentage });
     res.status(200).json({
       error: false,
       message: "Offer added successfully!",
@@ -309,13 +269,9 @@ async function addOffer(req, res) {
 }
 const getOffers = async (req, res) => {
   try {
-    // Retrieve all frames from the database
     const data = await OfferDb.find();
-
-    // Send a success response with the retrieved data
     res.status(200).json(data);
   } catch (error) {
-    // Handle errors and send an error response
     console.error('Error fetching banners:', error);
     res.status(500).json({ error: 'Internal Server Error. Error while getting Banners' });
   }
@@ -323,7 +279,7 @@ const getOffers = async (req, res) => {
 
 const deleteOffer = async (req, res) => {
   try {
-    const  id = req.query.id;  
+    const id = req.query.id;
     console.log('adminController', id)
 
     if (!id) {
@@ -332,13 +288,11 @@ const deleteOffer = async (req, res) => {
         message: "Offer ID is required"
       });
     }
-
-    // Find and delete the offer by ID
     console.log('offer deleted')
-    const categoryName=await OfferDb.findOne({_id:id});
+    const categoryName = await OfferDb.findOne({ _id: id });
     const deletedOffer = await OfferDb.findByIdAndDelete(id);
-    
-    await productDB.updateMany({category:categoryName.categoryName},{catoffer:0})
+
+    await productDB.updateMany({ category: categoryName.categoryName }, { catoffer: 0 })
 
     if (!deletedOffer) {
       return res.status(404).json({
@@ -400,11 +354,11 @@ async function categoryActive(req, res) {
     const id = req.query.id
     const data = await CategoryDb.findOneAndUpdate(
       { _id: id },
-      [{ $set: { isActive: { $not: "$isActive" } } }]  // Use aggregation to invert the isActive value
+      [{ $set: { isActive: { $not: "$isActive" } } }]
     );
-    const  activeststus=!data.isActive
+    const activeststus = !data.isActive
 
-    await productDB.updateMany({category:data.name},{catstatus:activeststus});
+    await productDB.updateMany({ category: data.name }, { catstatus: activeststus });
 
     res.status(200).json({
       error: false,
@@ -464,58 +418,223 @@ async function blockUser(req, res) {
   }
 }
 
-async function updateFeatured(req,res) {
+async function updateFeatured(req, res) {
   try {
-    const {id , detail} = req.body  
-    console.log(id ,detail)
-    await productDB.updateOne({_id:id },{$set:detail})
+    const { id, detail } = req.body
+    console.log(id, detail)
+    await productDB.updateOne({ _id: id }, { $set: detail })
     res.status(200).json({
-      error:false,
-      message:"successfull"
+      error: false,
+      message: "successfull"
     })
   } catch (error) {
     console.log(error)
     res.status(500).json({
-      error:true,
-      message:"internel Server error"
+      error: true,
+      message: "internel Server error"
     })
   }
 
 }
-async function getCardData(req,res){
+async function getCardData(req, res) {
   try {
-     const users =  UserDb.length
-     const orders = orderDb
+    const totalCustomers = await UserDb.countDocuments();
 
-     console.log('this is user length',length)
-     res.status(200).json({
-      error:false,
-      data:length
-     })
+    const totalOrders = await OrderDb.countDocuments();
+
+
+    const orders = await OrderDb.find({})
+    const totalSales = orders.reduce((sum, order) => sum + order.totalAmount, 0);
+
+    console.log('Total customers:', totalCustomers);
+    console.log('Total orders:', totalOrders);
+    console.log('Total sales:', totalSales);
+
+    res.status(200).json({
+      error: false,
+      data: { totalCustomers, totalOrders, totalSales },
+    });
+  } catch (error) {
+    console.error("Error fetching card data:", error);
+    res.status(500).json({
+      error: true,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+
+async function updateProductStatus(req, res) {
+  try {
+    const { id } = req.body
+    if (!id) {
+      return res.status(403).json({
+        error: true,
+        message: "id is required"
+      })
+    }
+
+    await productDB.findOneAndUpdate(
+      { _id: id },
+      [{ $set: { status: { $not: ["$status"] } } }],
+      { new: true }
+    );
+
+
+    res.status(200).json({
+      error: false,
+      message: "product status updated successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: false,
+      message: "internel Server error"
+    })
+  }
+}
+async function updateProduct(req, res) {
+  const { id, product } = req.body
+  try {
+    await productDB.updateOne({ _id: id }, {
+      productName: product.productName,
+      description: product.description,
+      actualPrice: product.actualPrice,
+      offerPrice: product.offerPrice,
+    })
+
+    res.status(200).json({
+      error: false,
+      message: "product  updated successfully"
+    })
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: false,
+      message: "internel Server error"
+    })
+  }
+}
+async function getOrder(req, res) {
+  try {
+    const Order = await OrderDb.find();
+    res.status(200).json({
+      error: false,
+      data: Order
+    })
   } catch (error) {
     res.status(500).json({
-      error:true,
-      message:"internal Server error"
+      error: false,
+      message: "internel Server error"
     })
   }
 }
+async function updateOrderStatus(req, res) {
+  try {
+    const { id, status } = req.body
+
+    await OrderDb.updateOne({ orderId: id }, { status: status });
+    const data = await OrderDb.findOne({ orderId: id })
+    console.log(data);
+
+    res.status(200).json({
+      error: false,
+      data: data
+    })
+  } catch (error) {
+    res.status(500).json({
+      error: false,
+      message: "internel Server error"
+    })
+  }
+}
+// Get sales data
+const getGraphData = async (req, res) => {
+  try {
+    const currentYear = new Date().getFullYear(); 
+    const pastYears = Array.from({ length: 5 }, (_, i) => currentYear - (4 - i)); // Generate array of years from 5 years ago to current year
+
+    // Aggregate query to get total sales for each month in the last 5 years
+    const salesData = await OrderDb.aggregate([
+      {
+        $match: {
+          orderDate: {
+            $gte: new Date(`${pastYears[0]}-01-01`), // Start of the 5th past year
+            $lt: new Date(`${currentYear + 1}-01-01`) // Start of the next year
+          }
+        }
+      },
+
+      {
+        $project: {
+          year: { $year: "$orderDate" },
+          month: { $month: "$orderDate" },
+          totalAmount: 1
+        }
+      },
+      {
+        $group: {
+          _id: { year: "$year", month: "$month" },
+          totalSales: { $sum: "$totalAmount" }
+        }
+      },
+      {
+        $sort: { "_id.year": -1, "_id.month": 1 } // Sort by year descending, month ascending
+      }
+    ]);
+
+    // Structure data for frontend
+    const monthlyData = {};
+    salesData.forEach(row => {
+      const { year, month } = row._id;
+      if (!monthlyData[year]) {
+        monthlyData[year] = Array(12).fill(0); // Initialize array for months
+      }
+      monthlyData[year][month - 1] = row.totalSales; // Populate the sales amount for the month
+    });
+
+    // Prepare the response data
+    const responseData = {
+      monthlyData,
+      yearlyData: pastYears.map(year => ({
+        year,
+        totalSales: monthlyData[year] ? monthlyData[year].reduce((acc, curr) => acc + curr, 0) : 0
+      }))
+    };
+    console.log("fetched monthly data ", responseData)
+    return res.status(200).json({
+      error: false,
+      data: responseData
+    })
+  } catch (error) {
+    console.error('Error fetching sales data:', error);
+    return res.status(500).json({ error: 'Error fetching sales data' });
+  }
+};
+
 export default {
-    login,
-    status,
-    getUsers, 
-    addBanner,
-    getBanners,
-    getCardData,
-    addCategory,
-    getCategories,
-    categoryActive,
-    blockUser,
-    logout,
-    deleteBanner,
-    addProduct,
-    getProducts,
-    getOffers,
-    addOffer,
-    deleteOffer,
-    updateFeatured
+  login,
+  status,
+  getUsers,
+  addBanner,
+  getBanners,
+  getCardData,
+  getGraphData,
+  addCategory,
+  getCategories,
+  categoryActive,
+  blockUser,
+  logout,
+  deleteBanner,
+  addProduct,
+  getProducts,
+  getOffers,
+  addOffer,
+  deleteOffer,
+  updateFeatured,
+  updateProductStatus,
+  updateProduct,
+  getOrder,
+  updateOrderStatus
 }
