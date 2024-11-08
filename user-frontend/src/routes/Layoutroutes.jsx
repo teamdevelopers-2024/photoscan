@@ -21,10 +21,13 @@ import Customize from "../components/customize/Customize";
 import NewPassword from "../pages/New Password/NewPassword";
 import Proudcts from "../components/Products/Products";
 import Wishlist from "../pages/Wishlist/Wishlist";
+import ScrollToTop from "./scrollTopap";
+
 
 export default function Layoutroutes() {
     return (
         <Router>
+            <ScrollToTop/>
             <Routes>
                 {/* Private Routes */}
                 <Route element={<PrivateRoute />}>
