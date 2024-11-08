@@ -1,8 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import api from "../../../services/api";
 import { updateUserData } from '../../../redux/userSlice';
-import addressModal from "../../Profile/Components/addressModal"
+import AddAddressForm from '../../../components/addAddress/addAddress';
+
+function ParentComponent() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+
+  // Fetch user data and dispatch to Redux if necessary
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user) {
+        try {
+          const response = await api.getUserProfile();
+          
+            setData(response.data)
+          
+          const responseData = await response.json();
+          dispatch(updateUserData(responseData.user));
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+        }
+      }
+    };
+    fetchUserData();
+  }, [user, dispatch]);
+
+  return <ProfileSection />;
+}
 
 function ProfileSection() {
   const dispatch = useDispatch();
@@ -22,14 +48,13 @@ function ProfileSection() {
     phoneNumber: user?.phoneNumber || '',
   });
 
-  const [addresses, setAddresses] = useState([
-    { id: 1, address: '123 Main St, Springfield, USA', isDefault: true },
-    { id: 2, address: '456 Elm St, Shelbyville, USA', isDefault: false },
-  ]);
+  const [addresses, setAddresses] = useState([]); // State to hold the fetched addresses
+  const [addresEditMode, setAddresEditMode] = useState([]); // Manage edit mode for each address// Manage modal visibility
 
   const [addressEditMode, setAddressEditMode] = useState(addresses.map(() => false));
   const [newAddress, setNewAddress] = useState('');
   const [showModal, setShowModal] = useState(false);
+
 
   const handleChange = (e) => {
     setFormData({
@@ -66,6 +91,10 @@ function ProfileSection() {
     } catch (error) {
       console.error('Error updating user data:', error);
     }
+  };
+  const handleAddAddress = (newAddress) => {
+    console.log('Address added:', newAddress);
+    setShowModal(false); // Close modal after adding
   };
 
   const handleAddressChange = (index, newAddress) => {
@@ -135,11 +164,13 @@ function ProfileSection() {
   }
 
   return (
+            <>
     <main className="flex-1">
       <div className="p-7 w-[84%] h-[100vh] left-[15%] relative bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4">Account Settings</h2>
 
         <div className="space-y-4">
+          {/* Personal Information Section */}
           <div className="flex items-center">
             <div className="flex-1">
               <div className="flex items-center justify-between mb-1">
@@ -193,6 +224,7 @@ function ProfileSection() {
             </div>
           </div>
 
+          {/* Email Section */}
           <div className="flex items-center">
             <div className="flex-1">
               <div className="flex items-center justify-between mb-1">
@@ -229,6 +261,7 @@ function ProfileSection() {
             </div>
           </div>
 
+          {/* Phone Section */}
           <div className="flex items-center">
             <div className="flex-1">
               <div className="flex items-center justify-between mb-1">
@@ -264,93 +297,73 @@ function ProfileSection() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">Addresses</h2>
+          {/* Address Section */}
+          <div className="space-y-4">
+      <h3 className="text-lg font-semibold">Addresses</h3>
+      {addresses.map((address, index) => (
+        <div
+          key={address.id}
+          className="flex items-center justify-between p-3 bg-gray-100 rounded-lg"
+        >
+          <input
+            type="text"
+            value={address.address}
+            onChange={(e) => handleAddressChange(index, e.target.value)}
+            disabled={!addressEditMode[index]}
+            className={`w-full border border-gray-300 rounded-md p-2 ${
+              addressEditMode[index] ? 'bg-white' : 'bg-gray-200'
+            }`}
+          />
+          <div className="ml-4 space-x-2 flex items-center">
             <button
-              className="bg-green-500 text-white rounded-md px-3 py-1 hover:bg-green-600"
-              onClick={() => setShowModal(true)}
+              className="text-sm text-blue-500 hover:underline"
+              onClick={() => toggleAddressEdit(index)}
             >
-              Add Address
+              {addressEditMode[index] ? 'Save' : 'Edit'}
+            </button>
+            {!address.isDefault && (
+              <button
+                className="text-sm text-gray-500 hover:text-blue-500"
+                onClick={() => setDefaultAddress(index)}
+              >
+                Set Default
+              </button>
+            )}
+            <button
+              className="text-sm text-red-500 hover:underline"
+              onClick={() => deleteAddress(index)}
+            >
+              Delete
             </button>
           </div>
-
-          {addresses.map((address, index) => (
-            <div key={address.id} className="flex items-center justify-between mb-2">
-              {addressEditMode[index] ? (
-                <input
-                  type="text"
-                  value={address.address}
-                  onChange={(e) => handleAddressChange(index, e.target.value)}
-                  className="border border-gray-300 rounded-md p-2 flex-1"
-                />
-              ) : (
-                <span className={`flex-1 ${address.isDefault ? 'font-bold' : ''}`}>
-                  {address.address} {address.isDefault && '(Default)'}
-                </span>
-              )}
-              <div className="flex items-center">
-                <button
-                  onClick={() => {
-                    setDefaultAddress(index);
-                    toggleAddressEdit(index);
-                  }}
-                  className={`text-sm ${address.isDefault ? 'text-gray-400' : 'text-blue-500'}`}
-                  disabled={address.isDefault}
-                >
-                  Set as Default
-                </button>
-                <button
-                  onClick={() => toggleAddressEdit(index)}
-                  className="text-sm text-blue-500 mx-2 hover:underline"
-                >
-                  {addressEditMode[index] ? 'Save' : 'Edit'}
-                </button>
-                <button
-                  onClick={() => deleteAddress(index)}
-                  className="text-sm text-red-500 hover:underline"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
         </div>
-      </div>
-
-      {/* Modal for adding new address */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-5 rounded-lg shadow-lg">
-            <h2 className="text-lg font-semibold mb-4">Add New Address</h2>
-            <input
-              type="text"
-              value={newAddress}
-              onChange={(e) => setNewAddress(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 w-full"
-              placeholder="Enter Address"
-            />
-            <div className="mt-4 flex justify-end">
-              <button
-                className="mr-2 bg-gray-300 text-black rounded-md px-3 py-1"
-                onClick={() => setShowModal(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-green-500 text-white rounded-md px-3 py-1"
-                onClick={addAddress}
-              >
-                Add Address
-              </button>
+      ))}
+      <button
+        className="text-blue-500 hover:underline mt-2"
+        onClick={() => setShowModal(true)}
+      >
+        + Add New Address
+      </button>
             </div>
           </div>
         </div>
-      )}
     </main>
+    {showModal && (
+  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div className="bg-white p-6 rounded-lg max-w-md w-full">
+      <AddAddressForm
+        addAddress={addAddress}
+        newAddress={newAddress}
+        setNewAddress={setNewAddress}
+        onClose={() => setShowModal(false)}
+      />
+    </div>
+  </div>
+)}
+
+          </>
   );
 }
 
-export default ProfileSection;
+export default ParentComponent;
