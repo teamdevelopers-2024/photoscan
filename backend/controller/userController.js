@@ -12,6 +12,7 @@ import BannerDb from "../model/bannerModal.js";
 import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
 import "dotenv/config";
 import ProductDb from "../model/prodectModel.js";
+import CategoryDb from "../model/Category.js";
 
 const login = async (req, res) => {
   try {
@@ -567,6 +568,39 @@ async function getFeaturedProducts(req,res) {
   }
 
 }
+
+
+async function getCategories(req, res) {
+  try {
+    // Fetch the first 4 categories from catdb
+    const categories = await CategoryDb.find().limit(4);
+
+    // For each category, fetch up to 10 products
+    const productsByCategory = await Promise.all(
+      categories.map(async (category) => {
+        const products = await ProductDb.find({ category: category.name }) // Adjust filter based on your product schema
+          .limit(10);
+        return products; // Only return products for each category
+      })
+    );
+
+    // Send the result with separate arrays for categories and products
+    res.status(200).json({
+      error: false,
+      message: 'Categories and products fetched successfully',
+      categories: categories, // Array of category details
+      productsByCategory: productsByCategory, // Array of arrays, each containing products for a category
+    });
+  } catch (error) {
+    console.error("Error fetching categories with products:", error);
+    res.status(500).json({
+      error: true,
+      message: 'An error occurred while fetching categories and products.',
+    });
+  }
+}
+
+
 
 
 // Export the controller

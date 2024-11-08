@@ -212,6 +212,7 @@ async function getSingleProduct(id) {
 }
 
 
+
 async function getFeaturedProducts() {
   try {
     const response = await apiClient.get(`/featuredProducts`)
@@ -219,6 +220,18 @@ async function getFeaturedProducts() {
   } catch (error) {
     console.log(error)
     return error.response.data
+  }
+}
+
+
+
+async function getCategories(status) {
+  try {
+    const response = await apiClient.get(`/getCategories?status=${status}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data    
   }
 }
 

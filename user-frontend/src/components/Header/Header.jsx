@@ -24,6 +24,7 @@ const Header = () => {
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
   const [isProductHover, setIsProductHover] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([])
   const navigate = useNavigate();
   const location = useLocation();
   const headerRef = useRef(null);
@@ -34,13 +35,13 @@ const Header = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const data = await api.getCategories(true);
-        // Limit categories to four and each category's subcategories to ten
-        const limitedCategories = data.data.slice(0, 4).map((category) => ({
-          ...category,
-          subcategories: category.subcategories.slice(0, 10),
-        }));
-        setCategories(limitedCategories);
+        const result = await api.getCategories(true);
+
+        if (!result.error) {
+          setCategories(result.categories);
+          setProducts(result.productsByCategory)
+        }
+
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -152,9 +153,13 @@ const Header = () => {
           </div>
         </div>
       </header>
+
+
+
+
       <header
         ref={headerRef}
-        style={{visibility:"hidden"}}
+        style={{ visibility: "hidden" }}
         className="flex justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
       >
         <Link to="/">
@@ -241,25 +246,41 @@ const Header = () => {
 
       {/* Responsive Product Categories Dropdown */}
       <div
-        className={`w-full text-[#666666] text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${isProductHover ? "" : "hidden"
+        className={`w-full text-[#666666] bg-white text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${isProductHover ? "" : "hidden"
           }`}
         onMouseEnter={() => setIsProductHover(true)}
         onMouseLeave={() => setIsProductHover(false)}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full max-w-screen-md border border-gray-300 bg-white py-4 px-5">
-          {categories.map((category) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 w-full max-w-screen-lg py-4 px-2">
+          {categories.map((category, index) => (
             <div
-              key={category.id}
-              className="flex flex-col items-start cursor-pointer hover:text-[#4d4d4d] text-left"
-              onMouseDown={() => handleCatClick(category.category)} // Updated event to ensure click is detected
+              key={category._id}
+              className="flex flex-col items-center cursor-pointer hover:text-[#4d4d4d] text-center"
             >
-              <span className="font-bold text-[12px]">
+              {/* Category Name with onClick */}
+              <span
+                onMouseDown={() => handleCatClick(category.name)} 
+                className="font-bold z-50 text-[14px] mb-2 cursor-pointer"
+              >
                 {category.name}
               </span>
+
+              {/* Display Products Under the Category */}
+              <div className="bg-white mt-2 w-full">
+                {products[index]?.map((product, subIndex) => (
+                  <div
+                    key={subIndex}
+                    className="text-[12px] cursor-pointer hover:text-[#4d4d4d] py-1"
+                  >
+                    {product.productName}
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
       </div>
+
     </>
   );
 };
