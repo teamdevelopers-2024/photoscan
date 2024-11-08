@@ -212,6 +212,16 @@ async function getSingleProduct(id) {
 }
 
 
+async function getCategories(status) {
+  try {
+    const response = await apiClient.get(`/getCategories?status=${status}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data    
+  }
+}
+
 export default {
   userLogin,
   userRegister,
