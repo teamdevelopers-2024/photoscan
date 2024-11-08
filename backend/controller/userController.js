@@ -541,6 +541,23 @@ async function getBanners(req, res) {
 }
 
 
+async function getSingleProduct(req,res) {
+  try {
+    const {id} = req.query
+    const data = await ProductDb.findOne({_id:id})
+    console.log(data)
+    res.status(200).json({
+      error:false,
+      message:"Product data fetched successfully",
+      data:data
+    })
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: true, message: 'An error occurred while fetching Product.' });
+  }
+}
+
+
 // Export the controller
 export default {
   login,
@@ -556,5 +573,6 @@ export default {
   newPass,
   changePass,
   getProducts,
-  getBanners
+  getBanners,
+  getSingleProduct
 }

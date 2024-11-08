@@ -10,17 +10,16 @@ import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 import MyOrder from "../components/MyOrders/MyOrder";
 import Cart from "../pages/CartPage/Cart";
 import Profile from "../pages/Profile/Profile";
-import MomentoListing from "../pages/Products_Listing/ProductsListing";
 import FrameListing from "../pages/Frames_Listing/FrameListing";
 import PageNotFound from "../pages/404/PageNotFound";
-import SingleProduct from "../pages/Single Product/SingleProduct";
 import PrivateRoute from "./PrivateRoute";
 import RedirectIfAuthenticated from "./RedirectIfAuthenticated";
 import ForgotPass from "../pages/forgtoPass/ForgotPass";
-import MomentoPage from "../pages/momentoPage/MomentoPage";
 import FramePage from "../pages/framePage/FramePage";
+import SingleProduct from "../pages/singleProduct/SingleProduct";
 import Customize from "../components/customize/Customize";
 import NewPassword from "../pages/New Password/NewPassword";
+import Proudcts from "../components/Products/Products";
 
 export default function Layoutroutes() {
     return (
@@ -50,9 +49,9 @@ export default function Layoutroutes() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/about" element={<Aboutus />} />
-                <Route path="/products" element={<MomentoListing />} />
+                <Route path="/products" element={<Proudcts />} />
                 <Route path="*" element={<PageNotFound />} />
-                <Route path="/momentopage" element={<MomentoPage />} />
+                <Route path="/singleProduct" element={<SingleProduct />} />
                 <Route path="/framepage" element={<FramePage />} />
                 <Route path="/customise" element={<Customize/>} />
                 <Route path="/resetpassword" element={<NewPassword />} />
