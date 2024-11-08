@@ -102,7 +102,7 @@ const Header = () => {
             onClick={handleUserClick}
             className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110"
           />
-          <Link to="">
+          <Link to="/wishlist">
             <FaHeart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
           </Link>
           <div className="relative h-auto" onClick={toggleCartDropdown}>
@@ -147,7 +147,7 @@ const Header = () => {
             </ul>
             <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
                <FaUser onClick={()=> navigate('/profile')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-              <FaHeart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              <FaHeart onClick={()=> navigate('/wishlist')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
 
               <div className="relative" onClick={toggleCartDropdown}>
