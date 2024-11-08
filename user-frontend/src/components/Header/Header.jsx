@@ -5,6 +5,7 @@ import {
   FaShoppingCart,
   FaBars,
   FaTimes,
+  FaHeart,
 } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
 import CartDropdown from "../cartDropdown/CardDropdown";
@@ -24,7 +25,7 @@ const Header = () => {
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
   const [isProductHover, setIsProductHover] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const headerRef = useRef(null);
@@ -39,9 +40,8 @@ const Header = () => {
 
         if (!result.error) {
           setCategories(result.categories);
-          setProducts(result.productsByCategory)
+          setProducts(result.productsByCategory);
         }
-
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -102,8 +102,8 @@ const Header = () => {
             onClick={handleUserClick}
             className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110"
           />
-          <Link to="">
-            <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+          <Link to="/wishlist">
+            <FaHeart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
           </Link>
           <div className="relative h-auto" onClick={toggleCartDropdown}>
             <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
@@ -119,8 +119,9 @@ const Header = () => {
         </button>
 
         <div
-          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"
-            } md:hidden w-full`}
+          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${
+            isMenuOpen ? "translate-x-0" : "translate-x-full"
+          } md:hidden w-full`}
           style={{ maxWidth: "100%" }}
         >
           <div className="relative p-4">
@@ -137,6 +138,7 @@ const Header = () => {
               {menus.map((menu, index) => (
                 <li
                   key={index}
+                  onClick={()=> navigate(menu.route)}
                   className="cursor-pointer hover:text-[#4d4d4d] text-xl"
                 >
                   {menu.name.toUpperCase()}
@@ -144,8 +146,10 @@ const Header = () => {
               ))}
             </ul>
             <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
-              <FaUser className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+               <FaUser onClick={()=> navigate('/profile')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              <FaHeart onClick={()=> navigate('/wishlist')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+
               <div className="relative" onClick={toggleCartDropdown}>
                 <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               </div>
@@ -153,7 +157,6 @@ const Header = () => {
           </div>
         </div>
       </header>
-
 
       <header
         ref={headerRef}
@@ -205,8 +208,9 @@ const Header = () => {
         </button>
 
         <div
-          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"
-            } md:hidden w-full`}
+          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${
+            isMenuOpen ? "translate-x-0" : "translate-x-full"
+          } md:hidden w-full`}
           style={{ maxWidth: "100%" }}
         >
           <div className="relative p-4">
@@ -244,8 +248,9 @@ const Header = () => {
 
       {/* Responsive Product Categories Dropdown */}
       <div
-        className={`w-full text-[#666666] bg-white text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${isProductHover ? "" : "hidden"
-          }`}
+        className={`w-full text-[#666666] bg-white text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${
+          isProductHover ? "" : "hidden"
+        }`}
         onMouseEnter={() => setIsProductHover(true)}
         onMouseLeave={() => setIsProductHover(false)}
       >
@@ -278,9 +283,6 @@ const Header = () => {
           ))}
         </div>
       </div>
-
-
-
     </>
   );
 };

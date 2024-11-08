@@ -1,31 +1,37 @@
 import mongoose from "mongoose";
 
-
-const cartSchema = new mongoose.Schema({
-    userID: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "User", 
+// Define the cart schema
+const cartSchema = new mongoose.Schema(
+    {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "User", // Reference to the User model
+        },
+        items: [
+            {
+                productId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Product", // Reference to the Product model
+                    required: true,
+                },
+                image: {  // Changed from images to a single image
+                    type: String,
+                    required: false,
+                },
+                textInput: {  // Changed from textInput array to a single textInput
+                    type: String,
+                    required: false,
+                },
+            },
+        ],
     },
-    productID: [{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Product", 
-        required: true,
-    }],
-    images: [{
-        type: String,
-        required: false,
-    }],
-    texts: [{
-        type: String,
-        required: false,
-    }],
-}, {
-    timestamps: true, 
-});
+    {
+        timestamps: true, // Automatically manage createdAt and updatedAt fields
+    }
+);
 
-
+// Create the Cart model from the schema
 const CartDb = mongoose.model("Cart", cartSchema);
 
 export default CartDb;
-

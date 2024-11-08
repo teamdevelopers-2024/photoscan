@@ -6,7 +6,7 @@ import './Loading.css';
 import Adminlogin from "../components/Pages/admimLogin/Adminlogin";
 import AdminHome from "../components/Pages/adminHome/AdminHome";
 import AdminUser from "../components/mainComponents/mainUser/MainUser";
-import AdminDashbord from "../components/mainComponents/mainDashbord/MainDashbord";
+import AdminDashbord from "../components/mainComponents/mainDashbord/MainDashboard";
 import AdminProduct from "../components/mainComponents/mainProduct/MainProduct";
 import AdminCategory from "../components/mainComponents/mainCategory/Category";
 import AdminOrder from "../components/mainComponents/mainOrder/MainOrder";
