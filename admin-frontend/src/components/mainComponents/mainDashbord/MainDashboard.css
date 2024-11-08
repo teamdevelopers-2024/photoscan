@@ -222,10 +222,11 @@
 
   /* Filter Styling */
   .filters {
+    width: 100%;
     display: flex;
-    gap: 1rem;
+    /* gap: 1rem; */
     margin-bottom: 1rem;
-    justify-content: center;
+    justify-content: space-between;
   }
 
   .filters label {
@@ -306,6 +307,48 @@
     margin-left: 10px;
     /* Add spacing between button and chart */
   }
+
+  .download-button {
+    position: relative;
+    padding: 0.5rem 1rem;
+    margin-left: 1rem;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden; /* To hide the pseudo-element overflow */
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 0;
+  }
+  
+  .download-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #4b6584, #778ca3);
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    border-radius: 8px;
+    opacity: 1;
+  }
+  
+  .download-button:hover::before {
+    background: linear-gradient(135deg, #20c997, #17a2b8);
+    opacity: 1;
+  }
+  
+  .download-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
 
 
   /* Responsive Adjustments */
