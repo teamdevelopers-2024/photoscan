@@ -20,12 +20,13 @@ const CustomDropdown = ({ lineChartRange, setLineChartRange }) => {
     <div className="relative inline-block">
       <label className="flex items-center">
         Line Chart Range:
-        <div className="ml-2 relative">
+        <div className="ml-2 relative shadow-md rounded-lg">
           <button
             onClick={toggleDropdown}
-            className="bg-white text-black border border-gray-300 rounded-lg py-2 px-4 focus:border-blue-500 focus:ring-blue-500 transition duration-200"
+            className="bg-white text-black border border-gray-300 rounded-lg py-2 px-4 flex items-center focus:border-blue-500 focus:ring-blue-500 transition duration-200"
           >
             {lineChartRange}
+            <span className="ml-2">&#9662;</span> {/* Down arrow added here */}
           </button>
           {isOpen && (
             <div className="absolute z-10 bg-white border border-gray-300 rounded-lg mt-1 shadow-lg">
