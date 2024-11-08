@@ -74,36 +74,40 @@ const addBanner = async (req, res) => {
 };
 const addProduct = async (req, res) => {
   if (req.body) {
-    try {
-      const {
-        productName,
-        category,
-        sizes,
-        description,
-        actualPrice,
-        offerPrice,
-        images
-      } = req.body;
-      const newProduct = new productDB({
-        productName,
-        category,
-        sizes,
-        description,
-        actualPrice,
-        offerPrice,
-        images,
-        status: true,
-        catoffer: 0,
-        catstatus: true
-      });
+      try {
+          const {
+              productName,
+              category,
+              sizes, 
+              description,
+              actualPrice,
+              offerPrice,
+              images,
+              numberOfTextFields,
+              includeLogo
+          } = req.body;
+          const newProduct = new productDB({
+              productName,
+              category,
+              sizes,
+              description,
+              actualPrice,
+              offerPrice,
+              images,
+              status:true,
+              catoffer:0,
+              catstatus:true,
+              includelogo:includeLogo,
+              textfeild:numberOfTextFields
+          });
 
-      await newProduct.save();
-      res.status(201).json({ message: 'Product added successfully' });
+          await newProduct.save();
+          res.status(201).json({ message: 'Product added successfully' });
 
-    } catch (error) {
-      console.error('Error saving product:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
+      } catch (error) {
+          console.error('Error saving product:', error);
+          res.status(500).json({ error: 'Internal Server Error' });
+      }
   } else {
     console.error('Request body is missing');
     res.status(400).json({ error: 'Request body is missing' });

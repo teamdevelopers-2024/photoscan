@@ -40,6 +40,12 @@ const productSchema = new mongoose.Schema({
     isFeatured:{
         type:Boolean,
         default:false
+    },
+    includelogo:{
+        type:Boolean
+    },
+    textfeild:{
+        type:Number
     }
 });
 

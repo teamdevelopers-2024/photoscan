@@ -15,7 +15,7 @@ import api from "../../services/api.js";
 const Header = () => {
   const menus = [
     { name: "Home", route: "/" },
-    { name: "Products", route: "#" },
+    { name: "Products", route: "/products" },
     { name: "About Us", route: "/about" },
     { name: "Contact Us", route: "/contact" },
   ];
@@ -24,6 +24,7 @@ const Header = () => {
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
   const [isProductHover, setIsProductHover] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([])
   const navigate = useNavigate();
   const location = useLocation();
   const headerRef = useRef(null);
@@ -34,13 +35,13 @@ const Header = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const data = await api.getCategories(true);
-        // Limit categories to four and each category's subcategories to ten
-        const limitedCategories = data.data.slice(0, 4).map((category) => ({
-          ...category,
-          subcategories: category.subcategories.slice(0, 10),
-        }));
-        setCategories(limitedCategories);
+        const result = await api.getCategories(true);
+
+        if (!result.error) {
+          setCategories(result.categories);
+          setProducts(result.productsByCategory)
+        }
+
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -63,14 +64,100 @@ const Header = () => {
     navigate("/profile");
   };
 
-  const handleCatClick = (id) => {
-    navigate(`/products?catid=${id}`);
+  const handleCatClick = (catName) => {
+    navigate(`/products?catName=${catName}`);
   };
 
   return (
     <>
       <header
         ref={headerRef}
+        className="flex justify-between items-center fixed shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white bg-opacity-5 z-50"
+      >
+        <Link to="/">
+          <div className="w-[8rem] md:w-[12rem]">
+            <img className="p-2 md:ml-3 cursor-pointer" src={logo} alt="logo" />
+          </div>
+        </Link>
+        <div className="hidden md:grid text-[#666666] text-sm font-[600] p-2 md:p-4 tracking-tight">
+          <ul className="flex justify-center items-center gap-4 md:gap-5 relative">
+            {menus.map((menu, index) => (
+              <li
+                key={index}
+                className="relative cursor-pointer hover:text-[#4d4d4d]"
+                onMouseEnter={() =>
+                  menu.name === "Products" && setIsProductHover(true)
+                }
+              >
+                <Link to={menu.route} className="block">
+                  {menu.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="hidden md:flex justify-center items-center gap-4 md:gap-5 w-[12rem] md:w-[16rem] p-2 md:p-4 text-[1rem] md:text-[1.2rem]">
+          <FaUser
+            onClick={handleUserClick}
+            className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110"
+          />
+          <Link to="">
+            <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+          </Link>
+          <div className="relative h-auto" onClick={toggleCartDropdown}>
+            <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+            {isCartDropdownOpen && <CartDropdown />}
+          </div>
+        </div>
+
+        <button
+          onClick={toggleMenu}
+          className="md:hidden p-2 text-lg hover:text-[#4d4d4d] transition-all duration-300"
+        >
+          {isMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
+        <div
+          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+            } md:hidden w-full`}
+          style={{ maxWidth: "100%" }}
+        >
+          <div className="relative p-4">
+            <button
+              onClick={toggleMenu}
+              className="absolute top-4 right-4 text-2xl hover:text-[#4d4d4d] transition-all duration-300"
+            >
+              <FaTimes />
+            </button>
+            <div className="flex justify-center mb-8">
+              <img className="w-[8rem] md:w-[12rem]" src={logo} alt="logo" />
+            </div>
+            <ul className="flex flex-col items-center space-y-4">
+              {menus.map((menu, index) => (
+                <li
+                  key={index}
+                  className="cursor-pointer hover:text-[#4d4d4d] text-xl"
+                >
+                  {menu.name.toUpperCase()}
+                </li>
+              ))}
+            </ul>
+            <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
+              <FaUser className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              <div className="relative" onClick={toggleCartDropdown}>
+                <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+
+      <header
+        ref={headerRef}
+        style={{ visibility: "hidden" }}
         className="flex justify-between items-center shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
       >
         <Link to="/">
@@ -118,9 +205,8 @@ const Header = () => {
         </button>
 
         <div
-          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${
-            isMenuOpen ? "translate-x-0" : "translate-x-full"
-          } md:hidden w-full`}
+          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+            } md:hidden w-full`}
           style={{ maxWidth: "100%" }}
         >
           <div className="relative p-4">
@@ -158,56 +244,43 @@ const Header = () => {
 
       {/* Responsive Product Categories Dropdown */}
       <div
-        className={`w-full text-[#666666] text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${
-          isProductHover ? "" : "hidden"
-        }`}
+        className={`w-full text-[#666666] bg-white text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${isProductHover ? "" : "hidden"
+          }`}
         onMouseEnter={() => setIsProductHover(true)}
-        onMouseLeave={() => {
-          setIsProductHover(false);
-          setSubCategoryIndex(null); // Reset subcategory index on hover out
-        }}
+        onMouseLeave={() => setIsProductHover(false)}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full max-w-screen-md border border-gray-300 bg-white py-4 px-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-32  py-4 px-2">
           {categories.map((category, index) => (
             <div
-              key={index}
-              className="flex flex-col items-start cursor-pointer hover:text-[#4d4d4d] text-left relative"
-              onMouseEnter={() => setSubCategoryIndex(index)} // Set the index on hover
-              onMouseLeave={() => setSubCategoryIndex(null)} // Clear the index on mouse leave
+              key={category._id}
+              className="flex flex-col items-center cursor-pointer text-center"
             >
-              <div className="flex items-center">
-                <span
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleCatClick(category._id);
-                  }} // Call the handler with the category ID
-                  className="font-bold text-[12px] cursor-pointer"
-                >
-                  {category.name} {/* Display the category name */}
-                </span>
-                {/* {subCategoryIndex === index ? (
-                  <FaChevronDown className="ml-2 text-[10px]" />
-                ) : (
-                  <FaChevronRight className="ml-2 text-[10px]" />
-                )} */}
+              {/* Category Name with animated underline effect on hover */}
+              <span
+                onMouseDown={() => handleCatClick(category.name)}
+                className="relative font-bold text-[14px] mb-2 cursor-pointer hover:text-[#4d4d4d] transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-[2px] after:bg-[#4d4d4d] hover:after:w-full after:transition-all after:duration-300"
+              >
+                {category.name}
+              </span>
+
+              {/* Display Products Under the Category */}
+              <div className="bg-white mt-2 w-full">
+                {products[index]?.map((product, subIndex) => (
+                  <div
+                    key={subIndex}
+                    className="text-[12px] cursor-pointer hover:text-[#333333] hover:scale-105 transform py-1 transition-all duration-200"
+                  >
+                    {product.productName}
+                  </div>
+                ))}
               </div>
-              {/* Subcategories appear directly below the category div */}
-              {/* {subCategoryIndex === index && (
-                <div className="bg-white  mt-1  p-2  w-full">
-                  {category.subcategories.map((sub, subIndex) => (
-                    <div
-                      key={subIndex}
-                      className="text-[10px] cursor-pointer hover:text-[#4d4d4d] py-1"
-                    >
-                      {sub}
-                    </div>
-                  ))}
-                </div>
-              )} */}
             </div>
           ))}
         </div>
       </div>
+
+
+
     </>
   );
 };

@@ -12,6 +12,7 @@ import BannerDb from "../model/bannerModal.js";
 import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
 import "dotenv/config";
 import ProductDb from "../model/prodectModel.js";
+import CategoryDb from "../model/Category.js";
 
 const login = async (req, res) => {
   try {
@@ -510,15 +511,23 @@ const changePass = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
+    const { catName } = req.query; // Extract catName from query parameters
 
-    const products = await ProductDb.find();
-    res.status(200).json({ error: false, message: 'Products fetched successfully', products })
+    let filter = {};
 
+    // If catName is provided, filter products by category
+    if (catName) {
+      filter = { category: catName }; // Adjust this to match the field name in your Product model
+    }
+
+    const products = await ProductDb.find(filter); // Apply filter to find products
+    res.status(200).json({ error: false, message: 'Products fetched successfully', products });
   } catch (error) {
-    console.error("Error in find momentos:", error); // Log the error for debugging
-    res.status(500).json({ error: true, message: 'An error occurred while finding momentos.' });
+    console.error("Error in finding products:", error);
+    res.status(500).json({ error: true, message: 'An error occurred while fetching products.' });
   }
 };
+
 
 
 
@@ -568,12 +577,72 @@ const getCategories = async (req, res)=>{
 
 
 
+async function getSingleProduct(req, res) {
+  try {
+    const { id } = req.query
+    const data = await ProductDb.findOne({ _id: id })
+    console.log(data)
+    res.status(200).json({
+      error: false,
+      message: "Product data fetched successfully",
+      data: data
+    })
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: true, message: 'An error occurred while fetching Product.' });
+  }
+}
+
+async function getFeaturedProducts(req,res) {
+  try {
+    const featuredProducts = await ProductDb.find({ isFeatured: true }).limit(4);
+    res.status(200).json({ error: false, message: "Featured Products fetched successfully", featuredProducts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: true, message: "An error occured while fetching featured products" });
+  }
+
+}
+
+
+async function getCategories(req, res) {
+  try {
+    // Fetch the first 4 categories from catdb
+    const categories = await CategoryDb.find().limit(4);
+
+    // For each category, fetch up to 10 products
+    const productsByCategory = await Promise.all(
+      categories.map(async (category) => {
+        const products = await ProductDb.find({ category: category.name }) // Adjust filter based on your product schema
+          .limit(10);
+        return products; // Only return products for each category
+      })
+    );
+
+    // Send the result with separate arrays for categories and products
+    res.status(200).json({
+      error: false,
+      message: 'Categories and products fetched successfully',
+      categories: categories, // Array of category details
+      productsByCategory: productsByCategory, // Array of arrays, each containing products for a category
+    });
+  } catch (error) {
+    console.error("Error fetching categories with products:", error);
+    res.status(500).json({
+      error: true,
+      message: 'An error occurred while fetching categories and products.',
+    });
+  }
+}
+
+
+
+
 // Export the controller
 export default {
   login,
   register,
   getOtp,
-  getCategories,
   verifyOtp,
   checkAuthenticate,
   verifyRefreshToken,
@@ -584,5 +653,8 @@ export default {
   newPass,
   changePass,
   getProducts,
-  getBanners
+  getBanners,
+  getSingleProduct,
+  getFeaturedProducts,
+  getCategories
 }

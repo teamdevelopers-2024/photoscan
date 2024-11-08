@@ -13,10 +13,13 @@ router.post('/resetOtp', userController.resetOtp)
 router.post('/newPass', userController.newPass)
 router.post('/changePass', userController.changePass)
 
-router.get('/getCategories', userController.getCategories)
+// router.get('/getCategories', userController.getCategories)
 router.get('/checkAuthenticate', userController.checkAuthenticate)
 router.get('/getProducts', userController.getProducts)
 router.get("/getBanners",userController.getBanners)
+router.get("/getSingleProduct",userController.getSingleProduct)
+router.get("/featuredProducts",userController.getFeaturedProducts)
+router.get("/getCategories",userController.getCategories)
 
 
 router.delete('/logout', userController.logout)
