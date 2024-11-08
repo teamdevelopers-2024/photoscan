@@ -32,3 +32,8 @@
   left: 50%;
   transform: translateX(-50%); 
 }
+
+.onhover{
+    display: flex;
+}
+
