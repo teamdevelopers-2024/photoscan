@@ -207,6 +207,7 @@ const checkAuthenticate = async (req, res) => {
     const id = req.query.id;
 
     if (!accessToken) {
+      console.log("accesstoken is not have")
       return res.status(400).json({
         error: true,
         message: 'Access token is required',
@@ -514,11 +515,14 @@ const getProducts = async (req, res) => {
   try {
     const { catName } = req.query; // Extract catName from query parameters
 
-    let filter = {};
+    let filter = {
+      status : true ,
+      catstatus : true
+    };
 
-    // If catName is provided, filter products by category
+   
     if (catName) {
-      filter = { category: catName }; // Adjust this to match the field name in your Product model
+      filter.category = catName;
     }
 
     const products = await ProductDb.find(filter); // Apply filter to find products
@@ -549,6 +553,7 @@ async function getBanners(req, res) {
     res.status(500).json({ error: true, message: 'An error occurred while fetching banners.' });
   }
 }
+
 
 
 async function getSingleProduct(req, res) {

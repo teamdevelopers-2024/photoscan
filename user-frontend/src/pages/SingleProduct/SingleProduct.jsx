@@ -7,6 +7,7 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import Loader from "../../components/loader/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
@@ -20,6 +21,7 @@ function SingleProduct() {
     selectedFile: null, // To hold the selected file
   });
   const user = useSelector((state) => state.user.user);
+  const [loading , setLoading ] = useState(false)
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -38,7 +40,7 @@ function SingleProduct() {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get("id");
-
+    setLoading(true)
     const fetchItem = async () => {
       const result = await api.getSingleProduct(id);
       if (!result.error) {
@@ -46,6 +48,7 @@ function SingleProduct() {
       } else {
         console.error("Error fetching product:", result.error);
       }
+      setLoading(false)
     };
 
     fetchItem();
@@ -144,6 +147,7 @@ function SingleProduct() {
 
   return (
     <>
+    {loading && <Loader/>}
       <Header />
       <div className="min-h-screen">
         <main className="w-full justify-center p-4">
