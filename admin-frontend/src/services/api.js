@@ -6,255 +6,118 @@ const apiClient = axios.create({
     withCredentials: true,
 });
 
+// Centralized helper function for making API requests
+const apiRequest = async (method, url, data = null) => {
+    try {
+        const response = await apiClient({ method, url, data });
+        return response.data;
+    } catch (error) {
+        let errorMessage = "An error occurred.";
+
+        if (error.response) {
+            errorMessage = error.response?.data?.message || errorMessage;
+        } else if (error.request) {
+            errorMessage = "No response received from server.";
+        } else {
+            errorMessage = error.message || errorMessage;
+        }
+
+        console.error(`Error during ${method} request to ${url}:`, error);
+        return { error: true, message: errorMessage };
+    }
+};
+
+// API functions using the centralized request handler
 
 const checkAdmin = async (email, password) => {
-    console.log('Admin Login Attempt:', { email, password });
-
-    try {
-        const response = await apiClient.post('/login', { email, password });
-        console.log('Admin Login Response:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Admin Login Error:', error);
-        return null;
-    }
+    return await apiRequest('post', '/login', { email, password });
 };
-
 
 const getUsers = async (limit, page) => {
-    console.log('Fetching Users:', { limit, page });
-
-    try {
-        const response = await apiClient.get(`/getUsers?page=${page}&limit=${limit}`);
-        console.log('Fetched Users:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Get Users Error:', error);
-        return null;
-    }
+    return await apiRequest('get', `/getUsers?page=${page}&limit=${limit}`);
 };
-
 
 const addBanner = async (data) => {
-    console.log('Adding Banner:', data);
-
-    try {
-        const response = await apiClient.post('/addbanner', { data });
-        console.log('Add Frame Response:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error adding frame:', error);
-        return null;
-    }
+    return await apiRequest('post', '/addbanner', { data });
 };
-const deleteBanner = async (publicId) => {
-    console.log('deleting Banner:', publicId);
 
-    try {
-        const response = await apiClient.post('/deletebanner', { publicId });
-        console.log('Deleted banner sucessfully:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error adding frame:', error);
-        return null;
-    }
+const deleteBanner = async (publicId) => {
+    return await apiRequest('post', '/deletebanner', { publicId });
 };
 
 const getBanners = async () => {
-    console.log('Fetching Banners...');
-
-    try {
-        const response = await apiClient.get('/getbanners');
-        console.log('Fetched Banners:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error getting Banners:', error);
-        return null;
-    }
+    return await apiRequest('get', '/getbanners');
 };
+
 const getProducts = async (isUnlisted) => {
-    console.log('Fetching Banners...');
-
-    try {
-        const response = await apiClient.get(`/getproducts?status=${isUnlisted}`);
-        console.log('Fetched Products:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error getting Products:', error);
-        return null;
-    }
+    return await apiRequest('get', `/getproducts?status=${isUnlisted}`);
 };
 
+const addCategory = async (body) => {
+    return await apiRequest('post', '/addCategory', body);
+};
 
-async function addCategory(body) {
-    try {
-        const response = await apiClient.post("/addCategory", body)
-        return response.data
-    } catch (error) {
-        console.log(error)
-        return error.response.data
-    }
-}
-async function addProduct(body) {
-    try {
-        const response = await apiClient.post("/addproduct", body)
-        return response.data
-    } catch (error) {
-        console.log(error)
-        return error.response.data
-    }
-}
+const addProduct = async (body) => {
+    return await apiRequest('post', '/addproduct', body);
+};
 
-
-
-async function getCategories(active) {
-    try {
-        const response = await apiClient.get(`/getCategories?active=${active}`)
-        return response.data
-    } catch (error) {
-        console.log(error)
-        return error.response.data
-    }
-}
+const getCategories = async (active) => {
+    return await apiRequest('get', `/getCategories?active=${active}`);
+};
 
 const getOffers = async () => {
-    console.log('Fetching Offers...');
-
-    try {
-        const response = await apiClient.get('/getOffers');
-        console.log('Fetched Offers:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error getting Offers:', error);
-        return null;
-    }
+    return await apiRequest('get', '/getOffers');
 };
+
 const getOrder = async () => {
-    console.log('Fetching Orders...');
-
-    try {
-        const response = await apiClient.get('/getorder');
-        console.log('Fetched Oders:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error getting Oders:', error);
-        return null;
-    }
+    return await apiRequest('get', '/getorder');
 };
 
-async function addOffer(newOffer) {
-    try {
-        const response = await apiClient.post('/addOffer', newOffer)
-        return response.data;
-    }
-    catch (error) {
-        console.log(error)
-        return error.response.data;
-    }
-}
+const addOffer = async (newOffer) => {
+    return await apiRequest('post', '/addOffer', newOffer);
+};
+
 const deleteOffer = async (id) => {
-    console.log('Deleting Offer:', { id });
-
-    try {
-        const response = await apiClient.delete(`/deleteOffer?id=${id}`);
-        console.log('Delete Offer Response:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error deleting offer:', error);
-        return null;
-    }
+    return await apiRequest('delete', `/deleteOffer?id=${id}`);
 };
 
+const updateActive = async (id) => {
+    return await apiRequest('put', `/updateActive?id=${id}`);
+};
 
-async function updateActive(id) {
-    try {
-        const response = await apiClient.put(`/updateActive?id=${id}`)
-        return response.data
-    } catch (error) {
-        console.log(error)
-        return error.response.data
-    }
-}
+const blockUser = async (id) => {
+    return await apiRequest('put', '/blockUser', { id });
+};
 
+const logout = async () => {
+    return await apiRequest('get', '/logout');
+};
 
+const updateFeatured = async (id, detail) => {
+    return await apiRequest('post', '/updateFeatured', { id, detail });
+};
 
-async function blockUser(id) {
-    try {
-        const response = await apiClient.put("/blockUser", { id: id })
-        return response.data
-    } catch (error) {
-        console.log(error)
-        return error.response.data
-    }
-}
-async function logout() {
-    try {
-        const response = await apiClient.get("/logout")
-        return response.data
-    } catch (error) {
-        console.log(error)
-        return error.response.data
-    }
-}
+const getCardData = async () => {
+    return await apiRequest('get', '/getCardData');
+};
 
+const getGraphData = async () => {
+    return await apiRequest('get', '/getGraphData');
+};
 
-async function updateFeatured(id, detail) {
-    try {
-        const response = await apiClient.post("/updateFeatured", { id, detail })
-        return response.data
-    } catch (error) {
-        console.log(error)
-        return error.response.data
-    }
-}
-async function getCardData() {
-    try {
-        const response = await apiClient.get(`/getCardData`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching card data:", error);
-        return { error: true, message: error.response?.data?.message || "An error occurred." };
-    }
-}
+const updateProductStatus = async (id) => {
+    return await apiRequest('put', '/updateProductStatus', { id });
+};
 
-async function getGraphData(){
-    try {
-        const response = await apiClient.get(`/getGraphData`)
-        return response.data;
-    } catch (error) {
-        console.log("Error Fetching graph Data".error)
-        return {error:true,message:error.response?.data?.message || "An error occured."};
-    }
-}
+const updateProduct = async (id, product) => {
+    return await apiRequest('post', '/updateProduct', { id, product });
+};
 
-async function updateProductStatus(id) {
-    try {
-        const response = await apiClient.put("/updateProductStatus", { id })
-        return response.data
-    } catch (error) {
-        console.log(error)
-        return error.response.data
-    }
-}
-async function updateProduct(id, product) {
-    try {
-        const response = await apiClient.post("/updateProduct", { id, product })
-        return response.data
-    } catch (error) {
-        console.log(error)
-        return error.response.data
-    }
-}
-async function updateOrderStatus(id, status) {
-    try {
-        const response = await apiClient.post("/updateOrderStatus", { id, status })
-        return response.data
-    } catch (error) {
-        console.log(error)
-        return error.response.data
-    }
-}
+const updateOrderStatus = async (id, status) => {
+    return await apiRequest('post', '/updateOrderStatus', { id, status });
+};
 
+// Export all functions
 export default {
     checkAdmin,
     getUsers,
@@ -277,5 +140,5 @@ export default {
     updateProductStatus,
     updateProduct,
     getOrder,
-    updateOrderStatus
+    updateOrderStatus,
 };

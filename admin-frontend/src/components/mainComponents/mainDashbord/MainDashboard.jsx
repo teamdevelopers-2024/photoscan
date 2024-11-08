@@ -113,7 +113,7 @@ function MainDashbord() {
       </div>
 
       <div className="dash-main-body">
-        <div className="chart-container flex flex-col justify-center">
+        <div className="chart-container flex flex-col justify-center flex-2">
           <div className="year-display">
             {lineChartRange === "Monthly" && <h3>{yearlyLabels[currentYearIndex]}</h3>}
             {lineChartRange === "Yearly" && <h3>{yearlyLabels[0]} - {yearlyLabels[yearlyLabels.length-1]}</h3>}
