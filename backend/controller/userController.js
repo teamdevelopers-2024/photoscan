@@ -723,8 +723,9 @@ async function getCart(req, res) {
           items: {
             $push: {
               productId: "$items.productId",
-              image: "$productDetails.image",
-              textInput: "$items.textInput",
+              givenText: "$items.textInput",
+              givenImage: "$items.image",
+              productImage: "$productDetails.image",
               productName: "$productDetails.productName",
               productprice: "$productDetails.offerPrice"
             }

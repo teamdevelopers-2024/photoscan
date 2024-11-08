@@ -19,7 +19,7 @@ function Cart() {
         const userId = user._id; // Get the user ID
         const response = await api.getCart(userId); // Fetch cart data
         const data = response?.cartData?.items || [];
-        console.log(data);
+        // console.log(data);
 
         setCartItems(data); // Set the cart items in the state
       } catch (error) {
@@ -35,8 +35,8 @@ function Cart() {
 
   const handlePreviewClick = (item) => {
     setPreviewData({
-      image: item.image,
-      text: item.productName, // You can customize this to show any text
+      image: item.givenImage,
+      text: item.givenText, // You can customize this to show any text
     });
     setModalOpen(true);
   };
@@ -61,7 +61,7 @@ function Cart() {
                   className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gray-50 p-4 rounded-lg shadow"
                 >
                   <img
-                    src={item.image} // Get image from item
+                    src={item.productImage} // Get image from item
                     alt={item.productName} // Use productName as alt text
                     className="w-20 h-20 rounded-lg"
                   />
@@ -80,12 +80,7 @@ function Cart() {
                     <FontAwesomeIcon
                       icon={faTrashAlt}
                       className="text-red-500 cursor-pointer"
-                      onClick={() => {
-                        // Remove item from cart
-                        setCartItems(
-                          cartItems.filter((i) => i._id !== item._id)
-                        );
-                      }}
+                      onClick={() => deleteFromCart()}
                     />
                   </div>
                 </div>
