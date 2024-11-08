@@ -249,7 +249,7 @@ const Header = () => {
         onMouseEnter={() => setIsProductHover(true)}
         onMouseLeave={() => setIsProductHover(false)}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 w-full max-w-screen-lg py-4 px-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-32  py-4 px-2">
           {categories.map((category, index) => (
             <div
               key={category._id}
