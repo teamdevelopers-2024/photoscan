@@ -204,7 +204,6 @@ export default {
   userLogin,
   userRegister,
   getOtp,
-  getCategories,
   verifyOtp,
   checkAuthenticate,
   editProfile,
