@@ -137,6 +137,7 @@ const Header = () => {
               {menus.map((menu, index) => (
                 <li
                   key={index}
+                  onClick={()=> navigate(menu.route)}
                   className="cursor-pointer hover:text-[#4d4d4d] text-xl"
                 >
                   {menu.name.toUpperCase()}
@@ -144,7 +145,7 @@ const Header = () => {
               ))}
             </ul>
             <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
-              <FaUser className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              <FaUser onClick={()=> navigate('/profile')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               <div className="relative" onClick={toggleCartDropdown}>
                 <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />

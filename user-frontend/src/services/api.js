@@ -10,11 +10,18 @@ axios.defaults.withCredentials = true;  // Ensure cookies are sent with requests
 // });
 
 
+// const apiClient = axios.create({
+//   baseURL: 'http://localhost:4000/user',
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
 const apiClient = axios.create({
-  baseURL: 'http://localhost:4000/user',
+  baseURL: 'http://192.168.31.121:4000/user',
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials:true
 });
 
 // Function to handle token refresh
@@ -204,7 +211,7 @@ const getProducts = async (catName, currentPage, productsPerPage) => {
     return error.response.data;
   }
 };
-  
+
 
 
 async function getSingleProduct(id) {
