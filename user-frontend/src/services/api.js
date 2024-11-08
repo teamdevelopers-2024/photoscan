@@ -212,11 +212,21 @@ async function getSingleProduct(id) {
 }
 
 
+async function getFeaturedProducts() {
+  try {
+    const response = await apiClient.get(`/featuredProducts`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
+
 export default {
   userLogin,
   userRegister,
   getOtp,
-  getCategories,
   verifyOtp,
   checkAuthenticate,
   editProfile,
@@ -226,5 +236,6 @@ export default {
   changePass,
   getBanners,
   getProducts,
-  getSingleProduct
+  getSingleProduct,
+  getFeaturedProducts
 };
