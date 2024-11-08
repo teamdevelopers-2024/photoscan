@@ -20,6 +20,7 @@ import SingleProduct from "../pages/singleProduct/SingleProduct";
 import Customize from "../components/customize/Customize";
 import NewPassword from "../pages/New Password/NewPassword";
 import Proudcts from "../components/Products/Products";
+import Wishlist from "../pages/Wishlist/Wishlist";
 
 export default function Layoutroutes() {
     return (
@@ -30,7 +31,9 @@ export default function Layoutroutes() {
                     <Route path="/ordersuccess" element={<OrderSuccess />} />
                     <Route path="/myorder" element={<MyOrder />} />
                     <Route path="/cart" element={<Cart />} />
+                    <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/profile" element={<Profile />} />
+                    
                 </Route>
 
                 {/* Public Routes */}
