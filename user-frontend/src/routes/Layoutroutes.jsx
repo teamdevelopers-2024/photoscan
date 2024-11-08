@@ -10,12 +10,10 @@ import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 import MyOrder from "../components/MyOrders/MyOrder";
 import Cart from "../pages/CartPage/Cart";
 import Profile from "../pages/Profile/Profile";
-import FrameListing from "../pages/Frames_Listing/FrameListing";
 import PageNotFound from "../pages/404/PageNotFound";
 import PrivateRoute from "./PrivateRoute";
 import RedirectIfAuthenticated from "./RedirectIfAuthenticated";
 import ForgotPass from "../pages/forgtoPass/ForgotPass";
-import FramePage from "../pages/framePage/FramePage";
 import SingleProduct from "../pages/singleProduct/SingleProduct";
 import Customize from "../components/customize/Customize";
 import NewPassword from "../pages/New Password/NewPassword";
@@ -36,11 +34,12 @@ export default function Layoutroutes() {
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/resetpassword" element={<NewPassword />} />
                     
                 </Route>
 
                 {/* Public Routes */}
-                    <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/login" element={
                     <RedirectIfAuthenticated>
                         <Login />
@@ -58,9 +57,7 @@ export default function Layoutroutes() {
                 <Route path="/products" element={<Proudcts />} />
                 <Route path="*" element={<PageNotFound />} />
                 <Route path="/singleProduct" element={<SingleProduct />} />
-                <Route path="/framepage" element={<FramePage />} />
                 <Route path="/customise" element={<Customize/>} />
-                <Route path="/resetpassword" element={<NewPassword />} />
             </Routes>
         </Router>
     );
