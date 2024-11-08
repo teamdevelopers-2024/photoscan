@@ -200,6 +200,18 @@ const getProducts = async () => {
   }
 };
 
+
+async function getSingleProduct(id) {
+  try {
+    const response = await apiClient.get(`/getSingleProduct?id=${id}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
+
 export default {
   userLogin,
   userRegister,
@@ -213,5 +225,6 @@ export default {
   newPass,
   changePass,
   getBanners,
-  getProducts
+  getProducts,
+  getSingleProduct
 };
