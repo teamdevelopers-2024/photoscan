@@ -83,7 +83,9 @@ const addProduct = async (req, res) => {
               description,
               actualPrice,
               offerPrice,
-              images 
+              images,
+              numberOfTextFields,
+              includeLogo
           } = req.body;
           const newProduct = new productDB({
               productName,
@@ -95,7 +97,9 @@ const addProduct = async (req, res) => {
               images,
               status:true,
               catoffer:0,
-              catstatus:true
+              catstatus:true,
+              includelogo:includeLogo,
+              textfeild:numberOfTextFields
           });
 
           await newProduct.save();
