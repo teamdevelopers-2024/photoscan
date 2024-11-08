@@ -563,6 +563,7 @@ export default {
   login,
   register,
   getOtp,
+  getCategories,
   verifyOtp,
   checkAuthenticate,
   verifyRefreshToken,

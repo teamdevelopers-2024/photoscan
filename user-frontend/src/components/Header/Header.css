@@ -1,6 +1,39 @@
-.nothover{
-    display: none;
+
+.header-menu-item {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 5px;
+  color: #666666;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
+
+.header-menu-item:hover,
+.header-menu-item.active {
+  color: #4d4d4d;
+}
+
+.header-menu-item::after {
+  content: "";
+  position: absolute;
+  left: 50%; 
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background-color: #4d4d4d;
+  transition: width 0.3s ease-out, left 0.3s ease-out;
+  transform: translateX(-50%); 
+}
+
+.header-menu-item:hover::after,
+.header-menu-item.active::after {
+  width: 100%;
+  left: 50%;
+  transform: translateX(-50%); 
+}
+
 .onhover{
     display: flex;
 }
+
