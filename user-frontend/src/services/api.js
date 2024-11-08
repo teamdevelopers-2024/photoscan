@@ -37,8 +37,7 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;  // Mark request as retried to prevent loops
-      console.log('inside interceptors')
+      originalRequest._retry = true;
       try {
         await refreshToken();  // Attempt to refresh token
         return apiClient(originalRequest);  // Retry original request
@@ -79,7 +78,6 @@ const getOtp = async (email) => {
   try {
 
     const response = await apiClient.post('/getOtp', { email });
-    console.log(response.data);
 
     return response.data;
   } catch (error) {
@@ -87,7 +85,7 @@ const getOtp = async (email) => {
     return error.response.data;
   }
 };
-  
+
 const verifyOtp = async (email, otp) => {
   try {
     const response = await apiClient.post('/verifyOtp', { email, otp });
@@ -111,10 +109,8 @@ const editProfile = async (profileData) => {
 
 const checkAuthenticate = async () => {
   try {
-    console.log('insed checkAuthenticate')
     const response = await apiClient.get('/checkAuthenticate');
     const data = response.data
-    console.log(data)
     return data
   } catch (error) {
     console.error('Authentication check failed:', error.response.data);
@@ -127,10 +123,8 @@ const checkAuthenticate = async () => {
 const logout = async () => {
   try {
     const response = await apiClient.delete('/logout')
-    console.log(response.data)
     return response.data
   } catch (error) {
-    console.log(error)
     return error.response.data
   }
 }
@@ -139,7 +133,6 @@ const resetOtp = async (email) => {
   try {
 
     const response = await apiClient.post('/resetOtp', { email });
-    console.log(response.data);
 
     return response.data;
   } catch (error) {
@@ -152,7 +145,6 @@ const newPass = async (email, password) => {
   try {
 
     const response = await apiClient.post('/newPass', { email, password });
-    console.log(response.data);
 
     return response.data;
   } catch (error) {
@@ -167,7 +159,6 @@ const changePass = async (body) => {
     const response = await apiClient.post('/changePass', {
       body
     });
-    console.log(response.data);
 
     return response.data;
   } catch (error) {
@@ -204,7 +195,7 @@ const getProducts = async (catName, currentPage, productsPerPage) => {
     return error.response.data;
   }
 };
-  
+
 
 
 async function getSingleProduct(id) {
@@ -212,7 +203,6 @@ async function getSingleProduct(id) {
     const response = await apiClient.get(`/getSingleProduct?id=${id}`)
     return response.data
   } catch (error) {
-    console.log(error)
     return error.response.data
   }
 }
@@ -224,7 +214,6 @@ async function getFeaturedProducts() {
     const response = await apiClient.get(`/featuredProducts`)
     return response.data
   } catch (error) {
-    console.log(error)
     return error.response.data
   }
 }
@@ -236,8 +225,30 @@ async function getCategories(status) {
     const response = await apiClient.get(`/getCategories?status=${status}`)
     return response.data
   } catch (error) {
-    console.log(error)
-    return error.response.data    
+    return error.response.data
+  }
+}
+
+
+async function addToCart(body) {
+  try {
+
+    const response = await apiClient.post(`/addToCart`, body)
+
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
+}
+
+async function getCart(id) {
+  try {
+
+    const response = await apiClient.get(`/getCart?userid=${id}`)
+
+    return response.data
+  } catch (error) {
+    return error.response.data
   }
 }
 
@@ -257,5 +268,7 @@ export default {
   getProducts,
   getSingleProduct,
   getFeaturedProducts,
-  getCategories
+  getCategories,
+  addToCart,
+  getCart
 };

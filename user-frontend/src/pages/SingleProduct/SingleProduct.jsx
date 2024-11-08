@@ -5,8 +5,10 @@ import favourite from "../../assets/favourite.png";
 import share from "../../assets/share.png";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import { useSelector, useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 
 function SingleProduct() {
   const [state, setState] = useState({
@@ -17,8 +19,9 @@ function SingleProduct() {
     product: null,
     selectedFile: null, // To hold the selected file
   });
-
+  const user = useSelector((state) => state.user.user);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleTextChange = (e) =>
     setState((prevState) => ({ ...prevState, textInput: e.target.value }));
@@ -49,31 +52,93 @@ function SingleProduct() {
   }, [location.search]);
 
   const addToCart = async (id) => {
-    const parsedData = JSON.parse(localStorage.getItem("user")); // Change to your actual local storage key
-    const userId = parsedData.user._id; // Extract user ID
-    const productId = id;
-
-    const { textInput, selectedFile } = state;
-
-    // Create a form data object to send file and other information
-    const formData = new FormData();
-    formData.append("userId", userId);
-    formData.append("productId", productId);
-    formData.append("textInput", textInput);
-    if (selectedFile) {
-      formData.append("file", selectedFile); // Append the selected file
+    if (!user) {
+      navigate("/login");
+      return; // Prevent further execution if user is not logged in
     }
+
+    const userId = user._id;
+    const productId = id;
+    const { textInput, selectedFile } = state; // Assume state contains textInput and selectedFile
+    let uploadedImageUrl = null; // Initialize as null
+
+    // Check if a selected file exists and upload it
+    if (selectedFile) {
+      try {
+        const imageData = new FormData();
+        imageData.append("file", selectedFile); // Use selectedFile directly
+        imageData.append("upload_preset", "cloud_name"); // Replace with your actual upload preset
+
+        // Upload the image to Cloudinary
+        const response = await fetch(
+          "https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload",
+          {
+            method: "POST",
+            body: imageData,
+          }
+        );
+
+        const data = await response.json();
+        if (response.ok) {
+          uploadedImageUrl = data.secure_url; // Store the single secure URL
+        } else {
+          console.error("Image upload failed:", data);
+        }
+      } catch (error) {
+        console.error("Error adding image to Cloudinary:", error);
+      }
+    }
+
+    // Create a plain object for JSON
+    const formData = {
+      userId,
+      productId,
+      textInput,
+      image: uploadedImageUrl ? uploadedImageUrl : null, // Use null if no image uploaded
+    };
 
     // Send the request to add the item to the cart
     try {
       const response = await api.addToCart(formData);
-      if (response.success) {
-        console.log("Item added to cart successfully!");
+
+      if (!response.error) {
+        // Show success toast
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Item added to cart successfully!",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
       } else {
-        console.error("Failed to add item to cart:", response.message);
+        // Show error toast
+        Swal.fire({
+          icon: "error",
+          title: "Failed!",
+          text: "Failed to add item to cart.",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
       }
     } catch (error) {
       console.error("Error adding item to cart:", error);
+      // Show error toast for unexpected errors
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "An unexpected error occurred. Please try again.",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
     }
   };
 
@@ -158,7 +223,9 @@ function SingleProduct() {
                   {/* Icons Section */}
                   <div className="mt-4 flex justify-center sm:justify-start space-x-3 bg-zinc-300 p-2 rounded-lg">
                     <img className="w-5 h-5" src={share} alt="Share" />
-                    <span className="text-zinc-500 text-xl font-['Lato']">|</span>
+                    <span className="text-zinc-500 text-xl font-['Lato']">
+                      |
+                    </span>
                     <img className="w-6 h-6" src={favourite} alt="Favourite" />
                   </div>
                 </div>
