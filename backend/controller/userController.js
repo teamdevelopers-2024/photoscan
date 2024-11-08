@@ -13,6 +13,7 @@ import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
 import "dotenv/config";
 import ProductDb from "../model/prodectModel.js";
 import CategoryDb from "../model/Category.js";
+import addressModel from "../model/addressModel.js";
 
 const login = async (req, res) => {
   try {
@@ -608,6 +609,52 @@ async function getCategories(req, res) {
   }
 }
 
+async function addAddress(req,res){
+    try {
+      const data = req.body.data
+      const newAddress = new addressModel({
+        userId: data.userId,
+        fullName: data.fullName,
+        phoneNumber: data.phoneNumber,
+        addressLine1: data.addressLine1,
+        addressLine2: data.addressLine2,
+        city: data.city,
+        state: data.state,
+        postalCode: data.postalCode,
+        country: data.country,
+        isDefault: data.isDefault || false,
+      });
+  
+      await newAddress.save();
+  
+      res.status(201).json({
+        success: true,
+        message: "Address added successfully!",
+      });
+    } catch (error) {
+      console.error("Error Adding Address:", error);
+      res.status(500).json({
+        error: true,
+        message: "An error occurred while adding the address.",
+  
+      });
+}
+}
+
+async function getAddress(req, res) {
+  try {
+    // Fetch all addresses from the database
+    const addresses = await addressModel.find();
+
+    // Send the fetched addresses back as a JSON response
+    res.status(200).json(addresses);
+  } catch (error) {
+    console.error("Error fetching addresses:", error);
+    
+    // Send an error response in case of failure
+    res.status(500).json({ message: "An error occurred while fetching addresses." });
+  }
+}
 
 
 
@@ -629,5 +676,7 @@ export default {
   getBanners,
   getSingleProduct,
   getFeaturedProducts,
-  getCategories
+  getCategories,
+  addAddress,
+  getAddress
 }

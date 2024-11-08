@@ -241,6 +241,27 @@ async function getCategories(status) {
   }
 }
 
+async function addAddress(data){
+  try {
+    const response = await apiClient.post(`/addAddress`,{data: data})
+    console.log(response);
+    
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data    
+  }
+}
+
+async function getAddress() {
+  try {
+    const response = await apiClient.get(`/getAddress`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data    
+  }
+}
 
 export default {
   userLogin,
@@ -257,5 +278,7 @@ export default {
   getProducts,
   getSingleProduct,
   getFeaturedProducts,
-  getCategories
+  getCategories,
+  addAddress,
+  getAddress
 };
