@@ -821,7 +821,7 @@ export default {
   getFeaturedProducts,
   getCategories,
   addAddress,
-  getAddress
+  getAddress,
   addToCart,
-  getCart
+  getCart,
 }
