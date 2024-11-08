@@ -1,3 +1,4 @@
+import { text } from "express";
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
@@ -50,6 +51,9 @@ const orderSchema = new mongoose.Schema(
         productId: {
           type: String,
           required: true
+        },
+        category:{
+            type:String
         },
         name: {
           type: String,

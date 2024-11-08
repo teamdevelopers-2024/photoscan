@@ -2,7 +2,6 @@
 import BannerDb from "../model/bannerModal.js";
 import CategoryDb from "../model/Category.js";
 import OfferDb from "../model/offerModel.js";
-import ProductDb from "../model/prodectModel.js";
 import UserDb from "../model/userModel.js";
 import productDB from "../model/prodectModel.js"
 import { v2 as cloudinary } from 'cloudinary';
@@ -14,35 +13,35 @@ cloudinary.config({
   api_secret: 'DueiTABSuPgrkBrs5OJeSBQMNTQ',
 });
 
-const login = async (req,res)=>{
-    try {
-        const {email , password } = req.body
-        const isEmail = process.env.ADMIN_USERNAME;
-        const isPassword = process.env.ADMIN_PASSWORD;
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body
+    const isEmail = process.env.ADMIN_USERNAME;
+    const isPassword = process.env.ADMIN_PASSWORD;
 
-        if(email != isEmail){
-            return res
-            .status(400)
-            .json({error:true , message:"email is incorrect"})
-        }
-        if(password != isPassword){
-            return res
-            .status(400)
-            .json({error:true , message:"password is incorrect"})
-        }
-        req.session.isAdmin = true 
-        res.status(200).json({
-            error:false,
-            message:"admin logged in successfully"
-        })
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            error:true , 
-            message:"internel server error"
-        })
+    if (email != isEmail) {
+      return res
+        .status(400)
+        .json({ error: true, message: "email is incorrect" })
     }
+    if (password != isPassword) {
+      return res
+        .status(400)
+        .json({ error: true, message: "password is incorrect" })
+    }
+    req.session.isAdmin = true
+    res.status(200).json({
+      error: false,
+      message: "admin logged in successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: true,
+      message: "internel server error"
+    })
   }
+}
 const status = async (req, res) => {
   console.log("isAdmin", req.session.isAdmin);
   if (req.session.isAdmin) {
@@ -75,43 +74,43 @@ const addBanner = async (req, res) => {
 };
 const addProduct = async (req, res) => {
   if (req.body) {
-      try {
-          const {
-              productName,
-              category,
-              sizes, 
-              description,
-              actualPrice,
-              offerPrice,
-              images,
-              numberOfTextFields,
-              includeLogo
-          } = req.body;
-          const newProduct = new productDB({
-              productName,
-              category,
-              sizes,
-              description,
-              actualPrice,
-              offerPrice,
-              images,
-              status:true,
-              catoffer:0,
-              catstatus:true,
-              includelogo:includeLogo,
-              textfeild:numberOfTextFields
-          });
+    try {
+      const {
+        productName,
+        category,
+        sizes,
+        description,
+        actualPrice,
+        offerPrice,
+        images,
+        numberOfTextFields,
+        includeLogo
+      } = req.body;
+      const newProduct = new productDB({
+        productName,
+        category,
+        sizes,
+        description,
+        actualPrice,
+        offerPrice,
+        images,
+        status: true,
+        catoffer: 0,
+        catstatus: true,
+        includelogo: includeLogo,
+        textfeild: numberOfTextFields
+      });
 
-          await newProduct.save();
-          res.status(201).json({ message: 'Product added successfully' });
+      await newProduct.save();
+      res.status(201).json({ message: 'Product added successfully' });
 
-      } catch (error) {
-          console.error('Error saving product:', error);
-          res.status(500).json({ error: 'Internal Server Error' });
-      }
+    } catch (error) {
+      console.error('Error saving product:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   } else {
-      console.error('Request body is missing');
-      res.status(400).json({ error: 'Request body is missing' });
+    console.error('Request body is missing');
+    res.status(400).json({ error: 'Request body is missing' });
   }
 };
 
@@ -126,8 +125,8 @@ const getBanners = async (req, res) => {
 };
 const getProducts = async (req, res) => {
   try {
-    const {status } = req.query
-    const data = await productDB.find({status:status});
+    const { status } = req.query
+    const data = await productDB.find({ status: status });
     res.status(200).json(data);
   } catch (error) {
     console.error('Error fetching Products:', error);
@@ -135,11 +134,11 @@ const getProducts = async (req, res) => {
   }
 };
 const deleteBanner = async (req, res) => {
-  const publicId=req.body.publicId;
+  const publicId = req.body.publicId;
   try {
-    const result1 = await BannerDb.deleteOne({publicId:publicId})
+    const result1 = await BannerDb.deleteOne({ publicId: publicId })
     const result = await cloudinary.uploader.destroy(publicId);
-    res.status(200).json({ success: true, result,result1 });
+    res.status(200).json({ success: true, result, result1 });
   } catch (error) {
     console.error("Error deleting image from Cloudinary:", error);
     res.status(500).json({ success: false, error });
@@ -157,7 +156,7 @@ const getUsers = async (req, res) => {
 
     const startIndex = (page - 1) * limit;
 
-  
+
     const users = await UserDb.find().skip(startIndex).limit(limit);
     console.log(users);
 
@@ -254,7 +253,7 @@ async function addOffer(req, res) {
       discountPercentage: discountPercentage,
       categoryName: categoryName,
     });
-    await productDB.updateMany({category:categoryName},{catoffer:discountPercentage});
+    await productDB.updateMany({ category: categoryName }, { catoffer: discountPercentage });
     res.status(200).json({
       error: false,
       message: "Offer added successfully!",
@@ -284,7 +283,7 @@ const getOffers = async (req, res) => {
 
 const deleteOffer = async (req, res) => {
   try {
-    const  id = req.query.id;  
+    const id = req.query.id;
     console.log('adminController', id)
 
     if (!id) {
@@ -294,10 +293,10 @@ const deleteOffer = async (req, res) => {
       });
     }
     console.log('offer deleted')
-    const categoryName=await OfferDb.findOne({_id:id});
+    const categoryName = await OfferDb.findOne({ _id: id });
     const deletedOffer = await OfferDb.findByIdAndDelete(id);
-    
-    await productDB.updateMany({category:categoryName.categoryName},{catoffer:0})
+
+    await productDB.updateMany({ category: categoryName.categoryName }, { catoffer: 0 })
 
     if (!deletedOffer) {
       return res.status(404).json({
@@ -359,11 +358,11 @@ async function categoryActive(req, res) {
     const id = req.query.id
     const data = await CategoryDb.findOneAndUpdate(
       { _id: id },
-      [{ $set: { isActive: { $not: "$isActive" } } }] 
+      [{ $set: { isActive: { $not: "$isActive" } } }]
     );
-    const  activeststus=!data.isActive
+    const activeststus = !data.isActive
 
-    await productDB.updateMany({category:data.name},{catstatus:activeststus});
+    await productDB.updateMany({ category: data.name }, { catstatus: activeststus });
 
     res.status(200).json({
       error: false,
@@ -423,131 +422,253 @@ async function blockUser(req, res) {
   }
 }
 
-async function updateFeatured(req,res) {
+async function updateFeatured(req, res) {
   try {
-    const {id , detail} = req.body  
-    console.log(id ,detail)
-    await productDB.updateOne({_id:id },{$set:detail})
+    const { id, detail } = req.body
+    console.log(id, detail)
+    await productDB.updateOne({ _id: id }, { $set: detail })
     res.status(200).json({
-      error:false,
-      message:"successfull"
+      error: false,
+      message: "successfull"
     })
   } catch (error) {
     console.log(error)
     res.status(500).json({
-      error:false,
-      message:"internel Server error"
+      error: true,
+      message: "internel Server error"
     })
   }
 
 }
-
-
-async function updateProductStatus(req,res) {
+async function getCardData(req, res) {
   try {
-    const {id } = req.body
-    if(!id){
+    const totalCustomers = await UserDb.countDocuments();
+
+    const totalOrders = await OrderDb.countDocuments();
+
+
+    const orders = await OrderDb.find({})
+    const totalSales = orders.reduce((sum, order) => sum + order.totalAmount, 0);
+
+    console.log('Total customers:', totalCustomers);
+    console.log('Total orders:', totalOrders);
+    console.log('Total sales:', totalSales);
+
+    res.status(200).json({
+      error: false,
+      data: { totalCustomers, totalOrders, totalSales },
+    });
+  } catch (error) {
+    console.error("Error fetching card data:", error);
+    res.status(500).json({
+      error: true,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+
+async function updateProductStatus(req, res) {
+  try {
+    const { id } = req.body
+    if (!id) {
       return res.status(403).json({
-        error:true ,
-        message:"id is required"
+        error: true,
+        message: "id is required"
       })
     }
 
-    await ProductDb.findOneAndUpdate(
+    await productDB.findOneAndUpdate(
       { _id: id },
       [{ $set: { status: { $not: ["$status"] } } }],
       { new: true }
     );
-    
+
 
     res.status(200).json({
-      error:false,
-      message:"product status updated successfully"
+      error: false,
+      message: "product status updated successfully"
     })
   } catch (error) {
     console.log(error)
     res.status(500).json({
-      error:false,
-      message:"internel Server error"
+      error: false,
+      message: "internel Server error"
     })
   }
 }
-async function updateProduct(req,res) {
-  const {id,product } = req.body
+async function updateProduct(req, res) {
+  const { id, product } = req.body
   try {
-    await productDB.updateOne({_id:id},{
-      productName:product.productName,
-      description:product.description,
-      actualPrice:product.actualPrice,
-      offerPrice:product.offerPrice,})
+    await productDB.updateOne({ _id: id }, {
+      productName: product.productName,
+      description: product.description,
+      actualPrice: product.actualPrice,
+      offerPrice: product.offerPrice,
+    })
 
-      res.status(200).json({
-        error:false,
-        message:"product  updated successfully"
-      })
+    res.status(200).json({
+      error: false,
+      message: "product  updated successfully"
+    })
 
   } catch (error) {
     console.log(error)
     res.status(500).json({
-      error:false,
-      message:"internel Server error"
+      error: false,
+      message: "internel Server error"
     })
   }
 }
-async function getOrder(req,res) {
+async function getOrder(req, res) {
   try {
-    const Order=await OrderDb.find();
+    const Order = await OrderDb.find();
     res.status(200).json({
       error: false,
       data: Order
     })
   } catch (error) {
     res.status(500).json({
-      error:false,
-      message:"internel Server error"
+      error: false,
+      message: "internel Server error"
     })
   }
 }
-async function updateOrderStatus(req,res) {
+async function updateOrderStatus(req, res) {
   try {
-    const {id,status}=req.body
-    
-    await OrderDb.updateOne({orderId:id},{status:status});
-    const data=await OrderDb.findOne({orderId:id})
+    const { id, status } = req.body
+
+    await OrderDb.updateOne({ orderId: id }, { status: status });
+    const data = await OrderDb.findOne({ orderId: id })
     console.log(data);
-    
+
     res.status(200).json({
       error: false,
       data: data
     })
   } catch (error) {
     res.status(500).json({
-      error:false,
-      message:"internel Server error"
+      error: false,
+      message: "internel Server error"
     })
   }
 }
+// Get sales data
+const getGraphData = async (req, res) => {
+  try {
+    const currentYear = new Date().getFullYear();
+    const pastYears = Array.from({ length: 5 }, (_, i) => currentYear - (4 - i)); // Generate array of years from 5 years ago to current year
+
+    // Fetch categories from the CategoryDb collection
+    const categories = await CategoryDb.find({});
+
+    // Aggregate query to get total sales for each month in the last 5 years
+    const salesData = await OrderDb.aggregate([
+      {
+        $match: {
+          orderDate: {
+            $gte: new Date(`${pastYears[0]}-01-01`), // Start of the 5th past year
+            $lt: new Date(`${currentYear + 1}-01-01`) // Start of the next year
+          }
+        }
+      },
+      {
+        $project: {
+          year: { $year: "$orderDate" },
+          month: { $month: "$orderDate" },
+          totalAmount: 1,
+          products: 1 // Include products for category aggregation
+        }
+      },
+      {
+        $group: {
+          _id: { year: "$year", month: "$month" },
+          totalSales: { $sum: "$totalAmount" },
+          products: { $push: "$products" } // Collect all products for aggregation
+        }
+      },
+      {
+        $sort: { "_id.year": -1, "_id.month": 1 } // Sort by year descending, month ascending
+      }
+    ]);
+
+    // Structure data for monthly and yearly sales
+    const monthlyData = {};
+    const categoryData = {}; // To store category-based sales data
+    let categoryNames;
+    let categoryValues;
+
+    salesData.forEach(row => {
+      const { year, month } = row._id;
+      const { products } = row;
+
+      // Monthly data aggregation
+      if (!monthlyData[year]) {
+        monthlyData[year] = Array(12).fill(0); // Initialize array for months
+      }
+      monthlyData[year][month - 1] = row.totalSales; // Populate the sales amount for the month
+
+      // Category-wise aggregation
+      products?.forEach(productList => {
+        productList.forEach(product => {
+          // Assuming the product has a category field, adjust if necessary
+          const categoryName = product.category;
+
+          if (!categoryData[categoryName]) {
+            categoryData[categoryName] = 0; // Initialize category sales if not present
+          }
+          categoryData[categoryName] += product.price; // Add the product price to the corresponding category
+        });
+      });
+      categoryNames = Object.keys(categoryData)
+      categoryValues = Object.values(categoryData)
+    });
+
+    // Prepare the response data
+    const responseData = {
+      monthlyData,
+      yearlyData: pastYears.map(year => ({
+        year,
+        totalSales: monthlyData[year] ? monthlyData[year].reduce((acc, curr) => acc + curr, 0) : 0
+      })),
+      categoryData, // Add category-based sales data
+      categoryNames,
+      categoryValues,
+    };
+
+    console.log("Fetched monthly, yearly, and category sales data:", responseData);
+    return res.status(200).json({
+      error: false,
+      data: responseData
+    });
+  } catch (error) {
+    console.error('Error fetching sales data:', error);
+    return res.status(500).json({ error: 'Error fetching sales data' });
+  }
+};
 
 export default {
-    login,
-    status,
-    getUsers, 
-    addBanner,
-    getBanners,
-    addCategory,
-    getCategories,
-    categoryActive,
-    blockUser,
-    logout,
-    deleteBanner,
-    addProduct,
-    getProducts,
-    getOffers,
-    addOffer,
-    deleteOffer,
-    updateFeatured,
-    updateProductStatus,
-    updateProduct,
-    getOrder,
-    updateOrderStatus
+  login,
+  status,
+  getUsers,
+  addBanner,
+  getBanners,
+  getCardData,
+  getGraphData,
+  addCategory,
+  getCategories,
+  categoryActive,
+  blockUser,
+  logout,
+  deleteBanner,
+  addProduct,
+  getProducts,
+  getOffers,
+  addOffer,
+  deleteOffer,
+  updateFeatured,
+  updateProductStatus,
+  updateProduct,
+  getOrder,
+  updateOrderStatus
 }
