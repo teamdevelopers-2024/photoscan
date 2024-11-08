@@ -19,9 +19,7 @@ function MainDashbord() {
   const [totalOrders,setTotalOrders] = useState(0)
   const [totalSales,setTotalSales] = useState(0)
   const [salesData, setSalesData] = useState(null);
-  const [montlyDataa,setMontlyData] = useState([])
-  const [yearlyDataa,setYearlyData] = useState([])
-  
+  // const [categoryData,setCategoryData] = useState([])
     const fetchCardData = async ()=>{
       try {
         const response = await api.getCardData()
@@ -37,8 +35,7 @@ function MainDashbord() {
       try {
         const response = await api.getGraphData();
         setSalesData(response.data);
-        setMontlyData(response.data.montlyDataa)
-        setYearlyData(response.data.yearlyDataa)
+        // setCategoryData()
       } catch (error) {
         console.error('Error fetching sales data:', error);
       }
@@ -49,16 +46,6 @@ function MainDashbord() {
       fetchSalesData()
     },[])
 
-  const monthlyData = {
-    [currentYear - 2]: [1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000],
-    [currentYear - 1]: [2000, 3000, 4000, 3500, 4500, 5500, 6000, 7000, 7500, 8000, 8500, 9000],
-    [currentYear]: [2500, 3500, 4500, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000],
-    [currentYear + 1]: [3000, 4000, 5000, 4500, 5500, 6500, 7500, 8500, 9500, 10500, 11500, 12500],
-    [currentYear + 2]: [3500, 4500, 5500, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000],
-    [currentYear + 3]: [4000, 5000, 6000, 5500, 6500, 7500, 8500, 9500, 10500, 11500, 12500, 13500]
-  };
-
-
   const filteredData = {
     labels: lineChartRange === "Monthly" ? ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] : yearlyLabels,
     datasets: [
@@ -68,7 +55,7 @@ function MainDashbord() {
         borderColor: "rgba(83, 101, 126, 0.8)",
         borderWidth: 2,
         pointBackgroundColor: "rgba(83, 101, 126, 1)",
-        data: lineChartRange === "Monthly" ? salesData?.monthlyData[yearlyLabels[currentYearIndex]] : salesData.yearlyData.map((yearData) => yearData.totalSales),
+        data: lineChartRange === "Monthly" ? salesData?.monthlyData[yearlyLabels[currentYearIndex]] : salesData?.yearlyData.map((yearData) => yearData.totalSales),
       },
     ],
   };
@@ -119,10 +106,10 @@ function MainDashbord() {
       </div>
 
       <div className="filters">
-        <select value={lineChartRange} onChange={(e) => setLineChartRange(e.target.value)}>
-          <option value="Monthly">Monthly</option>
-          <option value="Yearly">Yearly</option>
-        </select>
+        <CustomDropdown
+          lineChartRange={lineChartRange}
+          setLineChartRange={setLineChartRange}
+        />
       </div>
 
       <div className="dash-main-body">

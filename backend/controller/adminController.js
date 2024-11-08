@@ -552,8 +552,11 @@ async function updateOrderStatus(req, res) {
 // Get sales data
 const getGraphData = async (req, res) => {
   try {
-    const currentYear = new Date().getFullYear(); 
+    const currentYear = new Date().getFullYear();
     const pastYears = Array.from({ length: 5 }, (_, i) => currentYear - (4 - i)); // Generate array of years from 5 years ago to current year
+
+    // Fetch categories from the CategoryDb collection
+    const categories = await CategoryDb.find({});
 
     // Aggregate query to get total sales for each month in the last 5 years
     const salesData = await OrderDb.aggregate([
@@ -565,18 +568,19 @@ const getGraphData = async (req, res) => {
           }
         }
       },
-
       {
         $project: {
           year: { $year: "$orderDate" },
           month: { $month: "$orderDate" },
-          totalAmount: 1
+          totalAmount: 1,
+          products: 1 // Include products for category aggregation
         }
       },
       {
         $group: {
           _id: { year: "$year", month: "$month" },
-          totalSales: { $sum: "$totalAmount" }
+          totalSales: { $sum: "$totalAmount" },
+          products: { $push: "$products" } // Collect all products for aggregation
         }
       },
       {
@@ -584,14 +588,33 @@ const getGraphData = async (req, res) => {
       }
     ]);
 
-    // Structure data for frontend
+    // Structure data for monthly and yearly sales
     const monthlyData = {};
+    const categoryData = {}; // To store category-based sales data
+
     salesData.forEach(row => {
       const { year, month } = row._id;
+      const {products} =row;
+
+      // Monthly data aggregation
       if (!monthlyData[year]) {
         monthlyData[year] = Array(12).fill(0); // Initialize array for months
       }
       monthlyData[year][month - 1] = row.totalSales; // Populate the sales amount for the month
+
+    //   // Category-wise aggregation
+    //   products?.forEach(productList => {
+    //     productList.forEach(product => {
+    //       // Assuming the product has a category field, adjust if necessary
+    //       const categoryName = product.category;
+
+    //       if (!categoryData[categoryName]) {
+    //         categoryData[categoryName] = 0; // Initialize category sales if not present
+    //       }
+    //       categoryData[categoryName] += product.price; // Add the product price to the corresponding category
+    //     });
+    //   });
+    console.log("categoriesss......",row.products)
     });
 
     // Prepare the response data
@@ -600,13 +623,15 @@ const getGraphData = async (req, res) => {
       yearlyData: pastYears.map(year => ({
         year,
         totalSales: monthlyData[year] ? monthlyData[year].reduce((acc, curr) => acc + curr, 0) : 0
-      }))
+      })),
+      // categoryData, // Add category-based sales data
     };
-    console.log("fetched monthly data ", responseData)
+
+    console.log("Fetched monthly, yearly, and category sales data:", responseData);
     return res.status(200).json({
       error: false,
       data: responseData
-    })
+    });
   } catch (error) {
     console.error('Error fetching sales data:', error);
     return res.status(500).json({ error: 'Error fetching sales data' });
