@@ -106,7 +106,7 @@ export default function FeaturedProducts() {
                   data-aos="fade-up"
                   data-aos-delay={product.aosDelay}
                   key={product._id}
-                  className="relative w-[250px] h-[312px] p-2"
+                  className="relative cursor-pointer w-[250px] h-[312px] p-2"
                 >
                   <img
                     className="w-full h-[250px] object-cover"
