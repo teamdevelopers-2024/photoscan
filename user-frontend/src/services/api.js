@@ -187,15 +187,11 @@ async function getBanners() {
 }
 
 
-const getProducts = async (catName, currentPage, productsPerPage) => {
+const getProducts = async (catName, currentPage, productsPerPage ,sortOptionFilter) => {
   try {
-    const response = await apiClient.get('/getProducts', {
-      params: {
-        catName, // Pass catName as a query parameter
-        page: currentPage,
-        limit: productsPerPage,
-      },
-    });
+    const query = `/getProducts?catName=${catName}&page=${currentPage}&limit=${productsPerPage}&sortOptionFilter=${encodeURIComponent(sortOptionFilter)}`;
+    const response = await apiClient.get(query);
+    
     return response.data;
   } catch (error) {
     console.error('Failed to fetch products:', error);
@@ -275,6 +271,17 @@ async function getAddress() {
   try {
     const response = await apiClient.get(`/getAddress`)
     return response.data
+  }  catch (error) {
+    console.log(error);
+    return error.response ? error.response.data : null;  // Handle any errors
+  }
+}
+
+
+async function deleteCartItem(itemId,userId) {
+  try {
+    const response = await apiClient.delete(`/deleteCartItem?itemId=${itemId}&userId=${userId}`)
+    return response.data
   } catch (error) {
     console.log(error)
     return error.response.data    
@@ -301,4 +308,5 @@ export default {
   getAddress,
   addToCart,
   getCart,
+  deleteCartItem,
 };

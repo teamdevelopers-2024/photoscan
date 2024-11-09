@@ -516,6 +516,7 @@ const changePass = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const { catName } = req.query; // Extract catName from query parameters
+    console.log('this is catName : ',catName)
 
     let filter = {
       status : true ,
@@ -523,11 +524,14 @@ const getProducts = async (req, res) => {
     };
 
    
-    if (catName) {
+    if (catName && catName != 'All' && catName != 'null' && catName != 'undefined'){
       filter.category = catName;
     }
 
+    console.log(filter)
+
     const products = await ProductDb.find(filter); // Apply filter to find products
+    console.log("this is products : ",products)
     res.status(200).json({ error: false, message: 'Products fetched successfully', products });
   } catch (error) {
     console.error("Error in finding products:", error);
@@ -651,9 +655,10 @@ async function addAddress(req,res){
 async function getAddress(req, res) {
   try {
     // Fetch all addresses from the database
-    const addresses = await addressModel.find();
+    const addresses = await addressModel.find({});
 
     // Send the fetched addresses back as a JSON response
+    console.log("address fetched",addresses)
     res.status(200).json(addresses);
   } catch (error) {
     console.error("Error fetching addresses:", error);
@@ -761,6 +766,7 @@ async function getCart(req, res) {
           "items.productId": 1,
           "items.image": 1,
           "items.textInput": 1,
+          "items._id":1,
           "productDetails.productName": "$productDetails.productName",
           "productDetails.offerPrice": "$productDetails.offerPrice",
           "productDetails.image": { $arrayElemAt: ["$productDetails.images", 0] } // Get the first image
@@ -772,9 +778,11 @@ async function getCart(req, res) {
           userId: { $first: "$userId" },
           items: {
             $push: {
+              itemId: "$items._id",
               productId: "$items.productId",
-              image: "$productDetails.image",
-              textInput: "$items.textInput",
+              givenText: "$items.textInput",
+              givenImage: "$items.image",
+              productImage: "$productDetails.image",
               productName: "$productDetails.productName",
               productprice: "$productDetails.offerPrice"
             }
@@ -796,6 +804,34 @@ async function getCart(req, res) {
     res.status(500).json({ error: true, message: 'Internal server error' });
   }
 }
+
+
+async function deleteCartItem(req, res) {
+  try {
+
+    console.log(req.query);
+    
+    const { itemId,userId } = req.query; // Assuming you're sending userId and itemId in the request body
+    console.log(userId,itemId);
+    
+    // Find the cart for the user and update it
+    const updatedCart = await CartDb.findOneAndUpdate(
+      { userId: userId }, // Filter to find the cart for the specific user
+      { $pull: { items: { _id: itemId } } }, // Use $pull to remove the item with the given itemId
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedCart) {
+      return res.status(404).json({ error: true, message: 'Cart not found' });
+    }
+
+    res.status(200).json({ error: false, message: 'Item removed from cart successfully', updatedCart });
+  } catch (error) {
+    console.error('Error deleting item from cart:', error);
+    res.status(500).json({ error: true, message: 'Internal server error' });
+  }
+}
+
 
 // Export the controller
 export default {
@@ -819,5 +855,6 @@ export default {
   addAddress,
   getAddress,
   addToCart,
-  getCart
+  getCart,
+  deleteCartItem,
 }
