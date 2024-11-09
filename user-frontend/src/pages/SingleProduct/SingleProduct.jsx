@@ -138,9 +138,11 @@ function SingleProduct() {
     const productId = id;
     const { textInput, selectedFiles } = state;
     let uploadedImageUrl = null;
+    let publicId
 
     if (selectedFiles && selectedFiles.length) {
       try {
+        setLoading(true)
         const formData = new FormData();
         Array.from(selectedFiles).forEach((file) => {
           formData.append("file", file);
@@ -156,6 +158,7 @@ function SingleProduct() {
         );
 
         const data = await response.json();
+         publicId = data.public_id;
         if (response.ok) {
           uploadedImageUrl = data.secure_url;
         } else {
@@ -171,6 +174,7 @@ function SingleProduct() {
       productId,
       textInput,
       image: uploadedImageUrl ? uploadedImageUrl : null,
+      publicId:publicId
     };
 
     try {
@@ -211,6 +215,9 @@ function SingleProduct() {
         timer: 3000,
         timerProgressBar: true,
       });
+    }
+    finally{
+      setLoading(false)
     }
   };
 
