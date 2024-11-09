@@ -31,7 +31,8 @@ const Header = () => {
   const headerRef = useRef(null);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleCartDropdown = () => setIsCartDropdownOpen(!isCartDropdownOpen);
+  const toggleCartDropdown = () => setIsCartDropdownOpen(true);
+  const closeCartDropdown = () => setIsCartDropdownOpen(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -105,9 +106,16 @@ const Header = () => {
           <Link to="/wishlist">
             <FaHeart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
           </Link>
-          <div className="relative h-auto" onClick={toggleCartDropdown}>
+          <div
+            className="relative h-auto"
+            onMouseEnter={toggleCartDropdown}
+            onClick={() => navigate("/cart")}
+          >
             <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-            {isCartDropdownOpen && <CartDropdown />}
+
+            {isCartDropdownOpen && (
+              <CartDropdown closeDropdown={closeCartDropdown} />
+            )}
           </div>
         </div>
 
@@ -119,9 +127,8 @@ const Header = () => {
         </button>
 
         <div
-          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${
-            isMenuOpen ? "translate-x-0" : "translate-x-full"
-          } md:hidden w-full`}
+          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+            } md:hidden w-full`}
           style={{ maxWidth: "100%" }}
         >
           <div className="relative p-4">
@@ -138,7 +145,7 @@ const Header = () => {
               {menus.map((menu, index) => (
                 <li
                   key={index}
-                  onClick={()=> navigate(menu.route)}
+                  onClick={() => navigate(menu.route)}
                   className="cursor-pointer hover:text-[#4d4d4d] text-xl"
                 >
                   {menu.name.toUpperCase()}
@@ -146,8 +153,8 @@ const Header = () => {
               ))}
             </ul>
             <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
-               <FaUser onClick={()=> navigate('/profile')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-              <FaHeart onClick={()=> navigate('/wishlist')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              <FaUser onClick={() => navigate('/profile')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              <FaHeart onClick={() => navigate('/wishlist')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
 
               <div className="relative" onClick={toggleCartDropdown}>
@@ -208,9 +215,8 @@ const Header = () => {
         </button>
 
         <div
-          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${
-            isMenuOpen ? "translate-x-0" : "translate-x-full"
-          } md:hidden w-full`}
+          className={`fixed top-0 left-0 bg-white z-50 transform transition-transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+            } md:hidden w-full`}
           style={{ maxWidth: "100%" }}
         >
           <div className="relative p-4">
@@ -248,9 +254,8 @@ const Header = () => {
 
       {/* Responsive Product Categories Dropdown */}
       <div
-        className={`w-full text-[#666666] bg-white text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${
-          isProductHover ? "" : "hidden"
-        }`}
+        className={`w-full text-[#666666] bg-white text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${isProductHover ? "" : "hidden"
+          }`}
         onMouseEnter={() => setIsProductHover(true)}
         onMouseLeave={() => setIsProductHover(false)}
       >
