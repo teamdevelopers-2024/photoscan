@@ -281,6 +281,17 @@ async function getAddress() {
   }
 }
 
+
+async function deleteCartItem(itemId,userId) {
+  try {
+    const response = await apiClient.delete(`/deleteCartItem?itemId=${itemId}&userId=${userId}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data    
+  }
+}
+
 export default {
   userLogin,
   userRegister,
@@ -298,7 +309,8 @@ export default {
   getFeaturedProducts,
   getCategories,
   addAddress,
-  getAddress
+  getAddress,
   addToCart,
-  getCart
+  getCart,
+  deleteCartItem,
 };
