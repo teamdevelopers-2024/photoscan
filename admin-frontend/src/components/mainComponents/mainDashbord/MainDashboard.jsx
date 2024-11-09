@@ -15,21 +15,24 @@ function MainDashbord() {
   ];
 
   const [lineChartRange, setLineChartRange] = useState("Monthly");
-  const [pieChartCategory, setPieChartCategory] = useState("All");
   const [currentYearIndex, setCurrentYearIndex] = useState(2);
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
   const [totalSales, setTotalSales] = useState(0);
   const [salesData, setSalesData] = useState(null);
+  const [ordersData, setOrdersData] = useState([]);
 
   const chartContainerRef = useRef(null); // Reference for the chart container
 
   const fetchCardData = async () => {
     try {
       const response = await api.getCardData();
+      console.log("orders",response.data.orders);
+      setOrdersData(response.data.orders)
       setTotalCustomers(response.data.totalCustomers);
       setTotalOrders(response.data.totalOrders);
       setTotalSales(response.data.totalSales);
+
     } catch (error) {
       console.log("Error Fetching Card Data", error);
     }
@@ -49,49 +52,61 @@ function MainDashbord() {
     fetchSalesData();
   }, []);
 
-    const onDownloadClick = async () => {
-      const doc = new jsPDF();
-      let yPosition = 10;
 
-      doc.setFontSize(18);
-      doc.text("Yearly Financial Report", 10, yPosition);
-      yPosition += 10;
 
-      // Add Financial Overview Section
-      doc.setFontSize(14);
-      doc.text(`Year: ${yearlyLabels[currentYearIndex]}`, 10, yPosition);
+  const onDownloadClick = async () => {
+    const doc = new jsPDF();
+    let yPosition = 10;
+  
+    // Center-aligned header row
+    doc.setFontSize(18);
+    doc.text("Order Report", doc.internal.pageSize.getWidth() / 2, yPosition, { align: "center" });
+    yPosition += 10;
+  
+    // Header row for order details with adjusted column widths and right-aligned total amount
+    const columnWidths = [40, 50, 30, 40]; // Adjust widths as needed
+    const totalAmountWidth = columnWidths[2]; // Width for total amount
+  
+    doc.setFontSize(12);
+    doc.text("Order Date", columnWidths[0], yPosition, { align: "center" });
+    doc.text("Order ID", columnWidths[0] + columnWidths[1], yPosition, { align: "center" });
+    doc.text("Amount ", columnWidths[0] + columnWidths[1] + columnWidths[2], yPosition, { align: "center" });
+    doc.text("Status", columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], yPosition, { align: "center" });
+    yPosition += 10;
+    doc.line(10, yPosition, doc.internal.pageSize.getWidth() - 10, yPosition); // Separator line
+    yPosition += 5;
+  
+    // Process and display order details with centered text
+    let totalAmount = 0;
+    ordersData.forEach((order) => {
+      const { orderDate, orderId, totalAmount: orderAmount, status } = order;
+      doc.setFontSize(10);
+      doc.text(formatDate(orderDate), columnWidths[0], yPosition, { align: "center" });
+      doc.text(orderId, columnWidths[0] + columnWidths[1], yPosition, { align: "center" });
+      doc.text(orderAmount.toFixed(2), columnWidths[0] + columnWidths[1] + columnWidths[2] , yPosition, { align: "center" }); // Calculate x-position for right-aligned total amount
+      doc.text(status, columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], yPosition, { align: "center" });
       yPosition += 10;
-      doc.text(`Total Customers: ${totalCustomers}`, 10, yPosition);
-      yPosition += 10;
-      doc.text(`Total Orders: ${totalOrders}`, 10, yPosition);
-      yPosition += 10;
-      doc.text(`Total Sales: $${totalSales}`, 10, yPosition);
-      yPosition += 10;
+      totalAmount += orderAmount;
+    });
+  
+    // Display total amount with right alignment
+    doc.setFontSize(12);
+    const totalXPos = doc.internal.pageSize.getWidth() - totalAmountWidth - 10; // Calculate x-position for right-aligned total amount
+    doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, totalXPos, yPosition, { align: "right" });
+  
+    doc.save("order-report.pdf");
+  };
 
-      // Capture Sales Chart as Image and Insert into PDF
-      const chartContainer = document.getElementById("chart-container");
-      if (chartContainer) {
-        const chartImage = await html2canvas(chartContainer);
-        const chartData = chartImage.toDataURL("image/png");
-        doc.addImage(chartData, "PNG", 10, yPosition, 190, 80);
-        yPosition += 90;
-      }
+  const formatDate = (date) => {
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    return new Date(date).toLocaleDateString("en-US", options);
 
-      // Include Additional Order Details or Summary Data (Example)
-      doc.setFontSize(12);
-      salesData?.yearlyData?.forEach((data, index) => {
-        if (index <= currentYearIndex) { // include only up to selected year
-          doc.text(`Year ${yearlyLabels[index]}: Sales - $${data.totalSales}, Orders - ${data.totalOrders}`, 10, yPosition);
-          yPosition += 10;
-        }
-      });
+  };
 
-      // Download PDF
-      doc.save("financial-report.pdf");
-    };
+
   const filteredData = {
     labels: lineChartRange === "Monthly"
-      ? ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+      ? ["Jan", "Feb", "Mar", "April", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"]
       : yearlyLabels,
     datasets: [
       {

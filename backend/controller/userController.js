@@ -655,14 +655,16 @@ async function addAddress(req,res){
 async function getAddress(req, res) {
   try {
     const { id } = req.query
-    // Fetch all addresses from the database
     const addresses = await addressModel.find({userId:id});
-
     // Send the fetched addresses back as a JSON response
     res.status(200).json({
       error:false,
       data:addresses
     });
+    // Send the fetched addresses back as a JSON response
+    console.log("address fetched",addresses)
+    res.status(200).json(addresses);
+
   } catch (error) {
     console.error("Error fetching addresses:", error);
     
@@ -807,6 +809,7 @@ async function getCart(req, res) {
     res.status(500).json({ error: true, message: 'Internal server error' });
   }
 }
+
 
 async function deleteCartItem(req, res) {
   try {
