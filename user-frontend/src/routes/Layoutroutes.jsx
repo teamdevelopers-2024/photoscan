@@ -14,12 +14,12 @@ import PageNotFound from "../pages/404/PageNotFound";
 import PrivateRoute from "./PrivateRoute";
 import RedirectIfAuthenticated from "./RedirectIfAuthenticated";
 import ForgotPass from "../pages/forgtoPass/ForgotPass";
-import SingleProduct from "../pages/singleProduct/SingleProduct";
 import Customize from "../components/customize/Customize";
-import NewPassword from "../pages/New Password/NewPassword";
 import Proudcts from "../components/Products/Products";
 import Wishlist from "../pages/Wishlist/Wishlist";
 import ScrollToTop from "./scrollTopap";
+import SingleProduct from "../pages/singleProduct/SingleProduct";
+import NewPassword from "../pages/New Password/NewPassword";
 
 
 export default function Layoutroutes() {
