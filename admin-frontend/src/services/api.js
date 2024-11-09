@@ -8,7 +8,7 @@ import axios from 'axios';
 
 
 const apiClient = axios.create({
-    baseURL: 'https://api.photoscan.co.in/user',
+    baseURL: 'https://api.photoscan.co.in/admin',
     headers: {
       'Content-Type': 'application/json',
     },
