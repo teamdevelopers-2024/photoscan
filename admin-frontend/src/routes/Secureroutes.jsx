@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Outlet, Navigate } from "react-router-dom";
 
@@ -10,9 +11,8 @@ const ProtectedRoute = ({ children }) => {
   }, []);
   const checkAdminStatus = async () => {
     try {
-      const response = await fetch("https://api.photoscan.co.in/admin/status", {
-        method: "GET",
-        credentials: "include",
+      const response = await axios.get("https://api.photoscan.co.in/admin/status", {
+        withCredentials:true
       });
       const data = await response.json();
       if (data.loggedIn) {
