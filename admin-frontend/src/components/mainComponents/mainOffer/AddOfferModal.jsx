@@ -26,7 +26,6 @@ function AddOfferModal({ isOpen, onClose, offers }) {
       const filteredCategories = data.data.filter(
         (category) => !existingOfferCategories.includes(category.name) // Filter out categories with existing offers
       );
-      console.log('this is categories', data);
       setCategories(filteredCategories);
     } catch (error) {
       console.error('Error fetching categories:', error);

@@ -27,14 +27,13 @@ function MainDashbord() {
   const fetchCardData = async () => {
     try {
       const response = await api.getCardData();
-      console.log("orders",response.data.orders);
       setOrdersData(response.data.orders)
       setTotalCustomers(response.data.totalCustomers);
       setTotalOrders(response.data.totalOrders);
       setTotalSales(response.data.totalSales);
 
     } catch (error) {
-      console.log("Error Fetching Card Data", error);
+      console.error("Error Fetching Card Data", error);
     }
   };
 

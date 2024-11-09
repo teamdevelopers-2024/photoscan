@@ -74,7 +74,7 @@ const AddCategoryModal = ({ isOpen,setIsUpdate, onClose }) => {
             }
             setIsUpdate((prev)=> !prev)
         } catch (error) {
-            console.log(error);
+            console.error(error);
         } finally {
             setIsLoading(false);
         }

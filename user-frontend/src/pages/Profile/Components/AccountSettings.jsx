@@ -6,7 +6,7 @@ import AddAddressForm from "../../../components/addAddress/addAddress";
 import { FiEdit, FiCheck, FiTrash2, FiHome, FiPlus } from "react-icons/fi";
 import Swal from "sweetalert2";
 import Loader from "../../../../../admin-frontend/src/components/Loader/Loader";
-import EditAddress from "../../../components/edit AddressModal/EditAddress";
+import EditAddress from "../../../components/edit AddressModal/editAddress";
 
 function ParentComponent() {
   const dispatch = useDispatch();
@@ -91,9 +91,7 @@ function ParentComponent() {
 
 
 
-  const toggleAddressEdit = (address) => {
-    console.log(address);
-    
+  const toggleAddressEdit = (address) => {    
     setEditData(address)
     setEditModal(true)
   };

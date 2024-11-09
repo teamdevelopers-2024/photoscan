@@ -180,11 +180,11 @@ async function getBanners() {
 }
 
 
-const getProducts = async (catName, currentPage, productsPerPage ,sortOptionFilter) => {
+const getProducts = async (catName, currentPage, productsPerPage, sortOptionFilter) => {
   try {
     const query = `/getProducts?catName=${catName}&page=${currentPage}&limit=${productsPerPage}&sortOptionFilter=${encodeURIComponent(sortOptionFilter)}`;
     const response = await apiClient.get(query);
-    
+
     return response.data;
   } catch (error) {
     console.error('Failed to fetch products:', error);
@@ -248,15 +248,15 @@ async function getCart(id) {
   }
 }
 
-async function addAddress(data){
+async function addAddress(data) {
   try {
-    const response = await apiClient.post(`/addAddress`,{data: data})
+    const response = await apiClient.post(`/addAddress`, { data: data })
     console.log(response);
-    
+
     return response.data
   } catch (error) {
     console.log(error)
-    return error.response.data    
+    return error.response.data
   }
 }
 
@@ -264,20 +264,20 @@ async function getAddress(id) {
   try {
     const response = await apiClient.get(`/getAddress?id=${id}`)
     return response.data
-  }  catch (error) {
+  } catch (error) {
     console.log(error);
     return error.response ? error.response.data : null;  // Handle any errors
   }
 }
 
 
-async function deleteCartItem(itemId,userId) {
+async function deleteCartItem(itemId, userId) {
   try {
     const response = await apiClient.delete(`/deleteCartItem?itemId=${itemId}&userId=${userId}`)
     return response.data
   } catch (error) {
     console.log(error)
-    return error.response.data    
+    return error.response.data
   }
 }
 
@@ -288,7 +288,7 @@ async function getCartProducts(id) {
     return response.data
   } catch (error) {
     console.log(error)
-    return error.response.data    
+    return error.response.data
   }
 }
 
@@ -299,30 +299,44 @@ async function deleteAddress(id) {
     return response.data
   } catch (error) {
     console.log(error)
-    return error.response.data    
+    return error.response.data
   }
 }
 
-async function setDefaultAddress(addressId,userId) {
+async function setDefaultAddress(addressId, userId) {
   try {
     const response = await apiClient.put(`/setDefaultAddress?userId=${userId}&addressId=${addressId}`)
-    return response.data
-  } catch (error) {
-    console.log(error)
-    return error.response.data    
-  }
-}
-
-
-async function makeOrder(body) {
-  try {
-    const response = await apiClient.post("/makeOrder",{body})
     return response.data
   } catch (error) {
     console.log(error)
     return error.response.data
   }
 }
+
+
+async function makeOrder(body) {
+  try {
+    const response = await apiClient.post("/makeOrder", { body })
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
+
+async function editAddress(formData, userId, addressId) {
+  const queryString = `formData=${encodeURIComponent(JSON.stringify(formData))}&userId=${userId}&addressId=${addressId}`;
+
+  try {
+    const response = await apiClient.put(`/editAddress?${queryString}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error.response.data;
+  }
+}
+
 
 export default {
   userLogin,
@@ -348,5 +362,6 @@ export default {
   getCartProducts,
   deleteAddress,
   setDefaultAddress,
-  makeOrder
+  makeOrder,
+  editAddress,
 };

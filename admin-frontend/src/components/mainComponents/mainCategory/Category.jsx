@@ -22,7 +22,7 @@ function MainMomento() {
           setCategories(result.data);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -57,7 +57,7 @@ function MainMomento() {
           setIsUpdate(!isUpdate);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -66,7 +66,6 @@ function MainMomento() {
 
   const manageCategory = (id) => {
     // Implement the function to manage category
-    console.log(`Manage category with id: ${id}`);
   };
 
   return (

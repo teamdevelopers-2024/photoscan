@@ -24,7 +24,7 @@ function MainUser() {
           setTotalPages(Math.ceil(data.totalPages / 10));
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -92,7 +92,6 @@ function MainUser() {
         }
         setIsUpdate(!isUpdate)
         setLoading(false)
-        console.log('User blocked:', id);
       }
     });
   };

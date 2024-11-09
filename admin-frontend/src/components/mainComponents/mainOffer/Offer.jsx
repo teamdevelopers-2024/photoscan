@@ -15,7 +15,6 @@ function Offer() {
     const fetchOffers = async () => {
       try {
         const data = await api.getOffers();
-        console.log("Fetched Offers :", data)
         setOffers(data);
       }
       catch (error) {
@@ -47,7 +46,6 @@ function Offer() {
       return
     }
       const response = await api.deleteOffer(id); // Call the deleteOffer API
-      console.log('Deleting Offer Response:', response);
 
       if (!response.error) {
         // Update the offers state

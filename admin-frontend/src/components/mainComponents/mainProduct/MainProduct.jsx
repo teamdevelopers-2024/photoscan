@@ -62,8 +62,7 @@ function MainProduct() {
   };
 
   const handleDelete = async(id) => {
-    console.log(id )
-    console.log("prouduct ids : ", selectedProducts)
+    
     if(selectedProducts.includes(id)) {
       Swal.fire({
         icon:"error",
