@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Outlet, Navigate } from "react-router-dom";
+import api from "../services/api";
 
 const ProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
@@ -11,9 +12,7 @@ const ProtectedRoute = ({ children }) => {
   }, []);
   const checkAdminStatus = async () => {
     try {
-      const response = await axios.get("https://api.photoscan.co.in/admin/status", {
-        withCredentials:true
-      });
+      const response = await api.status()
       console.log("this is api response : ",response)
       if (response.data.loggedIn) {
         setIsAdmin(true);
