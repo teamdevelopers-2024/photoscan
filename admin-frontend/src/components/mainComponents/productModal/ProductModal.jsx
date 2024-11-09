@@ -15,6 +15,7 @@ const AddProductModal = ({ closeModal }) => {
   const [description, setDescription] = useState('');
   const [actualPrice, setActualPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
+  const [imageCount, setImageCount] = useState('');
   const [images, setImages] = useState([]);
   const [numberOfTextFields, setNumberOfTextFields] = useState(0); // New State
   const [includeLogo, setIncludeLogo] = useState(false); // New State
@@ -88,6 +89,7 @@ const AddProductModal = ({ closeModal }) => {
         images: uploadedImageUrls,
         numberOfTextFields,
         includeLogo,
+        imageCount,
       };
 
       const result = await api.addProduct(productData);
@@ -275,6 +277,17 @@ const AddProductModal = ({ closeModal }) => {
               required
               className="w-full p-2 border border-gray-300 rounded"
               min="0"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-1">Image Count:</label>
+            <input
+              type="number"
+              value={imageCount}
+              onChange={(e) => setImageCount(e.target.value)}
+              required
+              className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
 

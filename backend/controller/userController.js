@@ -797,9 +797,6 @@ async function getCart(req, res) {
   }
 }
 
-
-
-
 // Export the controller
 export default {
   login,
@@ -820,7 +817,7 @@ export default {
   getFeaturedProducts,
   getCategories,
   addAddress,
-  getAddress
+  getAddress,
   addToCart,
   getCart
 }

@@ -84,7 +84,8 @@ const addProduct = async (req, res) => {
         offerPrice,
         images,
         numberOfTextFields,
-        includeLogo
+        includeLogo,
+        imageCount
       } = req.body;
       const newProduct = new productDB({
         productName,
@@ -98,7 +99,8 @@ const addProduct = async (req, res) => {
         catoffer: 0,
         catstatus: true,
         includelogo: includeLogo,
-        textfeild: numberOfTextFields
+        textfeild: numberOfTextFields,
+        imageCount
       });
 
       await newProduct.save();
@@ -453,10 +455,12 @@ async function getCardData(req, res) {
     console.log('Total customers:', totalCustomers);
     console.log('Total orders:', totalOrders);
     console.log('Total sales:', totalSales);
+    console.log("data",orders);
+    
 
     res.status(200).json({
       error: false,
-      data: { totalCustomers, totalOrders, totalSales },
+      data: { totalCustomers, totalOrders, totalSales, orders },
     });
   } catch (error) {
     console.error("Error fetching card data:", error);
