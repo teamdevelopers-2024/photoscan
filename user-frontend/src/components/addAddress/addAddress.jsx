@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import api from "../../services/api";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
-export default function AddAddressForm({ onSubmit }) {
+export default function AddAddressForm({ onClose,isUpdated }) {
    const user = useSelector((state)=> state.user.user)
   const [address, setAddress] = useState({
     fullName: "",
@@ -68,6 +69,18 @@ export default function AddAddressForm({ onSubmit }) {
     try {
       const response = await api.addAddress(formData);
       if (response.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Address Added",
+          text: "Address added successfully.",
+          toast: true, // Enable toast mode
+          position: "top-end", // Position of the toast
+          showConfirmButton: false, // Hide the confirm button
+          timer: 3000, // Duration before the toast disappears
+          timerProgressBar: true, // Show progress bar
+        });
+        onClose()
+        isUpdated()
         console.log("success");
       } else {
         console.log("failed");
@@ -136,7 +149,7 @@ export default function AddAddressForm({ onSubmit }) {
 
           <div>
             <label className="block font-medium text-gray-700">
-              Address Line 2
+              Landmark
             </label>
             <input
               type="text"
@@ -205,7 +218,7 @@ export default function AddAddressForm({ onSubmit }) {
             )}
           </div>
 
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <input
               type="checkbox"
               name="isDefault"
@@ -216,7 +229,7 @@ export default function AddAddressForm({ onSubmit }) {
             <label className="font-medium text-gray-700">
               Set as Default Address
             </label>
-          </div>
+          </div> */}
 
           <button
             onClick={() => addAddress()}

@@ -12,7 +12,7 @@ function ParentComponent() {
   const user = useSelector((state) => state.user.user);
   const [isLoading, setIsLoading] = useState(false);
   const [addresses, setAddresses] = useState([]);
-  const [isupdated, setIsUpdated] = useState(false);
+  const [isUpdated, setIsUpdated] = useState(false);
   const [editMode, setEditMode] = useState({
     firstName: false,
     lastName: false,
@@ -58,7 +58,7 @@ function ParentComponent() {
 
     fetchUserData();
     fetchAddresses();
-  }, [isupdated]);
+  }, [isUpdated]);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -133,7 +133,7 @@ function ParentComponent() {
       console.error("Error setting default address:", error);
     } finally {
       setIsLoading(false);
-      setIsUpdated(!isupdated);
+      setIsUpdated(!isUpdated);
     }
   };
 
@@ -175,7 +175,7 @@ function ParentComponent() {
       console.error("Error deleting address data:", error);
     } finally {
       setIsLoading(false);
-      setIsUpdated(!isupdated);
+      setIsUpdated(!isUpdated);
     }
 
     // setAddresses(updatedAddresses);
@@ -345,13 +345,10 @@ function ParentComponent() {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg max-w-md w-full">
             <AddAddressForm
-              addAddress={(newAddressData) => {
-                dispatch(setAddresses([...addresses, newAddressData])); // Add new address to Redux
-                setShowModal(false);
-              }}
               newAddress={newAddress}
               setNewAddress={setNewAddress}
               onClose={() => setShowModal(false)}
+              isUpdated={()=>setIsUpdated(!isUpdated)}
             />
           </div>
         </div>
