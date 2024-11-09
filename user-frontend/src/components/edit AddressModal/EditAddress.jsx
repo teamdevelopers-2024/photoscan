@@ -2,18 +2,17 @@ import React, { useState } from "react";
 import api from "../../services/api";
 import { useSelector } from "react-redux";
 
-export default function AddAddressForm({ onSubmit }) {
+export default function EditAddress({ onClose ,current}) {
    const user = useSelector((state)=> state.user.user)
   const [address, setAddress] = useState({
-    fullName: "",
-    phoneNumber: "",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    country: "",
-    isDefault: false,
+    fullName: current.fullName || "",
+    phoneNumber: current.phoneNumber || '',
+    addressLine1: current.addressLine1 ||"",
+    addressLine2: current.addressLine2 || '',
+    city: current.city || '',
+    state: current.state || '',
+    postalCode: current.postalCode || '',
+    country: current.country || '',
   });
 
   const [errors, setErrors] = useState({
@@ -82,7 +81,7 @@ export default function AddAddressForm({ onSubmit }) {
     <div className="flex items-center justify-center z-50 w-full min-h-screen bg-gray-800 bg-opacity-50 fixed top-0 left-0">
       <div className="w-full max-w-lg mx-auto p-6 bg-white rounded-lg shadow-xl space-y-6 overflow-y-auto max-h-[90vh]">
         <h2 className="text-2xl font-semibold text-center mb-6">
-          Add New Address
+          Edit Address
         </h2>
 
         <form className="space-y-4">

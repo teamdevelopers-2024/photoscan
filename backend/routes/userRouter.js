@@ -32,7 +32,10 @@ router.get("/getCategories", userController.getCategories)
 router.get("/getCart", userController.getCart)
 router.get("/gatCartProducts",userController.getCartProducts)
 
+router.put("/setDefaultAddress",userController.setDefaultAddress)
+
 
 router.delete('/deleteCartItem', userController.deleteCartItem)
+router.delete('/deleteAddress', userController.deleteAddress)
 router.delete('/logout', userController.logout)
 export default router; 
