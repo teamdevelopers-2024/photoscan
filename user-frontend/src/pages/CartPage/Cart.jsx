@@ -39,17 +39,18 @@ function Cart() {
       fetchCartItems();
     }
   }, [user, updateCart]);
-  async function deleteFromCloud() {
+  async function deleteFromCloud(itemId) {
     try {
-      const result = await cloudinary.uploader.destroy("v35wbfwaj7cpr9jsbekn");
-      console.log("Image deleted successfully:", result);
+      setIsLoading(true);
+      // const result = await cloudinary.uploader.destroy(publicId);
+      await deleteFromCart(itemId);
+      // console.log("Image deleted successfully:", result);
     } catch (error) {
-      console.log("error delete cloud",error);
+      console.log("error delete cloud", error);
     }
   }
   const deleteFromCart = async (itemId) => {
     try {
-      setIsLoading(true);
       const response = await api.deleteCartItem(itemId, user._id); // Pass userId as argument
       console.log(response);
 
@@ -97,6 +98,27 @@ function Cart() {
     setModalOpen(false);
   };
 
+  function navigateToCheckout() {
+    if (!cartItems || cartItems.length === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops, your cart is empty!",
+        text: "You cannot proceed to checkout without any items in your cart.",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: true,
+        confirmButtonColor: "#3085d6",
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      return;
+    }
+    setIsLoading(true);
+    setTimeout(() => {
+      navigate("/checkout");
+      setIsLoading(false);
+    }, 500);
+  }
   // useEffect(() => {
   //   const deleteFromCart = async (itemId) => {
   //     try {
@@ -195,7 +217,7 @@ function Cart() {
               </span>
             </div>
             <button
-              onClick={() => navigate("/checkout")}
+              onClick={() => navigateToCheckout()}
               className="w-full bg-blue-500 text-white p-3 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
             >
               Proceed to Checkout
