@@ -42,8 +42,10 @@ function ParentComponent() {
 
     const fetchAddresses = async () => {
       try {
-        const addressesData = await api.getAddress();
-        setAddresses(addressesData);
+        const response = await api.getAddress(user._id);
+        if(!response.error){
+          setAddresses(response.data);
+        }
       } catch (error) {
         console.error('Failed to fetch addresses:', error);
       }

@@ -657,13 +657,12 @@ async function getAddress(req, res) {
     const { id } = req.query
     const addresses = await addressModel.find({userId:id});
     // Send the fetched addresses back as a JSON response
+    console.log("address fetched",addresses)
     res.status(200).json({
       error:false,
       data:addresses
     });
     // Send the fetched addresses back as a JSON response
-    console.log("address fetched",addresses)
-    res.status(200).json(addresses);
 
   } catch (error) {
     console.error("Error fetching addresses:", error);
