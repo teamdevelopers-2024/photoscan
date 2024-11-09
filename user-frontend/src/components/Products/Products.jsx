@@ -16,21 +16,13 @@ import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/rea
 import ProductFilter from './ProductFilter';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
+import api from '../../services/api';
 
 const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
+  { name: 'Most Popular', href: '#', current: false },
   { name: 'Newest', href: '#', current: false },
   { name: 'Price: Low to High', href: '#', current: false },
   { name: 'Price: High to Low', href: '#', current: false },
-];
-
-const subCategories = [
-  { name: 'Totes', href: '#' },
-  { name: 'Backpacks', href: '#' },
-  { name: 'Travel Bags', href: '#' },
-  { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
 ];
 
 const filters = [
@@ -40,7 +32,7 @@ const filters = [
     options: [
       { value: 'white', label: 'White', checked: false },
       { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
+      { value: 'blue', label: 'Blue', checked: false },
       { value: 'brown', label: 'Brown', checked: false },
       { value: 'green', label: 'Green', checked: false },
       { value: 'purple', label: 'Purple', checked: false },
@@ -67,8 +59,9 @@ function classNames(...classes) {
 export default function Products() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState({});
-  const [catFilter , setCateFilter ] = useState('')
-  const [sortOptionFilter , setSortOptionFilter ] = useState('')
+  const [catFilter , setCateFilter ] = useState(undefined)
+  const [sortOptionFilter , setSortOptionFilter ] = useState(undefined)
+  const [subCategories, setSubCategories] = useState([]);
 
   useEffect(() => {
     // Initialize active filters with checked values on mount
@@ -76,8 +69,41 @@ export default function Products() {
       acc[filter.id] = filter.options.filter(option => option.checked).map(option => option.value);
       return acc;
     }, {});
+    sortOptionFilter && sortOptions.map((item)=>{
+      if(item.name==sortOptionFilter){
+        item.current = true
+      }else{
+        item.current=false
+      }
+    })
+
+    catFilter && subCategories.map((item)=>{
+      if(item.name == catFilter){
+        item.current = true
+      }else{
+        item.current = false
+      }
+    })
     setActiveFilters(initialFilters);
-  }, []);
+  }, [catFilter,sortOptionFilter]);
+  
+  useEffect(()=>{
+    const getCategories = async()=>{
+      const result = await api.getCategories(true)
+      if(!result.error){
+        console.log("this is category data : ",result.categories)
+        const updatedCategories = [
+          { name: "All", href: "#", current: true }, // Default to current: true for "All"
+          ...result.categories.map(category => ({
+            ...category,
+            current: false,
+          }))
+        ];
+        setSubCategories(updatedCategories);
+      }
+    }
+    getCategories()
+  },[])
 
   const handleFilterChange = (filterId, value) => {
     setActiveFilters(prevFilters => {
@@ -208,7 +234,7 @@ export default function Products() {
                   <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
                     {subCategories.map((category) => (
                       <li onClick={()=> setCateFilter(category.name)} key={category.name}>
-                        <a href={category.href}>{category.name}</a>
+                        <a className={`cursor-pointer ${category.current ? 'text-slate-500':''}`} href={category.href}>{category.name}</a>
                       </li>
                     ))}
                   </ul>

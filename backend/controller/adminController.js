@@ -74,40 +74,42 @@ const addBanner = async (req, res) => {
 };
 const addProduct = async (req, res) => {
   if (req.body) {
-      try {
-          const {
-              productName,
-              category,
-              sizes, 
-              description,
-              actualPrice,
-              offerPrice,
-              images,
-              numberOfTextFields,
-              includeLogo
-          } = req.body;
-          const newProduct = new productDB({
-              productName,
-              category,
-              sizes,
-              description,
-              actualPrice,
-              offerPrice,
-              images,
-              status:true,
-              catoffer:0,
-              catstatus:true,
-              includelogo:includeLogo,
-              textfeild:numberOfTextFields
-          });
+    try {
+      const {
+        productName,
+        category,
+        sizes,
+        description,
+        actualPrice,
+        offerPrice,
+        images,
+        numberOfTextFields,
+        includeLogo,
+        imageCount
+      } = req.body;
+      const newProduct = new productDB({
+        productName,
+        category,
+        sizes,
+        description,
+        actualPrice,
+        offerPrice,
+        images,
+        status: true,
+        catoffer: 0,
+        catstatus: true,
+        includelogo: includeLogo,
+        textfeild: numberOfTextFields,
+        imageCount
+      });
 
-          await newProduct.save();
-          res.status(201).json({ message: 'Product added successfully' });
+      await newProduct.save();
+      res.status(201).json({ message: 'Product added successfully' });
 
-      } catch (error) {
-          console.error('Error saving product:', error);
-          res.status(500).json({ error: 'Internal Server Error' });
-      }
+    } catch (error) {
+      console.error('Error saving product:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   } else {
     console.error('Request body is missing');
     res.status(400).json({ error: 'Request body is missing' });
@@ -453,10 +455,12 @@ async function getCardData(req, res) {
     console.log('Total customers:', totalCustomers);
     console.log('Total orders:', totalOrders);
     console.log('Total sales:', totalSales);
+    console.log("data",orders);
+    
 
     res.status(200).json({
       error: false,
-      data: { totalCustomers, totalOrders, totalSales },
+      data: { totalCustomers, totalOrders, totalSales, orders },
     });
   } catch (error) {
     console.error("Error fetching card data:", error);
@@ -595,10 +599,12 @@ const getGraphData = async (req, res) => {
     // Structure data for monthly and yearly sales
     const monthlyData = {};
     const categoryData = {}; // To store category-based sales data
+    let categoryNames;
+    let categoryValues;
 
     salesData.forEach(row => {
       const { year, month } = row._id;
-      const {products} =row;
+      const { products } = row;
 
       // Monthly data aggregation
       if (!monthlyData[year]) {
@@ -606,19 +612,20 @@ const getGraphData = async (req, res) => {
       }
       monthlyData[year][month - 1] = row.totalSales; // Populate the sales amount for the month
 
-    //   // Category-wise aggregation
-    //   products?.forEach(productList => {
-    //     productList.forEach(product => {
-    //       // Assuming the product has a category field, adjust if necessary
-    //       const categoryName = product.category;
+      // Category-wise aggregation
+      products?.forEach(productList => {
+        productList.forEach(product => {
+          // Assuming the product has a category field, adjust if necessary
+          const categoryName = product.category;
 
-    //       if (!categoryData[categoryName]) {
-    //         categoryData[categoryName] = 0; // Initialize category sales if not present
-    //       }
-    //       categoryData[categoryName] += product.price; // Add the product price to the corresponding category
-    //     });
-    //   });
-    console.log("categoriesss......",row.products)
+          if (!categoryData[categoryName]) {
+            categoryData[categoryName] = 0; // Initialize category sales if not present
+          }
+          categoryData[categoryName] += product.price; // Add the product price to the corresponding category
+        });
+      });
+      categoryNames = Object.keys(categoryData)
+      categoryValues = Object.values(categoryData)
     });
 
     // Prepare the response data
@@ -628,7 +635,9 @@ const getGraphData = async (req, res) => {
         year,
         totalSales: monthlyData[year] ? monthlyData[year].reduce((acc, curr) => acc + curr, 0) : 0
       })),
-      // categoryData, // Add category-based sales data
+      categoryData, // Add category-based sales data
+      categoryNames,
+      categoryValues,
     };
 
     console.log("Fetched monthly, yearly, and category sales data:", responseData);

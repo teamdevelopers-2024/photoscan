@@ -187,15 +187,11 @@ async function getBanners() {
 }
 
 
-const getProducts = async (catName, currentPage, productsPerPage) => {
+const getProducts = async (catName, currentPage, productsPerPage ,sortOptionFilter) => {
   try {
-    const response = await apiClient.get('/getProducts', {
-      params: {
-        catName, // Pass catName as a query parameter
-        page: currentPage,
-        limit: productsPerPage,
-      },
-    });
+    const query = `/getProducts?catName=${catName}&page=${currentPage}&limit=${productsPerPage}&sortOptionFilter=${encodeURIComponent(sortOptionFilter)}`;
+    const response = await apiClient.get(query);
+    
     return response.data;
   } catch (error) {
     console.error('Failed to fetch products:', error);
@@ -270,17 +266,50 @@ async function getCart(id) {
     return error.response.data
   }
 }
-async function getwishlist(id) {
-  try {
 
-    const response = await apiClient.get(`/getwishlist?userid=${id}`)    
+async function addAddress(data){
+  try {
+    const response = await apiClient.post(`/addAddress`,{data: data})
+    console.log(response);
+    
     return response.data
   } catch (error) {
-    return error.response.data
+    console.log(error)
+    return error.response.data    
+  }
+}
+
+async function getAddress(id) {
+  try {
+    const response = await apiClient.get(`/getAddress?id=${id}`)
+    return response.data
+  }  catch (error) {
+    console.log(error);
+    return error.response ? error.response.data : null;  // Handle any errors
   }
 }
 
 
+async function deleteCartItem(itemId,userId) {
+  try {
+    const response = await apiClient.delete(`/deleteCartItem?itemId=${itemId}&userId=${userId}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data    
+  }
+}
+
+
+async function getCartProducts(id) {
+  try {
+    const response = await apiClient.get(`/gatCartProducts?userId=${id}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data    
+  }
+}
 export default {
   userLogin,
   userRegister,
@@ -297,8 +326,10 @@ export default {
   getSingleProduct,
   getFeaturedProducts,
   getCategories,
+  addAddress,
+  getAddress,
   addToCart,
   getCart,
-  addToWishlist,
-  getwishlist
+  deleteCartItem,
+  getCartProducts
 };

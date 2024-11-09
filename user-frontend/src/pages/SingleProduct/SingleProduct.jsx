@@ -10,45 +10,102 @@ import api from "../../services/api";
 import Loader from "../../components/loader/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-import axios from "axios";
+import { FaCartPlus } from "react-icons/fa";
 function SingleProduct() {
+  const [isScrollable, setIsScrollable] = useState(false);
   const [state, setState] = useState({
     textInput: "",
-    quantity: 1,
-    currentImage: mainimg,
+    quantity: "",
+    currentImage: "",
     fileName: "No file chosen",
-    product: null,
-    selectedFile: null, // To hold the selected file
+    product: "",
+    selectedFiles: [],
+    isLogo: false,
+    inputFields: [], // Array to hold dynamic input fields
+    imageCount: 0,
+    previewModalOpen: false
   });
   const user = useSelector((state) => state.user.user);
-  const [loading , setLoading ] = useState(false)
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const [textInputError, setTextInputError] = useState("");
+  const [imageState, setImageState] = useState(false);
 
   const handleTextChange = (e) =>
     setState((prevState) => ({ ...prevState, textInput: e.target.value }));
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setState((prevState) => ({
-      ...prevState,
-      fileName: file ? file.name : "No file chosen",
-      selectedFile: file, // Store the selected file
-    }));
+    const files = e.target.files;
+
+    if (files.length !== state.imageCount) {
+      alert(`Please select exactly ${state.imageCount} images.`);
+      e.target.value = "";
+      setState((prevState) => ({
+        ...prevState,
+        fileName: "No file chosen",
+        selectedFiles: [],
+        previewModalOpen: false
+      }));
+      setImageState(false);
+    } else {
+      const fileNames = Array.from(files).map(file => file.name);
+      setState((prevState) => ({
+        ...prevState,
+        fileName: fileNames.join(", "),
+        selectedFiles: files,
+        previewModalOpen: true
+      }));
+      setImageState(true);
+    }
   };
+
+
+
+  const handleReplaceImage = (index) => (e) => {
+    const newFile = e.target.files[0];
+    if (newFile) {
+      const updatedFiles = Array.from(state.selectedFiles);
+      updatedFiles[index] = newFile; // Replace the selected file at the specified index
+      setState((prevState) => ({
+        ...prevState,
+        selectedFiles: updatedFiles,
+      }));
+    }
+  };
+
+
+  useEffect(() => {
+    // Add or remove Tailwind's overflow-hidden class on <body> based on scroll state
+    if (isScrollable) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [isScrollable]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get("id");
-    setLoading(true)
+    setLoading(true);
     const fetchItem = async () => {
       const result = await api.getSingleProduct(id);
       if (!result.error) {
-        setState((prevState) => ({ ...prevState, product: result.data }));
+        const { textfeild, includelogo, imageCount } = result.data;
+        const inputFields = Array.from({ length: textfeild }).map(
+          (_, index) => ({ id: index + 1, value: "" })
+        );
+        setState((prevState) => ({
+          ...prevState,
+          product: result.data,
+          inputFields,
+          imageCount,
+          isLogo: includelogo
+        }));
       } else {
         console.error("Error fetching product:", result.error);
       }
-      setLoading(false)
+      setLoading(false);
     };
 
     fetchItem();
@@ -57,33 +114,49 @@ function SingleProduct() {
   const addToCart = async (id) => {
     if (!user) {
       navigate("/login");
-      return; // Prevent further execution if user is not logged in
+      return;
+    }
+
+    const validateInputFields = () => {
+      return state.inputFields.every(field => field.value.trim() !== "");
+    };
+
+    if (state.inputFields.length && !validateInputFields()) {
+      setTextInputError("Please fill in all required fields.");
+      return;
+    } else {
+      setTextInputError("");
+    }
+
+    if (!imageState) {
+      alert("Please select the required images.");
+      return;
     }
 
     const userId = user._id;
     const productId = id;
-    const { textInput, selectedFile } = state; // Assume state contains textInput and selectedFile
-    let uploadedImageUrl = null; // Initialize as null
+    const { textInput, selectedFiles } = state;
+    let uploadedImageUrl = null;
 
-    // Check if a selected file exists and upload it
-    if (selectedFile) {
+    if (selectedFiles && selectedFiles.length) {
       try {
-        const imageData = new FormData();
-        imageData.append("file", selectedFile); // Use selectedFile directly
-        imageData.append("upload_preset", "cloud_name"); // Replace with your actual upload preset
+        const formData = new FormData();
+        Array.from(selectedFiles).forEach((file) => {
+          formData.append("file", file);
+        });
+        formData.append("upload_preset", "cloud_name");
 
-        // Upload the image to Cloudinary
         const response = await fetch(
           "https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload",
           {
             method: "POST",
-            body: imageData,
+            body: formData,
           }
         );
 
         const data = await response.json();
         if (response.ok) {
-          uploadedImageUrl = data.secure_url; // Store the single secure URL
+          uploadedImageUrl = data.secure_url;
         } else {
           console.error("Image upload failed:", data);
         }
@@ -92,20 +165,17 @@ function SingleProduct() {
       }
     }
 
-    // Create a plain object for JSON
     const formData = {
       userId,
       productId,
       textInput,
-      image: uploadedImageUrl ? uploadedImageUrl : null, // Use null if no image uploaded
+      image: uploadedImageUrl ? uploadedImageUrl : null,
     };
 
-    // Send the request to add the item to the cart
     try {
       const response = await api.addToCart(formData);
 
       if (!response.error) {
-        // Show success toast
         Swal.fire({
           icon: "success",
           title: "Success!",
@@ -117,7 +187,6 @@ function SingleProduct() {
           timerProgressBar: true,
         });
       } else {
-        // Show error toast
         Swal.fire({
           icon: "error",
           title: "Failed!",
@@ -131,7 +200,6 @@ function SingleProduct() {
       }
     } catch (error) {
       console.error("Error adding item to cart:", error);
-      // Show error toast for unexpected errors
       Swal.fire({
         icon: "error",
         title: "Error!",
@@ -242,9 +310,14 @@ function SingleProduct() {
     }
   };
 
+  const handleInputChange = (event, index) => {
+    const newInputFields = [...state.inputFields];
+    newInputFields[index].value = event.target.value;
+    setState((prevState) => ({ ...prevState, inputFields: newInputFields }));
+  };
   return (
     <>
-    {loading && <Loader/>}
+      {loading && <Loader />}
       <Header />
       <div className="min-h-screen">
         <main className="w-full justify-center p-4">
@@ -254,7 +327,9 @@ function SingleProduct() {
               <img
                 className="mx-auto w-3/4 sm:w-96 sm:h-96 rounded-lg"
                 src={
-                  state.product ? state.product.images[0] : state.currentImage
+                  state.product
+                    ? state.product.images[0]
+                    : state.currentImage
                 }
                 alt="Product"
               />
@@ -312,12 +387,34 @@ function SingleProduct() {
                 </div>
               </div>
 
+              {state.inputFields.map((field, index) => (
+                <div key={field.id} className="mt-2 text-sm">
+                  <label htmlFor={`inputField${index + 1}`}>
+                    Text Field {index + 1}:
+                  </label>
+                  <input
+                    type="text"
+                    id={`inputField${index + 1}`}
+                    placeholder="Enter Your Text"
+                    value={field.value}
+                    className="mt-2"
+                    onChange={(e) => handleInputChange(e, index)}
+                    required={state.product.textfieldRequired} // Add required attribute if necessary
+                  />
+                </div>
+              ))}
+              {textInputError && <p className="text-red-500">{textInputError}</p>}
+
               <div className="w-full flex gap-10 justify-between">
                 <button
-                  onClick={() => addToCart(state.product._id)} // Reference the function correctly
+                  onClick={() => addToCart(state.product._id)}
                   className="mt-4 flex items-center justify-center sm:justify-start space-x-2 w-1/2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(188,157,124)]"
                 >
-                  Add to cart
+                  <div className="flex items-center gap-2 p-2  rounded-lg w-32 h-10 cursor-pointertransition-colors duration-200">
+                    <p className="text-sm font-semibold">Add to cart</p>
+                    <FaCartPlus className="w-5 h-5" />
+                  </div>
+
                 </button>
 
                 <div className="flex gap-4">
@@ -332,32 +429,90 @@ function SingleProduct() {
                 </div>
               </div>
 
-              {/* Input Sections */}
-              <div className="mt-5 h-auto flex flex-col gap-4 text-xs text-zinc-500 font-['Lato']">
-                <div className="w-full sm:w-auto">
-                  <input
-                    type="text"
-                    value={state.textInput}
-                    onChange={handleTextChange}
-                    placeholder="Enter text"
-                    className="text-xs text-zinc-500 font-['Lato'] border border-gray-300 rounded-md p-1 w-full sm:w-auto"
-                  />
-                </div>
-
-                <div className="w-full sm:w-auto">
+              {/* Dynamic Input Fields */}
+              {state.imageCount > 0 && (
+                <div className="mt-4">
+                  <label htmlFor="logo">Images:</label>
                   <input
                     type="file"
+                    id="images"
+                    name="images"
                     onChange={handleFileChange}
-                    className="text-xs text-zinc-500 font-['Lato']"
-                    aria-label="Choose file"
+                    required
+                    multiple // Allows selection of multiple files
+                    accept="image/*" // Restricts to image files only
                   />
+                  <small>Select exactly {state.imageCount} images</small>
+                </div>
+              )}
+
+              {state.isLogo && (
+                <div className="mt-4">
+                  <label htmlFor="logo">Logo:</label>
+                  <input
+                    type="file"
+                    id="logo"
+                    name="logo"
+                    onChange={handleFileChange}
+                    required
+                    multiple // Allows selection of multiple files
+                  />
+                  <small>Select exactly {state.imageCount} images</small>
+                </div>
+              )}
+
+
+            </div>
+            {state.previewModalOpen && (
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+                style={{ zIndex: 1000 }}
+              >
+                <div className="bg-white p-6 rounded-lg w-full max-w-lg relative">
+                  <button
+
+                    className="absolute top-2 right-2 text-white w-16 h-7 rounded-lg bg-blue-600 hover:text-gray-500"
+                    onClick={() =>
+                      setState((prev) => ({
+                        ...prev,        // Keep all other state properties the same
+                        previewModalOpen: false,  // Set previewModal to false
+                      }))
+                    }
+                  >
+                    Done
+                  </button>
+                  <h2 className="text-xl font-semibold mb-4">
+                    Selected Images ({state.selectedFiles.length}/{state.imageCount})
+                  </h2>
+                  <ul
+                    className="space-y-4 overflow-y-scroll max-h-96"
+                    onMouseEnter={() => setIsScrollable(true)}
+                    onMouseLeave={() => setIsScrollable(false)}
+                  >
+                    {Array.from(state.selectedFiles).map((file, index) => (
+                      <li key={index} className="flex items-center space-x-4">
+                        {/* Display the image preview */}
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={`Selected ${index + 1}`}
+                          className="w-20 h-20 object-cover rounded border"
+                        />
+                        <span>{file.name}</span>
+                        <input
+                          type="file"
+                          onChange={handleReplaceImage(index)} // Handle replacement
+                          className="ml-auto text-sm"
+                        />
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-            </div>
+            )}
           </div>
-        </main>
-      </div>
-      <Footer />
+        </main >
+        <Footer />
+      </div >
     </>
   );
 }

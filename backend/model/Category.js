@@ -15,24 +15,7 @@ const categorySchema = new mongoose.Schema(
     count: {
       type: Number,
       default: 0
-    },
-    subcategories: [
-      {
-        name: {
-          type: String,
-          required: true,
-          uppercase: true
-        },
-        isActive: {
-          type: Boolean,
-          default: true
-        },
-        count: {
-          type: Number,
-          default: 0
-        }
-      }
-    ]
+    }
   },
   {
     timestamps: true

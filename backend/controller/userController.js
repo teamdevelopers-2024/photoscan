@@ -13,8 +13,10 @@ import verifyRefreshTokenFn from "../services/verifyRefreshTokenFn.js";
 import "dotenv/config";
 import ProductDb from "../model/prodectModel.js";
 import CategoryDb from "../model/Category.js";
+import addressModel from "../model/addressModel.js";
 import CartDb from "../model/cartModel.js";
-import wishlistDb from "../model/wishlistModal.js";
+
+
 
 const login = async (req, res) => {
   try {
@@ -515,6 +517,7 @@ const changePass = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const { catName } = req.query; // Extract catName from query parameters
+    console.log('this is catName : ',catName)
 
     let filter = {
       status : true ,
@@ -522,11 +525,14 @@ const getProducts = async (req, res) => {
     };
 
    
-    if (catName) {
+    if (catName && catName != 'All' && catName != 'null' && catName != 'undefined'){
       filter.category = catName;
     }
 
+    console.log(filter)
+
     const products = await ProductDb.find(filter); // Apply filter to find products
+    console.log("this is products : ",products)
     res.status(200).json({ error: false, message: 'Products fetched successfully', products });
   } catch (error) {
     console.error("Error in finding products:", error);
@@ -614,6 +620,59 @@ async function getCategories(req, res) {
     });
   }
 }
+
+async function addAddress(req,res){
+    try {
+      const data = req.body.data
+      const newAddress = new addressModel({
+        userId: data.userId,
+        fullName: data.fullName,
+        phoneNumber: data.phoneNumber,
+        addressLine1: data.addressLine1,
+        addressLine2: data.addressLine2,
+        city: data.city,
+        state: data.state,
+        postalCode: data.postalCode,
+        country: data.country,
+        isDefault: data.isDefault || false,
+      });
+  
+      await newAddress.save();
+  
+      res.status(201).json({
+        success: true,
+        message: "Address added successfully!",
+      });
+    } catch (error) {
+      console.error("Error Adding Address:", error);
+      res.status(500).json({
+        error: true,
+        message: "An error occurred while adding the address.",
+  
+      });
+}
+}
+
+async function getAddress(req, res) {
+  try {
+    const { id } = req.query
+    const addresses = await addressModel.find({userId:id});
+    // Send the fetched addresses back as a JSON response
+    console.log("address fetched",addresses)
+    res.status(200).json({
+      error:false,
+      data:addresses
+    });
+    // Send the fetched addresses back as a JSON response
+
+  } catch (error) {
+    console.error("Error fetching addresses:", error);
+    
+    // Send an error response in case of failure
+    res.status(500).json({ message: "An error occurred while fetching addresses." });
+  }
+}
+
 
 const addToCart = async (req, res) => {
   try {
@@ -758,6 +817,7 @@ async function getCart(req, res) {
           "items.productId": 1,
           "items.image": 1,
           "items.textInput": 1,
+          "items._id":1,
           "productDetails.productName": "$productDetails.productName",
           "productDetails.offerPrice": "$productDetails.offerPrice",
           "productDetails.image": { $arrayElemAt: ["$productDetails.images", 0] } // Get the first image
@@ -769,9 +829,11 @@ async function getCart(req, res) {
           userId: { $first: "$userId" },
           items: {
             $push: {
+              itemId: "$items._id",
               productId: "$items.productId",
-              image: "$productDetails.image",
-              textInput: "$items.textInput",
+              givenText: "$items.textInput",
+              givenImage: "$items.image",
+              productImage: "$productDetails.image",
               productName: "$productDetails.productName",
               productprice: "$productDetails.offerPrice"
             }
@@ -864,9 +926,59 @@ async function getwishlist(req, res) {
 }
 
 
+async function deleteCartItem(req, res) {
+  try {
+
+    console.log(req.query);
+    
+    const { itemId,userId } = req.query; // Assuming you're sending userId and itemId in the request body
+    console.log(userId,itemId);
+    
+    // Find the cart for the user and update it
+    const updatedCart = await CartDb.findOneAndUpdate(
+      { userId: userId }, // Filter to find the cart for the specific user
+      { $pull: { items: { _id: itemId } } }, // Use $pull to remove the item with the given itemId
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedCart) {
+      return res.status(404).json({ error: true, message: 'Cart not found' });
+    }
+
+    res.status(200).json({ error: false, message: 'Item removed from cart successfully', updatedCart });
+  } catch (error) {
+    console.error('Error deleting item from cart:', error);
+    res.status(500).json({ error: true, message: 'Internal server error' });
+  }
+}
 
 
+async function getCartProducts(req, res) {
+  try {
+    const { userId } = req.query;
 
+    // Step 1: Find the cart associated with the user
+    console.log("user id : ", userId);
+    const cart = await CartDb.findOne({ userId:new mongoose.Types.ObjectId(userId) }).populate('items.productId');
+    console.log("this is cart : ", cart);
+
+    if (!cart) {
+      return res.status(404).json({ error: true, message: "Cart not found for this user." });
+    }
+
+    // Step 2: Get product details for each item in the cart
+    const productIds = cart.items.map(item => item.productId); // Extract the productId from the cart items
+    
+    // Populate product data from the product model
+    const products = await ProductDb.find({ _id: { $in: productIds } });
+
+    // Step 3: Send only the product data to the frontend
+    return res.status(200).json({ error: false, productData: products });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: true, message: "An error occurred while fetching the product data." });
+  }
+}
 
 
 // Export the controller
@@ -888,8 +1000,10 @@ export default {
   getSingleProduct,
   getFeaturedProducts,
   getCategories,
+  addAddress,
+  getAddress,
   addToCart,
   getCart,
-  addToWishlist,
-  getwishlist
+  deleteCartItem,
+  getCartProducts
 }
