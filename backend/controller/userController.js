@@ -655,9 +655,10 @@ async function addAddress(req,res){
 async function getAddress(req, res) {
   try {
     // Fetch all addresses from the database
-    const addresses = await addressModel.find();
+    const addresses = await addressModel.find({});
 
     // Send the fetched addresses back as a JSON response
+    console.log("address fetched",addresses)
     res.status(200).json(addresses);
   } catch (error) {
     console.error("Error fetching addresses:", error);
