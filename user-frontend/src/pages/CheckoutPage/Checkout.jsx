@@ -12,6 +12,7 @@ const CheckoutPage = () => {
   const [defAddress, setDefAddress] = useState({})
   const [addressModal, setAddressModal] = useState(false)
   const [productData, setProductData] = useState([])
+  const [total, setTotal] = useState(0)
   useEffect(() => {
     const getAddresses = async () => {
       try {
@@ -21,12 +22,17 @@ const CheckoutPage = () => {
           api.getCartProducts(user._id),
         ]);
 
-        // Handle cart data response
         if (!cartRes.error) {
           console.log("getting inside : ", cartRes.productData)
+          console.log("this is checkout data : ",cartRes.productData)
           setProductData(cartRes.productData);
         }
-
+        let totalAmount = 0
+        cartRes.productData.map((pro) => {
+          console.log("this is pro inside map : ", pro)
+          totalAmount += pro.productId.offerPrice
+        })
+        setTotal(totalAmount)
         // Handle address data response
         if (!addressRes.error) {
           setAddresses(addressRes.data);
@@ -46,6 +52,83 @@ const CheckoutPage = () => {
       getAddresses();
     }
   }, [user._id]); // Add user._id as a dependency to ensure it re-runs when the user changes
+
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handlePayment = async () => {
+    // Load Razorpay script
+    const res = await loadRazorpayScript();
+    if (!res) {
+      alert("Razorpay SDK failed to load. Please check your internet connection.");
+      return;
+    }
+
+    // Razorpay Payment Options
+    const options = {
+      key: "rzp_test_MlCXSvdf7wnvN1", // Your Razorpay Key ID
+      amount: total * 100, // Amount in paise
+      currency: "INR",
+      name: "Photo Scan",
+      description: "Product Description",
+      image: "/your-logo.png", // Optional: Add your company logo here
+      handler: async (response) => {
+        console.log("Payment Response:", response); // Debug: Log the response
+
+        const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
+
+        if (!razorpay_payment_id) {
+          console.error("Missing payment details", response);
+          alert("Payment failed. Missing payment information.");
+          return;
+        }
+
+        // Payment successful, now create the order
+        try {
+          // Send payment details to backend to create the order
+          // const createOrderResponse = await api.makeOrder({
+          //   razorpay_payment_id,
+          //   amount: total, 
+          // });
+
+          // console.log("Order creation response:", createOrderResponse);
+
+          // if (createOrderResponse.data.success) {
+          //   alert("Order created successfully!");
+          // } else {
+          //   alert("Failed to create order");
+          // }
+        } catch (error) {
+          console.error("Error creating order:", error);
+          alert("Failed to create order");
+        }
+      },
+      prefill: {
+        name: user.firstName + user.lastName,
+        email: user.email,
+        contact: user.phoneNumber,
+      },
+      notes: {
+        address: "Customer Address",
+      },
+      theme: {
+        color: "#4d4d4d",
+      },
+    };
+
+    // Open Razorpay Checkout with the options
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  };
+
 
 
   const handleAddressRadioChange = (selected) => {
@@ -120,7 +203,7 @@ const CheckoutPage = () => {
                     <input
                       type="text"
                       name="name"
-                      disabled={defAddress}
+                      disabled={defAddress.fullName}
                       value={defAddress.fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       placeholder="John Doe"
@@ -136,7 +219,7 @@ const CheckoutPage = () => {
                       type="email"
                       name="email"
                       value={user.email}
-                      disabled={defAddress}
+                      disabled={user.email}
                       placeholder="you@example.com"
                       className="block w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-1 focus:ring-[rgb(211,184,130)] focus:border-[rgb(211,184,130)] sm:text-sm transition duration-300"
                       required
@@ -150,8 +233,8 @@ const CheckoutPage = () => {
                   <input
                     type="text"
                     name="address"
-                    value={`${defAddress.city} , ${defAddress.state} , ${defAddress.country} , ${defAddress.postalCode}`}
-                    disabled={defAddress}
+                    value={`${defAddress.city ? defAddress.city+"," : ''}${defAddress.state ? defAddress.state+"," : ''}${defAddress.country ? defAddress.country+"," : ''}${defAddress.postalCode ? defAddress.postalCode : ''}`}
+                    disabled={defAddress.city}
                     placeholder="1234 Main St"
                     className="block w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-1 focus:ring-[rgb(211,184,130)] focus:border-[rgb(211,184,130)] sm:text-sm transition duration-300"
                     required
@@ -228,24 +311,24 @@ const CheckoutPage = () => {
                 <li key={index} className="grid grid-cols-6 gap-2 border-b p-4 rounded-md shadow-sm hover:shadow-lg transition-shadow">
                   <div className="col-span-1 self-center">
                     <img
-                      src={product.images[0]} // Ensure the image path is correct
+                      src={product.productId.images[0]} // Ensure the image path is correct
                       alt="Product"
                       className="rounded w-full border border-gray-200"
                     />
                   </div>
                   <div className="flex flex-col col-span-3 pt-2">
                     <span className="text-gray-600 text-md font-semibold">
-                      {product.productName}
+                      {product.productId.productName}
                     </span>
                     <span className="text-gray-400 text-sm inline-block pt-1">
-                      {product.productName}
+                      {product.productId.productName}
                     </span>
                   </div>
                   <div className="col-span-2 pt-3">
                     <div className="flex items-center space-x-2 text-sm justify-between">
-                      <span className="text-gray-400">{product.actualPrice}</span>
+                      <span className="text-gray-400">{product.productId.actualPrice}</span>
                       <span className="text-pink-400 font-semibold inline-block">
-                        {product.offerPrice}
+                        {product.productId.offerPrice}
                       </span>
                     </div>
                   </div>
@@ -258,7 +341,9 @@ const CheckoutPage = () => {
 
           <div className="flex justify-between mt-4 border-b py-2 px-4 text-gray-600 font-medium">
             <span>Subtotal</span>
-            <span className="text-gray-800 font-semibold">€61.98</span>
+            <span className="text-gray-800 font-semibold">
+            {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(total)}
+            </span>
           </div>
           <div className="flex justify-between mt-2 border-b py-2 px-4 text-gray-600 font-medium">
             <span>Shipping</span>
@@ -266,11 +351,14 @@ const CheckoutPage = () => {
           </div>
           <div className="flex justify-between mt-2 border-b py-2 px-4 text-gray-600 font-medium">
             <span>Total</span>
-            <span className="text-gray-800 font-semibold">€61.98</span>
+            <span className="text-gray-800 font-semibold">
+              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(total)}
+            </span>
+
           </div>
           {/* Submit Payment Button */}
-          <button className="submit-button mt-6 px-4 py-2 rounded-lg bg-[rgb(211,184,130)] text-white focus:ring-0 focus:outline-none w-full text-base font-semibold shadow-lg transition-colors hover:bg-[rgb(188,157,124)]">
-            Pay €61.98
+          <button onClick={() => handlePayment()} className="submit-button mt-6 px-4 py-2 rounded-lg bg-[rgb(211,184,130)] text-white focus:ring-0 focus:outline-none w-full text-base font-semibold shadow-lg transition-colors hover:bg-[rgb(188,157,124)]">
+            Pay {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(total)}
           </button>
 
         </div>

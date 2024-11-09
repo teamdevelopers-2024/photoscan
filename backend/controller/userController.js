@@ -844,19 +844,13 @@ async function getCartProducts(req, res) {
     // Step 1: Find the cart associated with the user
     console.log("user id : ", userId);
     const cart = await CartDb.findOne({ userId:new mongoose.Types.ObjectId(userId) }).populate('items.productId');
-    console.log("this is cart : ", cart);
-
+    console.log("this is cart : ", cart.items[0].productId);
+    
     if (!cart) {
       return res.status(404).json({ error: true, message: "Cart not found for this user." });
     }
 
-    // Step 2: Get product details for each item in the cart
-    const productIds = cart.items.map(item => item.productId); // Extract the productId from the cart items
-    
-    // Populate product data from the product model
-    const products = await ProductDb.find({ _id: { $in: productIds } });
-
-    // Step 3: Send only the product data to the frontend
+    const products = cart.items
     return res.status(200).json({ error: false, productData: products });
   } catch (error) {
     console.error(error);

@@ -129,7 +129,7 @@ function SingleProduct() {
       setTextInputError("");
     }
 
-    if (!imageState) {
+    if ( state.imageCount> 0 && !imageState) {
       alert("Please select the required images.");
       return;
     }
@@ -350,7 +350,7 @@ function SingleProduct() {
                 </div>
               )}
 
-              {state.isLogo && (
+              {/* {state.isLogo && (
                 <div className="mt-4">
                   <label htmlFor="logo">Logo:</label>
                   <input
@@ -363,7 +363,7 @@ function SingleProduct() {
                   />
                   <small>Select exactly {state.imageCount} images</small>
                 </div>
-              )}
+              )} */}
 
 
             </div>
