@@ -31,5 +31,6 @@ router.get("/getCategories", userController.getCategories)
 router.get("/getCart", userController.getCart)
 
 
+router.delete('/deleteCartItem', userController.deleteCartItem)
 router.delete('/logout', userController.logout)
 export default router; 

@@ -83,6 +83,7 @@ function SingleProduct() {
 
         const data = await response.json();
         if (response.ok) {
+          console.log('Heyy this cloudinary',data.p)
           uploadedImageUrl = data.secure_url; // Store the single secure URL
         } else {
           console.error("Image upload failed:", data);

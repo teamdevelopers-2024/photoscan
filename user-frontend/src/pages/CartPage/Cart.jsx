@@ -3,35 +3,87 @@ import Header from "../../components/Header/Header";
 import "./Cart.css";
 import api from "../../services/api";
 import { useSelector } from "react-redux";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEye } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt, faEye } from "@fortawesome/free-solid-svg-icons";
 import Modal from "./previewModal";
+import Swal from "sweetalert2";
+import Loader from "../../components/loader/Loader";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]); // Initialize as an empty array
   const [modalOpen, setModalOpen] = useState(false); // State to control modal visibility
   const [previewData, setPreviewData] = useState({}); // State to hold preview data
+  const [updateCart, setUpdateCart] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user.user); // Access user from Redux store
+  const userId = user._id; // Get the user ID
+  const navigate = useNavigate();
 
+  const fetchCartItems = async () => {
+    try {
+      setIsLoading(true);
+      const response = await api.getCart(userId); // Fetch cart data
+      const data = response?.cartData?.items || [];
+      console.log(data);
+
+      setCartItems(data); // Set the cart items in the state
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const userId = user._id; // Get the user ID
-        const response = await api.getCart(userId); // Fetch cart data
-        const data = response?.cartData?.items || [];
-        // console.log(data);
-
-        setCartItems(data); // Set the cart items in the state
-      } catch (error) {
-        console.error("Error fetching cart items:", error);
-      }
-    };
-
     if (user) {
-      // Only fetch if the user is available
       fetchCartItems();
     }
-  }, [user]); // Dependency on user
+  }, [user, updateCart]);
+  async function deleteFromCloud() {
+    try {
+      const result = await cloudinary.uploader.destroy("v35wbfwaj7cpr9jsbekn");
+      console.log("Image deleted successfully:", result);
+    } catch (error) {
+      console.log("error delete cloud",error);
+    }
+  }
+  const deleteFromCart = async (itemId) => {
+    try {
+      setIsLoading(true);
+      const response = await api.deleteCartItem(itemId, user._id); // Pass userId as argument
+      console.log(response);
+
+      // Check if the response is successful and show a success toast
+      if (!response.error) {
+        Swal.fire({
+          icon: "success",
+          title: "Item Deleted",
+          text: "The item has been removed from your cart.",
+          toast: true, // Enable toast mode
+          position: "top-end", // Position of the toast
+          showConfirmButton: false, // Hide the confirm button
+          timer: 3000, // Duration before the toast disappears
+          timerProgressBar: true, // Show progress bar
+        });
+      }
+      setUpdateCart(!updateCart);
+    } catch (error) {
+      console.error("Error deleting item from cart:", error);
+      // Optionally show an error toast
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "There was an issue removing the item from your cart.",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handlePreviewClick = (item) => {
     setPreviewData({
@@ -45,8 +97,45 @@ function Cart() {
     setModalOpen(false);
   };
 
+  // useEffect(() => {
+  //   const deleteFromCart = async (itemId) => {
+  //     try {
+  //       const response = await api.deleteCartItem(itemId, userId);
+  //       console.log(response);
+
+  //       // Check if the response is successful and show a success toast
+  //       if (!response.error) {
+  //         Swal.fire({
+  //           icon: "success",
+  //           title: "Item Deleted",
+  //           text: "The item removed from your cart.",
+  //           toast: true, // Enable toast mode
+  //           position: "top-end", // Position of the toast
+  //           showConfirmButton: false, // Hide the confirm button
+  //           timer: 3000, // Duration before the toast disappears
+  //           timerProgressBar: true, // Show progress bar
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error("Error deleting item from cart:", error);
+  //       // Optionally show an error toast
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Error",
+  //         text: "There was an issue removing the item from your cart.",
+  //         toast: true,
+  //         position: "top-end",
+  //         showConfirmButton: false,
+  //         timer: 3000,
+  //         timerProgressBar: true,
+  //       });
+  //     }
+  //   };
+  // });
+
   return (
     <>
+      {isloading && <Loader />}
       <Header />
       <div className="bg-gray-100 h-[100vh] flex flex-col p-10 md:flex-row">
         <div className="bg-white rounded-lg h-[79vh] shadow-lg p-4 flex-1 overflow-y-scroll">
@@ -80,7 +169,7 @@ function Cart() {
                     <FontAwesomeIcon
                       icon={faTrashAlt}
                       className="text-red-500 cursor-pointer"
-                      onClick={() => deleteFromCart()}
+                      onClick={() => deleteFromCloud(item.itemId)}
                     />
                   </div>
                 </div>
@@ -99,24 +188,27 @@ function Cart() {
             <div className="flex justify-between items-center mb-4">
               <span>Total Amount:</span>
               <span className="text-xl font-bold">
-                ₹ 
+                ₹
                 {cartItems
                   .reduce((total, item) => total + item.productprice, 0)
                   .toFixed(2)}
               </span>
             </div>
-            <button className="w-full bg-blue-500 text-white p-3 rounded-lg font-bold hover:bg-blue-600 transition duration-300">
+            <button
+              onClick={() => navigate("/checkout")}
+              className="w-full bg-blue-500 text-white p-3 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
+            >
               Proceed to Checkout
             </button>
           </div>
         </div>
       </div>
 
-      <Modal 
-        isOpen={modalOpen} 
-        onClose={handleCloseModal} 
-        image={previewData.image} 
-        text={previewData.text} 
+      <Modal
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
+        image={previewData.image}
+        text={previewData.text}
       />
     </>
   );
