@@ -3,48 +3,49 @@ import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import Loader from "../loader/Loader";
 
-const sortOptions = [
-  { name: "Newest", href: "#", current: false },
-  { name: "Price: Low to High", href: "#", current: false },
-  { name: "Price: High to Low", href: "#", current: false },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function ProductFilter() {
+export default function ProductFilter({activeFilters , catFilter , sortOptionFilter}) {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  let cat = searchParams.get("catName");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1)
+  const [catName , setCatName ] = useState(cat)
   const navigate = useNavigate()
+  console.log("activeFilter : ",activeFilters)
+  console.log("catFilter : ",catFilter)
+  console.log("sortOptionFilter : ",sortOptionFilter)
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const catName = searchParams.get("catName");
 
   const productsPerPage = 8; // Number of products per page
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const fetchedProducts = await api.getProducts(catName, currentPage, productsPerPage);
-        setProducts(Array.isArray(fetchedProducts.products) ? fetchedProducts.products : []);
-        setTotalPages(fetchedProducts.totalPages); // Assuming the API returns totalPages for pagination
-      } catch (error) {
-        console.error("API call error", error);
-        setError("Failed to fetch products.");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchProducts();
-  }, [catName, currentPage]); // Fetch products when catName or currentPage changes
-  
+useEffect(() => {
+  if (catFilter) {
+    setCatName(catFilter);
+  }
+}, [catFilter]);
+
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const fetchedProducts = await api.getProducts(catName, currentPage, productsPerPage, sortOptionFilter);
+      console.log("this is fetched products : ",fetchedProducts)
+      setProducts(Array.isArray(fetchedProducts.products) ? fetchedProducts.products : []);
+      setTotalPages(fetchedProducts.totalPages);
+    } catch (error) {
+      console.error("API call error", error);
+      setError("Failed to fetch products.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProducts();
+}, [currentPage, catName, sortOptionFilter]);
+
 
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
@@ -72,7 +73,7 @@ export default function ProductFilter() {
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2">
             <div className="lg:col-span-3">
-              <div className="bg-white p-6 rounded-lg max-h-[820px] shadow-lg mb-6">
+              <div className="bg-white p-6 rounded-lg md:max-h-[820px] shadow-lg mb-6">
               {loading && <Loader product={true} />}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
                   {products.map((product) => (

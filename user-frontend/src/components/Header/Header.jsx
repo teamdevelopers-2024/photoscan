@@ -5,6 +5,7 @@ import {
   FaShoppingCart,
   FaBars,
   FaTimes,
+  FaHeart,
 } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
 import CartDropdown from "../cartDropdown/CardDropdown";
@@ -24,13 +25,14 @@ const Header = () => {
   const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
   const [isProductHover, setIsProductHover] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const headerRef = useRef(null);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleCartDropdown = () => setIsCartDropdownOpen(!isCartDropdownOpen);
+  const toggleCartDropdown = () => setIsCartDropdownOpen(true);
+  const closeCartDropdown = () => setIsCartDropdownOpen(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -39,9 +41,8 @@ const Header = () => {
 
         if (!result.error) {
           setCategories(result.categories);
-          setProducts(result.productsByCategory)
+          setProducts(result.productsByCategory);
         }
-
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -102,12 +103,19 @@ const Header = () => {
             onClick={handleUserClick}
             className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110"
           />
-          <Link to="">
-            <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+          <Link to="/wishlist">
+            <FaHeart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
           </Link>
-          <div className="relative h-auto" onClick={toggleCartDropdown}>
+          <div
+            className="relative h-auto"
+            onMouseEnter={toggleCartDropdown}
+            onClick={() => navigate("/cart")}
+          >
             <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-            {isCartDropdownOpen && <CartDropdown />}
+
+            {isCartDropdownOpen && (
+              <CartDropdown closeDropdown={closeCartDropdown} />
+            )}
           </div>
         </div>
 
@@ -137,6 +145,7 @@ const Header = () => {
               {menus.map((menu, index) => (
                 <li
                   key={index}
+                  onClick={() => navigate(menu.route)}
                   className="cursor-pointer hover:text-[#4d4d4d] text-xl"
                 >
                   {menu.name.toUpperCase()}
@@ -144,8 +153,10 @@ const Header = () => {
               ))}
             </ul>
             <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
-              <FaUser className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              <FaUser onClick={() => navigate('/profile')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              <FaHeart onClick={() => navigate('/wishlist')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+
               <div className="relative" onClick={toggleCartDropdown}>
                 <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               </div>
@@ -153,7 +164,6 @@ const Header = () => {
           </div>
         </div>
       </header>
-
 
       <header
         ref={headerRef}
@@ -278,9 +288,6 @@ const Header = () => {
           ))}
         </div>
       </div>
-
-
-
     </>
   );
 };
