@@ -8,10 +8,9 @@ const AddressModal = ({ addresses, onClose, onSelect }) => {
   };
 
   const handleSubmit = () => {
-    // Return the full address object when an address is selected
     const selected = addresses.find((address) => address._id === selectedAddress);
-    onSelect(selected); // Pass the selected object to the parent
-    onClose(); // Close the modal after selection
+    onSelect(selected); 
+    onClose(); 
   };
 
   return (

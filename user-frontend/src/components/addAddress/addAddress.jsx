@@ -220,7 +220,7 @@ export default function AddAddressForm({ onSubmit }) {
 
           <button
             onClick={() => addAddress()}
-            type="submit"
+            
             className="w-full bg-blue-500 text-white font-semibold py-3 rounded-md hover:bg-blue-600 transition-colors"
           >
             Add Address
