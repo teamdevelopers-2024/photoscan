@@ -516,6 +516,7 @@ const changePass = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const { catName } = req.query; // Extract catName from query parameters
+    console.log('this is catName : ',catName)
 
     let filter = {
       status : true ,
@@ -523,11 +524,14 @@ const getProducts = async (req, res) => {
     };
 
    
-    if (catName) {
+    if (catName && catName != 'All' && catName != 'null' && catName != 'undefined'){
       filter.category = catName;
     }
 
+    console.log(filter)
+
     const products = await ProductDb.find(filter); // Apply filter to find products
+    console.log("this is products : ",products)
     res.status(200).json({ error: false, message: 'Products fetched successfully', products });
   } catch (error) {
     console.error("Error in finding products:", error);
@@ -820,7 +824,7 @@ export default {
   getFeaturedProducts,
   getCategories,
   addAddress,
-  getAddress
+  getAddress,
   addToCart,
   getCart
 }

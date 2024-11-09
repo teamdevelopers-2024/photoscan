@@ -3,52 +3,49 @@ import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import Loader from "../loader/Loader";
 
-const sortOptions = [
-  { name: "Newest", href: "#", current: false },
-  { name: "Price: Low to High", href: "#", current: false },
-  { name: "Price: High to Low", href: "#", current: false },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function ProductFilter({activeFilters , catFilter , sortOptionFilter}) {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  let cat = searchParams.get("catName");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1)
+  const [catName , setCatName ] = useState(cat)
   const navigate = useNavigate()
   console.log("activeFilter : ",activeFilters)
+  console.log("catFilter : ",catFilter)
+  console.log("sortOptionFilter : ",sortOptionFilter)
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  let catName = searchParams.get("catName");
 
   const productsPerPage = 8; // Number of products per page
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        if(catFilter){
-          catName = catFilter
-        }
-        const fetchedProducts = await api.getProducts(catName, currentPage, productsPerPage ,sortOptionFilter);
-        setProducts(Array.isArray(fetchedProducts.products) ? fetchedProducts.products : []);
-        setTotalPages(fetchedProducts.totalPages); // Assuming the API returns totalPages for pagination
-      } catch (error) {
-        console.error("API call error", error);
-        setError("Failed to fetch products.");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchProducts();
-  }, [catName, currentPage]); // Fetch products when catName or currentPage changes
-  
+useEffect(() => {
+  if (catFilter) {
+    setCatName(catFilter);
+  }
+}, [catFilter]);
+
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const fetchedProducts = await api.getProducts(catName, currentPage, productsPerPage, sortOptionFilter);
+      console.log("this is fetched products : ",fetchedProducts)
+      setProducts(Array.isArray(fetchedProducts.products) ? fetchedProducts.products : []);
+      setTotalPages(fetchedProducts.totalPages);
+    } catch (error) {
+      console.error("API call error", error);
+      setError("Failed to fetch products.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProducts();
+}, [currentPage, catName, sortOptionFilter]);
+
 
   if (error) return <div className="text-center text-red-500">{error}</div>;
 

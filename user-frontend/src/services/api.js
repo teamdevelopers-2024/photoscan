@@ -187,15 +187,11 @@ async function getBanners() {
 }
 
 
-const getProducts = async (catName, currentPage, productsPerPage) => {
+const getProducts = async (catName, currentPage, productsPerPage ,sortOptionFilter) => {
   try {
-    const response = await apiClient.get('/getProducts', {
-      params: {
-        catName, // Pass catName as a query parameter
-        page: currentPage,
-        limit: productsPerPage,
-      },
-    });
+    const query = `/getProducts?catName=${catName}&page=${currentPage}&limit=${productsPerPage}&sortOptionFilter=${encodeURIComponent(sortOptionFilter)}`;
+    const response = await apiClient.get(query);
+    
     return response.data;
   } catch (error) {
     console.error('Failed to fetch products:', error);
@@ -298,7 +294,7 @@ export default {
   getFeaturedProducts,
   getCategories,
   addAddress,
-  getAddress
+  getAddress,
   addToCart,
   getCart
 };

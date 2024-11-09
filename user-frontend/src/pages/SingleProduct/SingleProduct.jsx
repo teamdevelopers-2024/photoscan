@@ -14,11 +14,11 @@ import Swal from "sweetalert2";
 function SingleProduct() {
   const [state, setState] = useState({
     textInput: "",
-    quantity: 1,
-    currentImage: mainimg,
+    quantity: '',
+    currentImage: '',
     fileName: "No file chosen",
-    product: null,
-    selectedFile: null, // To hold the selected file
+    product: '',
+    selectedFile: '', // To hold the selected file
   });
   const user = useSelector((state) => state.user.user);
   const [loading , setLoading ] = useState(false)
@@ -43,6 +43,7 @@ function SingleProduct() {
     setLoading(true)
     const fetchItem = async () => {
       const result = await api.getSingleProduct(id);
+      console.log('this is singleProduct : ',result.data)
       if (!result.error) {
         setState((prevState) => ({ ...prevState, product: result.data }));
       } else {
