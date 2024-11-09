@@ -14,8 +14,8 @@ const ProtectedRoute = ({ children }) => {
       const response = await axios.get("https://api.photoscan.co.in/admin/status", {
         withCredentials:true
       });
-      const data = await response.json();
-      if (data.loggedIn) {
+      console.log("this is api response : ",response)
+      if (response.data.loggedIn) {
         setIsAdmin(true);
       } else {
         setIsAdmin(null);
