@@ -670,7 +670,7 @@ async function getAddress(req, res) {
 
 const addToCart = async (req, res) => {
   try {
-    const { userId, productId, image, textInput } = req.body; // Destructure the data from req.body
+    const { userId, productId, image, textInput,publicId } = req.body; // Destructure the data from req.body
 
     // Validate input
     if (!productId) {
@@ -690,7 +690,8 @@ const addToCart = async (req, res) => {
         items: [{
           productId: productObjectId,
           image: image, // Store the single image URL
-          textInput: textInput // Store the single text input
+          textInput: textInput, // Store the single text input
+          publicId:publicId,
         }],
       });
     } else {
@@ -787,7 +788,7 @@ async function deleteCartItem(req, res) {
   try {
 
 
-    const { itemId, userId } = req.query; // Assuming you're sending userId and itemId in the request body
+    const { itemId, userId ,publicId} = req.query; // Assuming you're sending userId and itemId in the request body
 
     // Find the cart for the user and update it
     const updatedCart = await CartDb.findOneAndUpdate(

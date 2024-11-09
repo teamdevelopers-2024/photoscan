@@ -23,6 +23,10 @@ const cartSchema = new mongoose.Schema(
                     type: String,
                     required: false,
                 },
+                publicId:{
+                    type:String,
+                    required:true,
+                }
             },
         ],
     },
