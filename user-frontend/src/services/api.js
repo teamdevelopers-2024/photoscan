@@ -320,6 +320,16 @@ async function setDefaultAddress(addressId,userId) {
   }
 }
 
+async function editAddress() {
+  try {
+    const response = await apiClient.put(`/editAddress?userId=${userId}&addressId=${addressId}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data    
+  }
+}
+
 
 
 export default {
@@ -346,4 +356,5 @@ export default {
   getCartProducts,
   deleteAddress,
   setDefaultAddress,
+  editAddress,
 };
