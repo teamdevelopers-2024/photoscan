@@ -31,7 +31,7 @@ app.use(session({
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27018/sessions' }), // Change port here
     cookie: {
         secure: false, // Should be true in production if using HTTPS
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 1 * 60 * 60 * 1000 // 1 hour
     }
 }));
