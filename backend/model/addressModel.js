@@ -21,10 +21,6 @@ const addressSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  addressLine2: {
-    type: String,
-    trim: true,
-  },
   city: {
     type: String,
     required: true,

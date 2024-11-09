@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import {
-  FaUser, FaLock, FaCog, FaBox, FaSignOutAlt,
-} from 'react-icons/fa';
+import { FaUser, FaLock, FaCog, FaBox, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../services/api';
 
@@ -31,11 +29,10 @@ const ProfileSidebar = ({ setActiveSection, activeSection }) => {
   };
 
   return (
-    <aside className={`w-64 h-[90vh] p-6 shadow-lg transition-colors duration-300 rounded-lg flex flex-col`}>
+    <aside className="w-64 h-auto p-6 shadow-lg bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100  flex flex-col transition-all duration-300">
       <div className="relative top-5">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">Profile Menu</h2>
-          
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-semibold">Profile Menu</h2>
         </div>
         <ul className="space-y-4">
           {menuItems.map(({ id, label, icon: Icon }) => (
@@ -43,10 +40,15 @@ const ProfileSidebar = ({ setActiveSection, activeSection }) => {
               <a
                 href={`#${id}`}
                 onClick={() => setActiveSection(id)}
-                className={`flex items-center p-2 rounded-lg transition-all duration-200 ${activeSection === id ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md' : 'hover:bg-gray-200 dark:hover:bg-gray-200'} `}
+                className={`flex items-center p-3 rounded-lg transition-all duration-200 shadow-sm ${
+                  activeSection === id
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                }`}
                 aria-current={activeSection === id ? 'page' : undefined}
               >
-                <Icon className="mr-3" size={20} /> {label}
+                <Icon className="mr-3" size={20} /> 
+                <span className="font-medium">{label}</span>
               </a>
             </li>
           ))}
@@ -55,12 +57,16 @@ const ProfileSidebar = ({ setActiveSection, activeSection }) => {
       <div className="mt-auto">
         <button
           onClick={handleLogout}
-          className="flex items-center p-2 mt-6 text-red-500 hover:text-red-600 dark:text-red-400 transition-colors duration-200"
+          className="flex items-center p-3 mt-6 text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-500 transition-colors duration-200 rounded-lg shadow-sm hover:bg-gray-100 dark:hover:bg-gray-800"
           aria-label="Logout"
         >
           <FaSignOutAlt className="mr-2" /> Logout
         </button>
-        {errorMessage && <p className="text-red-500 dark:text-red-400 mt-2">{errorMessage}</p>}
+        {errorMessage && (
+          <p className="text-sm text-red-500 dark:text-red-400 mt-3 bg-red-100 dark:bg-red-900 p-2 rounded-md">
+            {errorMessage}
+          </p>
+        )}
       </div>
     </aside>
   );
