@@ -17,9 +17,9 @@ import ForgotPass from "../pages/forgtoPass/ForgotPass";
 import Customize from "../components/customize/Customize";
 import Proudcts from "../components/Products/Products";
 import Wishlist from "../pages/Wishlist/Wishlist";
-import SingleProduct from "../pages/singleProduct/SingleProduct";
 import NewPassword from "../pages/New Password/NewPassword";
 import ScrollToTop from "./scrollTopap";
+import SingleProduct from "../pages/singleProduct/SingleProduct";
 
 
 export default function Layoutroutes() {
