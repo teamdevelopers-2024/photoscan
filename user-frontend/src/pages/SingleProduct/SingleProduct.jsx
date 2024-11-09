@@ -15,7 +15,6 @@ import { FaCartPlus } from "react-icons/fa";
 function SingleProduct() {
   const [isScrollable, setIsScrollable] = useState(false);
   const [state, setState] = useState({
-    textInput: "",
     quantity: "",
     currentImage: "",
     fileName: "No file chosen",
@@ -24,7 +23,8 @@ function SingleProduct() {
     isLogo: false,
     inputFields: [], // Array to hold dynamic input fields
     imageCount: 0,
-    previewModalOpen: false
+    previewModalOpen: false,
+    sizes: []
   });
   const user = useSelector((state) => state.user.user);
   const [loading, setLoading] = useState(false);
@@ -92,16 +92,18 @@ function SingleProduct() {
     const fetchItem = async () => {
       const result = await api.getSingleProduct(id);
       if (!result.error) {
-        const { textfeild, includelogo, imageCount } = result.data;
+        const { textfeild, includelogo, imageCount, sizes } = result.data;
         const inputFields = Array.from({ length: textfeild }).map(
           (_, index) => ({ id: index + 1, value: "" })
         );
+        console.log("sizes : ", sizes)
         setState((prevState) => ({
           ...prevState,
           product: result.data,
           inputFields,
           imageCount,
-          isLogo: includelogo
+          sizes,
+          isLogo: includelogo,
         }));
       } else {
         console.error("Error fetching product:", result.error);
@@ -129,7 +131,7 @@ function SingleProduct() {
       setTextInputError("");
     }
 
-    if ( state.imageCount> 0 && !imageState) {
+    if (state.imageCount > 0 && !imageState) {
       alert("Please select the required images.");
       return;
     }
@@ -172,7 +174,7 @@ function SingleProduct() {
     const formData = {
       userId,
       productId,
-      textInput,
+      inputTexts : state.inputFields,
       image: uploadedImageUrl ? uploadedImageUrl : null,
       publicId:publicId
     };
@@ -299,7 +301,7 @@ function SingleProduct() {
               </div>
 
               {state.inputFields.map((field, index) => (
-                <div key={field.id} className="mt-2 text-sm">
+                <div key={field.id} className="mt-2 mb-4 text-sm">
                   <label htmlFor={`inputField${index + 1}`}>
                     Text Field {index + 1}:
                   </label>
@@ -315,20 +317,37 @@ function SingleProduct() {
                 </div>
               ))}
               {textInputError && <p className="text-red-500">{textInputError}</p>}
+              {state.sizes.length > 0 && (
+                <>
+                <div className="flex gap-3">
+
+                  <label htmlFor="size-dropdown" className="mt-3">Select Display Size:</label>
+                  <select id="size-dropdown">
+                    {state.sizes.map((size, index) => (
+                      <option key={index} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                    </div>
+                </>
+              )}
+
+
 
               <div className="w-full flex gap-10 justify-between">
                 <button
                   onClick={() => addToCart(state.product._id)}
-                  className="mt-4 flex items-center justify-center sm:justify-start space-x-2 w-1/2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(188,157,124)]"
+                  className="mt-4 max-h-14 flex items-center justify-center sm:justify-start space-x-2 w-1/2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(188,157,124)]"
                 >
                   <div className="flex items-center gap-2 p-2  rounded-lg w-32 h-10 cursor-pointertransition-colors duration-200">
-                    <p className="text-sm font-semibold">Add to cart</p>
+                    <p className="text-sm font-semibold w-full">Add to cart</p>
                     <FaCartPlus className="w-5 h-5" />
                   </div>
 
                 </button>
 
-                <div className="flex gap-4">
+                <div className="flex gap-4 h-14">
                   {/* Icons Section */}
                   <div className="mt-4 flex justify-center sm:justify-start space-x-3 bg-zinc-300 p-2 rounded-lg">
                     <img className="w-5 h-5" src={share} alt="Share" />
