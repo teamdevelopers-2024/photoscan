@@ -30,6 +30,7 @@ const login = async (req, res) => {
         .json({ error: true, message: "password is incorrect" })
     }
     req.session.isAdmin = true;
+    console.log(req.session , "this is sessions")
     req.session.save((err) => {
       if (err) {
         console.log("Session save error:", err);
