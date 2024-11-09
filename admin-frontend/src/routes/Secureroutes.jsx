@@ -1,5 +1,7 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Outlet, Navigate } from "react-router-dom";
+import api from "../services/api";
 
 const ProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
@@ -9,12 +11,9 @@ const ProtectedRoute = ({ children }) => {
   }, []);
   const checkAdminStatus = async () => {
     try {
-      const response = await fetch("http://localhost:4000/admin/status", {
-        method: "GET",
-        credentials: "include",
-      });
-      const data = await response.json();
-      if (data.loggedIn) {
+      const response = await api.status()
+      console.log("this is api response : ",response)
+      if (response.data.loggedIn) {
         setIsAdmin(true);
       } else {
         setIsAdmin(null);

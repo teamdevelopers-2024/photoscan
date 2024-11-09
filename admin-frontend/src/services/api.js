@@ -125,6 +125,9 @@ const updateOrderStatus = async (id, status) => {
     return await apiRequest('post', '/updateOrderStatus', { id, status });
 };
 
+const status = async () => {
+    return await apiRequest("get",'/status')
+}
 // Export all functions
 export default {
     checkAdmin,
@@ -149,4 +152,5 @@ export default {
     updateProduct,
     getOrder,
     updateOrderStatus,
+    status
 };
