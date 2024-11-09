@@ -37,6 +37,8 @@ const login = async (req, res) => {
           error: true,
           message: "Session save failed"
         });
+      }else{
+        console.log("session: saved successfull",req.session.isAdmin)
       }
       res.status(200).json({
         error: false,
