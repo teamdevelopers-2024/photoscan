@@ -94,18 +94,19 @@ const CheckoutPage = () => {
         // Payment successful, now create the order
         try {
           // Send payment details to backend to create the order
-          // const createOrderResponse = await api.makeOrder({
-          //   razorpay_payment_id,
-          //   amount: total, 
-          // });
+          const createOrderResponse = await api.makeOrder({
+            razorpay_payment_id,
+            amount: total, 
+            products:productData,
+          });
 
-          // console.log("Order creation response:", createOrderResponse);
+          console.log("Order creation response:", createOrderResponse);
 
-          // if (createOrderResponse.data.success) {
-          //   alert("Order created successfully!");
-          // } else {
-          //   alert("Failed to create order");
-          // }
+          if (createOrderResponse.data.success) {
+            alert("Order created successfully!");
+          } else {
+            alert("Failed to create order");
+          }
         } catch (error) {
           console.error("Error creating order:", error);
           alert("Failed to create order");

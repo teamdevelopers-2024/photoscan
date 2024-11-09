@@ -44,7 +44,8 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["Shipped", "Pending", "Delivered", "Canceled"] // Enum to restrict status values
+      enum: ["Shipped", "Pending", "Delivered", "Canceled"] ,
+      default:"Pending"
     },
     products: [
       {
@@ -77,11 +78,9 @@ const orderSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true // Automatically adds createdAt and updatedAt fields
+    timestamps: true 
   }
 );
-
-// Optionally add any custom pre-save hooks here if needed
 
 const OrderDb = mongoose.model("Order", orderSchema);
 

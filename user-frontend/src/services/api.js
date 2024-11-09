@@ -2,20 +2,20 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true;  // Ensure cookies are sent with requests
 
-// const apiClient = axios.create({
-//   baseURL: 'https://api.photoscan.co.in/user',
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// });
-
-
 const apiClient = axios.create({
-  baseURL: 'http://localhost:4000/user',
+  baseURL: 'https://api.photoscan.co.in/user',
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+
+// const apiClient = axios.create({
+//   baseURL: 'http://localhost:4000/user',
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
 // const apiClient = axios.create({
 //   baseURL: 'http://192.168.31.121:4000/user',
 //   headers: {
@@ -321,6 +321,15 @@ async function setDefaultAddress(addressId,userId) {
 }
 
 
+async function makeOrder(body) {
+  try {
+    const response = await apiClient.post("/makeOrder",{body})
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
 
 export default {
   userLogin,
@@ -346,4 +355,5 @@ export default {
   getCartProducts,
   deleteAddress,
   setDefaultAddress,
+  makeOrder
 };
