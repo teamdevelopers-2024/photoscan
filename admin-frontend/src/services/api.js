@@ -1,18 +1,18 @@
 import axios from 'axios';
 
 // Create an Axios instance with default configuration
-const apiClient = axios.create({
-    baseURL: 'http://localhost:4000/admin',
-    withCredentials: true,
-});
-
-
 // const apiClient = axios.create({
-//     baseURL: 'https://api.photoscan.co.in/admin',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   });
+//     baseURL: 'http://localhost:4000/admin',
+//     withCredentials: true,
+// });
+
+
+const apiClient = axios.create({
+    baseURL: 'https://api.photoscan.co.in/admin',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
 // Centralized helper function for making API requests
 const apiRequest = async (method, url, data = null) => {
