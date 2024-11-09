@@ -18,7 +18,7 @@ import Customize from "../components/customize/Customize";
 import Proudcts from "../components/Products/Products";
 import Wishlist from "../pages/Wishlist/Wishlist";
 import NewPassword from "../pages/New Password/NewPassword";
-import ScrollToTop from "./scrollTopap";
+import ScrollToTop from "./ScrollTopap";
 import SingleProduct from "../pages/singleProduct/SingleProduct";
 
 
