@@ -28,13 +28,15 @@ app.use(session({
     secret: 'photoscan@1223',
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27018/sessions' }), // Change port here
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27018/sessions' }),
     cookie: {
-        secure: false, // Should be true in production if using HTTPS
-        sameSite: "none",
-        maxAge: 1 * 60 * 60 * 1000 // 1 hour
+      secure: true,  // Use HTTPS in production
+      sameSite: 'None',  // Allow cross-origin cookie
+      maxAge: 1 * 60 * 60 * 1000,  // 1 hour
+      domain: '.photoscan.co.in'  // Set the domain if using subdomains
     }
-}));
+  }));
+  
 
 app.use(morgan('dev'));
 
