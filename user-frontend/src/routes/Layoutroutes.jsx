@@ -19,7 +19,7 @@ import Proudcts from "../components/Products/Products";
 import Wishlist from "../pages/Wishlist/Wishlist";
 import NewPassword from "../pages/New Password/NewPassword";
 import ScrollToTop from "./ScrollTopap";
-import SingleProduct from "../pages/singleProduct/SingleProduct";
+import SingleProduct from "../pages/SingleProduct/SingleProduct";
 
 
 export default function Layoutroutes() {
