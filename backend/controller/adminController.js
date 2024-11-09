@@ -58,7 +58,8 @@ const status = async (req, res) => {
   if (req.session.isAdmin) {
     res.status(200).json({ loggedIn: true });
   } else {
-    console.log("here");
+    console.log("here",req.session);
+
     res.status(401).json({ loggedIn: false });
   }
 };
