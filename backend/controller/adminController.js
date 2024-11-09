@@ -60,7 +60,6 @@ const status = async (req, res) => {
     res.status(200).json({ loggedIn: true });
   } else {
     console.log("here",req.session);
-
     res.status(401).json({ loggedIn: false });
   }
 };
