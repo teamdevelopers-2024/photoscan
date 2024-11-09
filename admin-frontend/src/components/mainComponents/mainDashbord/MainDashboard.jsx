@@ -4,7 +4,7 @@ import html2canvas from "html2canvas";
 import "./MainDashboard.css";
 import Chart from "chart.js/auto";
 import { Line, Pie } from "react-chartjs-2";
-import CustomDropdown from "./customDropDown.jsx";
+import CustomDropdown from "./CustomDropDown.jsx";
 import api from "../../../services/api.js";
 
 function MainDashbord() {
