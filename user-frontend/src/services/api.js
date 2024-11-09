@@ -257,9 +257,9 @@ async function getAddress() {
   try {
     const response = await apiClient.get(`/getAddress`)
     return response.data
-  } catch (error) {
-    console.log(error)
-    return error.response.data    
+  }  catch (error) {
+    console.log(error);
+    return error.response ? error.response.data : null;  // Handle any errors
   }
 }
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../../../services/api"; // Adjust the import based on your file structure
 import Swal from "sweetalert2"; // Import SweetAlert2
+import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa"; // Icons for password fields
 
 function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -8,6 +9,9 @@ function ChangePassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
@@ -67,7 +71,6 @@ function ChangePassword() {
           formData,
         });
 
-
         if (response && response.error) {
           setError(response.message);
         } else {
@@ -95,51 +98,89 @@ function ChangePassword() {
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto bg-white rounded-lg shadow-md">
-      <h1 className="font-extrabold text-xl mb-4 text-center">
-        Change Password
-      </h1>
+    <div className="p-6 sm:p-8 max-w-lg mx-auto bg-white rounded-lg shadow-xl border border-gray-100">
+      <h1 className="font-bold text-2xl text-gray-800 mb-6 text-center">Change Password</h1>
       <form onSubmit={handleChangePassword}>
-        <div className="mb-4">
-          <label htmlFor="current-password" className="block mb-1 font-medium">
+        {/* Current Password Field */}
+        <div className="mb-6 relative">
+          <label htmlFor="current-password" className="block text-sm font-medium text-gray-600 mb-2">
             Current Password:
           </label>
-          <input
-            type="password"
-            id="current-password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm p-2"
-          />
+          <div className="flex items-center">
+            <input
+              type={showCurrentPassword ? "text" : "password"}
+              id="current-password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              className="block w-full pl-10 pr-3 rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-[#d3b882] focus:border-[#d3b882] text-gray-900 placeholder-gray-500 sm:text-sm"
+              placeholder="Enter your current password"
+            />
+            <button
+              type="button"
+              className="absolute right-3"
+              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+            >
+              {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
         </div>
-        <div className="mb-4">
-          <label htmlFor="new-password" className="block mb-1 font-medium">
+
+        {/* New Password Field */}
+        <div className="mb-6 relative">
+          <label htmlFor="new-password" className="block text-sm font-medium text-gray-600 mb-2">
             New Password:
           </label>
-          <input
-            type="password"
-            id="new-password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm p-2"
-          />
+          <div className="flex items-center">
+            <input
+              type={showNewPassword ? "text" : "password"}
+              id="new-password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="block w-full pl-10 pr-3 rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-[#d3b882] focus:border-[#d3b882] text-gray-900 placeholder-gray-500 sm:text-sm"
+              placeholder="Enter your new password"
+            />
+            <button
+              type="button"
+              className="absolute right-3"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+            >
+              {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
         </div>
-        <div className="mb-4">
-          <label htmlFor="confirm-password" className="block mb-1 font-medium">
+
+        {/* Confirm Password Field */}
+        <div className="mb-6 relative">
+          <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-600 mb-2">
             Confirm Password:
           </label>
-          <input
-            type="password"
-            id="confirm-password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[rgb(211,184,130)] focus:ring-[rgb(211,184,130)] sm:text-sm p-2"
-          />
+          <div className="flex items-center">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              id="confirm-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="block w-full pl-10 pr-3 rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-[#d3b882] focus:border-[#d3b882] text-gray-900 placeholder-gray-500 sm:text-sm"
+              placeholder="Confirm your new password"
+            />
+            <button
+              type="button"
+              className="absolute right-3"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
         </div>
+
+        {/* Error and Success messages */}
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+        {success && <p className="text-green-500 mb-4 text-center">{success}</p>}
+
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(247,213,145)]"
+          className="w-full py-3 rounded-lg bg-[#d3b882] text-white font-semibold hover:bg-[#bc9d7c] focus:outline-none focus:ring-2 focus:ring-[#f7d591] transition duration-200"
         >
           Change Password
         </button>
