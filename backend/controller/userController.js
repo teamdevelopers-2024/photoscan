@@ -612,7 +612,12 @@ async function getCategories(req, res) {
 
 async function addAddress(req, res) {
   try {
-    const data = req.body.data
+    const data = req.body.data;
+
+    // Check if the user already has any addresses
+    const existingAddresses = await addressModel.find({ userId: data.userId });
+
+    // Create the new address
     const newAddress = new addressModel({
       userId: data.userId,
       fullName: data.fullName,
@@ -623,9 +628,10 @@ async function addAddress(req, res) {
       state: data.state,
       postalCode: data.postalCode,
       country: data.country,
-      isDefault: data.isDefault || false,
+      isDefault: existingAddresses.length === 0, // Set isDefault to true if no existing addresses
     });
 
+    // Save the new address
     await newAddress.save();
 
     res.status(201).json({
@@ -637,10 +643,10 @@ async function addAddress(req, res) {
     res.status(500).json({
       error: true,
       message: "An error occurred while adding the address.",
-
     });
   }
 }
+
 
 async function getAddress(req, res) {
   try {
