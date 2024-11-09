@@ -169,7 +169,7 @@ function Cart() {
                     <FontAwesomeIcon
                       icon={faTrashAlt}
                       className="text-red-500 cursor-pointer"
-                      onClick={() => deleteFromCloud(item.itemId)}
+                      onClick={() => deleteFromCart(item.itemId)}
                     />
                   </div>
                 </div>

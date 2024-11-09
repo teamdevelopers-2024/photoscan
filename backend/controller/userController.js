@@ -654,12 +654,17 @@ async function addAddress(req,res){
 
 async function getAddress(req, res) {
   try {
-    // Fetch all addresses from the database
-    const addresses = await addressModel.find({});
-
+    const { id } = req.query
+    const addresses = await addressModel.find({userId:id});
+    // Send the fetched addresses back as a JSON response
+    res.status(200).json({
+      error:false,
+      data:addresses
+    });
     // Send the fetched addresses back as a JSON response
     console.log("address fetched",addresses)
     res.status(200).json(addresses);
+
   } catch (error) {
     console.error("Error fetching addresses:", error);
     
@@ -833,6 +838,34 @@ async function deleteCartItem(req, res) {
 }
 
 
+async function getCartProducts(req, res) {
+  try {
+    const { userId } = req.query;
+
+    // Step 1: Find the cart associated with the user
+    console.log("user id : ", userId);
+    const cart = await CartDb.findOne({ userId:new mongoose.Types.ObjectId(userId) }).populate('items.productId');
+    console.log("this is cart : ", cart);
+
+    if (!cart) {
+      return res.status(404).json({ error: true, message: "Cart not found for this user." });
+    }
+
+    // Step 2: Get product details for each item in the cart
+    const productIds = cart.items.map(item => item.productId); // Extract the productId from the cart items
+    
+    // Populate product data from the product model
+    const products = await ProductDb.find({ _id: { $in: productIds } });
+
+    // Step 3: Send only the product data to the frontend
+    return res.status(200).json({ error: false, productData: products });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: true, message: "An error occurred while fetching the product data." });
+  }
+}
+
+
 // Export the controller
 export default {
   login,
@@ -857,4 +890,5 @@ export default {
   addToCart,
   getCart,
   deleteCartItem,
+  getCartProducts
 }
