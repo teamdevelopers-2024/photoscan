@@ -30,7 +30,7 @@ app.use(session({
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27018/sessions' }), // Change port here
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // true in production, false in development
+        secure: false, // true in production, false in development
         sameSite: "none",
         maxAge: 1 * 60 * 60 * 1000 // 1 hour
     }
