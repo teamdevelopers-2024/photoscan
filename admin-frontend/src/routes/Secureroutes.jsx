@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
   }, []);
   const checkAdminStatus = async () => {
     try {
-      const response = await fetch("http://localhost:4000/admin/status", {
+      const response = await fetch("https://api.photoscan.co.in/admin/status", {
         method: "GET",
         credentials: "include",
       });

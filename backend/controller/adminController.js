@@ -51,6 +51,8 @@ const status = async (req, res) => {
     res.status(401).json({ loggedIn: false });
   }
 };
+
+
 const addBanner = async (req, res) => {
   if (req.body) {
     try {
