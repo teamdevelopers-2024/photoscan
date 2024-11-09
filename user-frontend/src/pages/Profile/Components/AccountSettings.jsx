@@ -6,13 +6,16 @@ import AddAddressForm from "../../../components/addAddress/addAddress";
 import { FiEdit, FiCheck, FiTrash2, FiHome, FiPlus } from "react-icons/fi";
 import Swal from "sweetalert2";
 import Loader from "../../../../../admin-frontend/src/components/Loader/Loader";
+import EditAddress from "../../../components/edit AddressModal/editAddress";
 
 function ParentComponent() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const [isLoading, setIsLoading] = useState(false);
   const [addresses, setAddresses] = useState([]);
-  const [isUpdated, setIsUpdated] = useState(false);
+  const [isupdated, setIsUpdated] = useState(false);
+  const [editModal , setEditModal ] = useState(false)
+  const [editData , setEditData ] = useState({})
   const [editMode, setEditMode] = useState({
     firstName: false,
     lastName: false,
@@ -86,16 +89,11 @@ function ParentComponent() {
     }
   };
 
-  const handleAddressChange = (index, value) => {
-    const updatedAddresses = [...addresses];
-    updatedAddresses[index].address = value;
-    setAddresses(updatedAddresses);
-  };
 
-  const toggleAddressEdit = (index) => {
-    const newEditMode = [...addressEditMode];
-    newEditMode[index] = !newEditMode[index];
-    setAddressEditMode(newEditMode);
+
+  const toggleAddressEdit = (address) => {
+    setEditData(address)
+    setEditModal(true)
   };
 
   const handleSetDefaultAddress = async (addressId) => {
@@ -135,10 +133,6 @@ function ParentComponent() {
       setIsLoading(false);
       setIsUpdated(!isUpdated);
     }
-  };
-
-  const handleAddNewAddress = () => {
-    setNewAddress("");
   };
 
   const handleDeleteAddress = async (id) => {
@@ -309,10 +303,10 @@ function ParentComponent() {
                     </div>
                     <div className="flex items-center space-x-4">
                       <button
-                        onClick={() => toggleAddressEdit(index)}
+                        onClick={() => toggleAddressEdit(address)}
                         className="text-blue-600"
                       >
-                        {addressEditMode[index] ? <FiCheck /> : <FiEdit />}
+                       <FiEdit />
                       </button>
                       <button
                         onClick={() => handleDeleteAddress(address._id)}
@@ -341,6 +335,7 @@ function ParentComponent() {
         </div>
       </main>
       {/* Modal to Add Address */}
+      {editModal && <EditAddress onClose={()=> setEditModal(false)} current={editData}/>}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg max-w-md w-full">
