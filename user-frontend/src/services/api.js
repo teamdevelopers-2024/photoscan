@@ -298,6 +298,30 @@ async function getCartProducts(id) {
     return error.response.data    
   }
 }
+
+
+async function deleteAddress(id) {
+  try {
+    const response = await apiClient.delete(`/deleteAddress?id=${id}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data    
+  }
+}
+
+async function setDefaultAddress(addressId,userId) {
+  try {
+    const response = await apiClient.put(`/setDefaultAddress?userId=${userId}&addressId=${addressId}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data    
+  }
+}
+
+
+
 export default {
   userLogin,
   userRegister,
@@ -319,5 +343,7 @@ export default {
   addToCart,
   getCart,
   deleteCartItem,
-  getCartProducts
+  getCartProducts,
+  deleteAddress,
+  setDefaultAddress,
 };

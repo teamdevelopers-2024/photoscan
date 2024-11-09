@@ -81,7 +81,6 @@ const login = async (req, res) => {
       user: isUser
     });
   } catch (error) {
-    console.log('Error during login:', error);
     res.status(500).json({
       error: true,
       message: 'Internal server error'
@@ -195,7 +194,6 @@ const verifyOtp = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       error: true,
       message: "Internal Server error",
@@ -209,7 +207,6 @@ const checkAuthenticate = async (req, res) => {
     const id = req.query.id;
 
     if (!accessToken) {
-      console.log("accesstoken is not have")
       return res.status(400).json({
         error: true,
         message: 'Access token is required',
@@ -364,7 +361,6 @@ const logout = async (req, res) => {
 const editProfile = async (req, res) => {
   const { currentEmail, updatedField, updatedValue } = req.body; // Destructure the fields from req.body
 
-  console.log('Request Body:', req.body);
 
   // Check if currentEmail is provided
   if (!currentEmail || !updatedField || !updatedValue) {
@@ -383,7 +379,6 @@ const editProfile = async (req, res) => {
       { new: true, runValidators: true } // Return the updated document and apply schema validation
     );
 
-    console.log('Updated Fields:', updateData);
 
     // Check if user was found and updated
     if (!updatedUser) {
@@ -516,22 +511,19 @@ const changePass = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const { catName } = req.query; // Extract catName from query parameters
-    console.log('this is catName : ',catName)
 
     let filter = {
-      status : true ,
-      catstatus : true
+      status: true,
+      catstatus: true
     };
 
-   
-    if (catName && catName != 'All' && catName != 'null' && catName != 'undefined'){
+
+    if (catName && catName != 'All' && catName != 'null' && catName != 'undefined') {
       filter.category = catName;
     }
 
-    console.log(filter)
 
     const products = await ProductDb.find(filter); // Apply filter to find products
-    console.log("this is products : ",products)
     res.status(200).json({ error: false, message: 'Products fetched successfully', products });
   } catch (error) {
     console.error("Error in finding products:", error);
@@ -548,7 +540,6 @@ async function getBanners(req, res) {
     const datas = banners.map((item) => {
       return item.image
     })
-    console.log(banners)
     res.status(200).json({
       error: false,
       data: datas,
@@ -566,7 +557,6 @@ async function getSingleProduct(req, res) {
   try {
     const { id } = req.query
     const data = await ProductDb.findOne({ _id: id })
-    console.log(data)
     res.status(200).json({
       error: false,
       message: "Product data fetched successfully",
@@ -620,53 +610,58 @@ async function getCategories(req, res) {
   }
 }
 
-async function addAddress(req,res){
-    try {
-      const data = req.body.data
-      const newAddress = new addressModel({
-        userId: data.userId,
-        fullName: data.fullName,
-        phoneNumber: data.phoneNumber,
-        addressLine1: data.addressLine1,
-        addressLine2: data.addressLine2,
-        city: data.city,
-        state: data.state,
-        postalCode: data.postalCode,
-        country: data.country,
-        isDefault: data.isDefault || false,
-      });
-  
-      await newAddress.save();
-  
-      res.status(201).json({
-        success: true,
-        message: "Address added successfully!",
-      });
-    } catch (error) {
-      console.error("Error Adding Address:", error);
-      res.status(500).json({
-        error: true,
-        message: "An error occurred while adding the address.",
-  
-      });
+async function addAddress(req, res) {
+  try {
+    const data = req.body.data;
+
+    // Check if the user already has any addresses
+    const existingAddresses = await addressModel.find({ userId: data.userId });
+
+    // Create the new address
+    const newAddress = new addressModel({
+      userId: data.userId,
+      fullName: data.fullName,
+      phoneNumber: data.phoneNumber,
+      addressLine1: data.addressLine1,
+      addressLine2: data.addressLine2,
+      city: data.city,
+      state: data.state,
+      postalCode: data.postalCode,
+      country: data.country,
+      isDefault: existingAddresses.length === 0, // Set isDefault to true if no existing addresses
+    });
+
+    // Save the new address
+    await newAddress.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Address added successfully!",
+    });
+  } catch (error) {
+    console.error("Error Adding Address:", error);
+    res.status(500).json({
+      error: true,
+      message: "An error occurred while adding the address.",
+    });
+  }
 }
-}
+
 
 async function getAddress(req, res) {
   try {
     const { id } = req.query
-    const addresses = await addressModel.find({userId:id});
+    const addresses = await addressModel.find({ userId: id });
     // Send the fetched addresses back as a JSON response
-    console.log("address fetched",addresses)
     res.status(200).json({
-      error:false,
-      data:addresses
+      error: false,
+      data: addresses
     });
     // Send the fetched addresses back as a JSON response
 
   } catch (error) {
     console.error("Error fetching addresses:", error);
-    
+
     // Send an error response in case of failure
     res.status(500).json({ message: "An error occurred while fetching addresses." });
   }
@@ -717,35 +712,13 @@ const addToCart = async (req, res) => {
 };
 
 
-
-
-
-
-// async function getCart(req, res) {
-//   try {
-
-//     const userid = req.query.userid
-
-//     const cartData = await CartDb.findOne({ userId: userid });
-
-//     res.status(200).json({ error: false, message: 'Cart Items Fetched Successfully', cartData })
-
-//   } catch (error) {
-
-//     console.error('Error fetching to cart:', error);
-//     res.status(500).json({ error: true, message: 'Internal server error' });
-//   }
-
-// }
-
-
 async function getCart(req, res) {
   try {
     const userId = req.query.userid; // Get the user ID from the query
 
     // Use aggregation to fetch cart items and their associated product details
     const cartData = await CartDb.aggregate([
-      { $match: { userId:new mongoose.Types.ObjectId(userId) } }, // Match cart by user ID
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } }, // Match cart by user ID
       {
         $unwind: "$items" // Deconstruct the items array
       },
@@ -770,7 +743,7 @@ async function getCart(req, res) {
           "items.productId": 1,
           "items.image": 1,
           "items.textInput": 1,
-          "items._id":1,
+          "items._id": 1,
           "productDetails.productName": "$productDetails.productName",
           "productDetails.offerPrice": "$productDetails.offerPrice",
           "productDetails.image": { $arrayElemAt: ["$productDetails.images", 0] } // Get the first image
@@ -813,11 +786,9 @@ async function getCart(req, res) {
 async function deleteCartItem(req, res) {
   try {
 
-    console.log(req.query);
-    
-    const { itemId,userId } = req.query; // Assuming you're sending userId and itemId in the request body
-    console.log(userId,itemId);
-    
+
+    const { itemId, userId } = req.query; // Assuming you're sending userId and itemId in the request body
+
     // Find the cart for the user and update it
     const updatedCart = await CartDb.findOneAndUpdate(
       { userId: userId }, // Filter to find the cart for the specific user
@@ -842,6 +813,7 @@ async function getCartProducts(req, res) {
     const { userId } = req.query;
 
     // Step 1: Find the cart associated with the user
+
     console.log("user id : ", userId);
     const cart = await CartDb.findOne({ userId:new mongoose.Types.ObjectId(userId) }).populate('items.productId');
     console.log("this is cart : ", cart.items[0].productId);
@@ -849,12 +821,80 @@ async function getCartProducts(req, res) {
     if (!cart) {
       return res.status(404).json({ error: true, message: "Cart not found for this user." });
     }
-
     const products = cart.items
     return res.status(200).json({ error: false, productData: products });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: true, message: "An error occurred while fetching the product data." });
+  }
+}
+
+async function deleteAddress(req, res) {
+  try {
+    const { id } = req.query; // Extract the address ID from the query parameters
+
+    // Find the address being deleted
+    const addressToDelete = await addressModel.findOne({ _id: id });
+
+    if (!addressToDelete) {
+      return res.status(404).json({ error: true, message: 'Address not found' });
+    }
+
+    // Check if the address to delete is the default address
+    const isDefaultAddress = addressToDelete.isDefault;
+
+    // Delete the address
+    await addressModel.findOneAndDelete({ _id: id });
+
+    // If the deleted address was the default address, set a new default
+    if (isDefaultAddress) {
+      // Find all addresses for the user
+      const userId = addressToDelete.userId; // Assuming userId is a field in your address schema
+      const addresses = await addressModel.find({ userId });
+
+      if (addresses.length > 0) {
+        // Set the first address in the list as the new default
+        await addressModel.findOneAndUpdate(
+          { _id: addresses[0]._id },
+          { isDefault: true },
+          { new: true }
+        );
+      }
+    }
+
+    res.status(200).json({ error: false, message: 'Address removed successfully' });
+  } catch (error) {
+    console.error('Error while deleting address:', error);
+    res.status(500).json({ error: true, message: 'Internal server error' });
+  }
+}
+
+
+
+async function setDefaultAddress(req, res) {
+  try {
+
+    const { addressId, userId } = req.query;
+
+    await addressModel.updateMany(
+      { userId: userId, isDefault: true },
+      { isDefault: false }
+    );
+
+    const result = await addressModel.findOneAndUpdate(
+      { _id: addressId, userId: userId },
+      { isDefault: true },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ error: true, message: 'Address not found or does not belong to user' });
+    }
+
+    res.status(200).json({ error: false, message: 'Default address set successfully' });
+  } catch (error) {
+    console.error('Error while setting default address:', error);
+    res.status(500).json({ error: true, message: 'Internal server error' });
   }
 }
 
@@ -883,5 +923,7 @@ export default {
   addToCart,
   getCart,
   deleteCartItem,
-  getCartProducts
+  getCartProducts,
+  deleteAddress,
+  setDefaultAddress,
 }
