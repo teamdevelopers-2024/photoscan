@@ -43,6 +43,9 @@ const productSchema = new mongoose.Schema({
     },
     textfeild:{
         type:Number
+    },
+    imageCount:{
+        type:Number
     }
 });
 
