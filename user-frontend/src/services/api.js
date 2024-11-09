@@ -16,13 +16,6 @@ const apiClient = axios.create({
 //     'Content-Type': 'application/json',
 //   },
 // });
-// const apiClient = axios.create({
-//   baseURL: 'http://192.168.31.121:4000/user',
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-//   withCredentials:true
-// });
 
 // Function to handle token refresh
 const refreshToken = async () => {
