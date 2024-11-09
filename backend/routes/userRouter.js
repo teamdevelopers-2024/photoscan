@@ -13,6 +13,7 @@ router.post('/resetOtp', userController.resetOtp)
 router.post('/newPass', userController.newPass)
 router.post('/changePass', userController.changePass)
 router.post('/addToCart', userController.addToCart)
+router.post('/addToWishlist', userController.addToWishlist)
 
 // router.get('/getCategories', userController.getCategories)
 router.get('/checkAuthenticate', userController.checkAuthenticate)
@@ -22,6 +23,7 @@ router.get("/getSingleProduct", userController.getSingleProduct)
 router.get("/featuredProducts", userController.getFeaturedProducts)
 router.get("/getCategories", userController.getCategories)
 router.get("/getCart", userController.getCart)
+router.get("/getwishlist", userController.getwishlist)
 
 
 router.delete('/logout', userController.logout)

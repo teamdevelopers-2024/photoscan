@@ -14,6 +14,7 @@ import "dotenv/config";
 import ProductDb from "../model/prodectModel.js";
 import CategoryDb from "../model/Category.js";
 import CartDb from "../model/cartModel.js";
+import wishlistDb from "../model/wishlistModal.js";
 
 const login = async (req, res) => {
   try {
@@ -656,6 +657,52 @@ const addToCart = async (req, res) => {
     res.status(500).json({ error: true, message: 'Internal server error' });
   }
 };
+const addToWishlist = async (req, res) => {
+  try {
+    const { userId, productId, image, textInput ,public_Id } = req.body; // Destructure the data from req.body
+    console.log("this is public id "+public_Id);
+    
+
+    // Validate input
+    if (!productId) {
+      return res.status(400).json({ error: true, message: 'Product ID(s) are required.' });
+    }
+
+    // Convert productId to ObjectId
+    const productObjectId = new mongoose.Types.ObjectId(productId);
+
+    // Find or create the cart for the user
+    let wishlist = await wishlistDb.findOne({ userId });
+
+    if (!wishlist) {
+      // Create a new cart if it doesn't exist
+      wishlist = new wishlistDb({
+        userId,
+        items: [{
+          productId: productObjectId,
+          image: image, // Store the single image URL
+          textInput: textInput, // Store the single text input
+          publicid:public_Id
+        }],
+      });
+    } else {
+      // Always push a new item to the items array
+      wishlist.items.push({
+        productId: productObjectId,
+        image: image,
+        textInput: textInput,
+        publicid:public_Id
+      });
+    }
+
+    await wishlist.save(); // Save the cart
+
+    res.status(200).json({ error: false, message: 'Products added to cart successfully' });
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    res.status(500).json({ error: true, message: 'Internal server error' });
+  }
+};
 
 
 
@@ -747,6 +794,75 @@ async function getCart(req, res) {
   }
 }
 
+async function getwishlist(req, res) {
+  try {
+    const userId = req.query.userid; // Get the user ID from the query
+
+    // Use aggregation to fetch cart items and their associated product details
+    const wishlistData = await wishlistDb.aggregate([
+      { $match: { userId:new mongoose.Types.ObjectId(userId) } }, // Match cart by user ID
+      {
+        $unwind: "$items" // Deconstruct the items array
+      },
+      {
+        $lookup: {
+          from: "products", // Name of the products collection
+          localField: "items.productId", // Field from cart items
+          foreignField: "_id", // Field from products
+          as: "productDetails" // Output array field
+        }
+      },
+      {
+        $unwind: { // Deconstruct the productDetails array
+          path: "$productDetails",
+          preserveNullAndEmptyArrays: true // Include cart items even if no product found
+        }
+      },
+      {
+        $project: { // Project fields to include in the output
+          _id: 1,
+          userId: 1,
+          "items.productId": 1,
+          "items.image": 1,
+          "items.textInput": 1,
+          "items.publicid": 1, // Include the publicId from items
+          "productDetails.productName": "$productDetails.productName",
+          "productDetails.offerPrice": "$productDetails.offerPrice",
+          "productDetails.image": { $arrayElemAt: ["$productDetails.images", 0] } // Get the first image
+        }
+      },
+      {
+        $group: { // Group items back into an array
+          _id: "$_id",
+          userId: { $first: "$userId" },
+          items: {
+            $push: {
+              productId: "$items.productId",
+              image: "$productDetails.image",
+              textInput: "$items.textInput",
+              productName: "$productDetails.productName",
+              productprice: "$productDetails.offerPrice",
+              publicId: "$items.publicid" // Include the publicId in each item
+            }
+          }
+        }
+      }
+    ]);
+
+
+    // If no cart found, respond accordingly
+    if (!wishlistData || wishlistData.length === 0) {
+      return res.status(404).json({ error: true, message: 'Cart not found' });
+    }
+
+    // Respond with enriched cart data
+    res.status(200).json({ error: false, message: 'Cart Items Fetched Successfully', wishlistData: wishlistData[0] });
+  } catch (error) {
+    console.error('Error fetching cart:', error);
+    res.status(500).json({ error: true, message: 'Internal server error' });
+  }
+}
+
 
 
 
@@ -773,5 +889,7 @@ export default {
   getFeaturedProducts,
   getCategories,
   addToCart,
-  getCart
+  getCart,
+  addToWishlist,
+  getwishlist
 }

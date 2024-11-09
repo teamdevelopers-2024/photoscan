@@ -239,8 +239,20 @@ async function getCategories(status) {
 
 async function addToCart(body) {
   try {
+   
+    
 
     const response = await apiClient.post(`/addToCart`, body)
+
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
+}
+async function addToWishlist(body) {
+  try {
+    console.log(body);
+    const response = await apiClient.post(`/addToWishlist`, body)
 
     return response.data
   } catch (error) {
@@ -253,6 +265,15 @@ async function getCart(id) {
 
     const response = await apiClient.get(`/getCart?userid=${id}`)
 
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
+}
+async function getwishlist(id) {
+  try {
+
+    const response = await apiClient.get(`/getwishlist?userid=${id}`)    
     return response.data
   } catch (error) {
     return error.response.data
@@ -277,5 +298,7 @@ export default {
   getFeaturedProducts,
   getCategories,
   addToCart,
-  getCart
+  getCart,
+  addToWishlist,
+  getwishlist
 };

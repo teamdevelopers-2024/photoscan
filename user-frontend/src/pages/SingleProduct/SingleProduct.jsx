@@ -10,7 +10,7 @@ import api from "../../services/api";
 import Loader from "../../components/loader/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-
+import axios from "axios";
 function SingleProduct() {
   const [state, setState] = useState({
     textInput: "",
@@ -144,6 +144,103 @@ function SingleProduct() {
       });
     }
   };
+  const addToWishlist = async (id) => {
+    if (!user) {
+      navigate("/login");
+      return; // Prevent further execution if user is not logged in
+    }
+
+    const userId = user._id;
+    const productId = id;
+    const { textInput, selectedFile } = state; // Assume state contains textInput and selectedFile
+    // Check if a selected file exists and upload it
+    
+    if (!selectedFile) {
+      return Swal.fire({
+        icon: "error",
+        title: "Failed!",
+        text: "Add image and text to continue",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    }
+
+    setLoading(true);
+
+    const imageData = new FormData();
+    imageData.append("file", selectedFile);
+    imageData.append("upload_preset", "cloud_name");
+    imageData.append("cloud_name", "dpjzt7zwf");
+
+    try {
+      const cloudinaryResponse = await axios.post(
+        "https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload",
+        imageData,
+        { withCredentials: false } // Ensures credentials are not sent
+      );
+
+      const imageUrl = cloudinaryResponse.data.secure_url;
+      const publicId = cloudinaryResponse.data.public_id;
+      console.log(imageUrl+"jjsjjsjjjs"+publicId);
+      
+    // Create a plain object for JSON
+    const formData = {
+      userId,
+      productId,
+      textInput,
+      image: imageUrl, // Use null if no image uploaded
+      public_Id:publicId
+    };
+
+    // Send the request to add the item to the cart
+      const response = await api.addToWishlist(formData);
+
+      if (!response.error) {
+        setLoading(false);
+        // Show success toast
+        return Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Item added to cart successfully!",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      } else {
+        // Show error toast
+        setLoading(false);
+        return Swal.fire({
+          icon: "error",
+          title: "Failed!",
+          text: "Failed to add item to cart.",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error("Error adding item to cart:", error);
+      // Show error toast for unexpected errors
+      return Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "An unexpected error occurred. Please try again.",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    }
+  };
 
   return (
     <>
@@ -230,7 +327,7 @@ function SingleProduct() {
                     <span className="text-zinc-500 text-xl font-['Lato']">
                       |
                     </span>
-                    <img className="w-6 h-6" src={favourite} alt="Favourite" />
+                    <img onClick={() => addToWishlist(state.product._id)} className="w-6 h-6" src={favourite} alt="Favourite" />
                   </div>
                 </div>
               </div>
