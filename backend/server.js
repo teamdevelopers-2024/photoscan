@@ -33,7 +33,7 @@ app.use(session({
       secure: true,  // Use HTTPS in production
       sameSite: 'None',  // Allow cross-origin cookie
       maxAge: 1 * 60 * 60 * 1000,  // 1 hour
-      domain: '.admin.photoscan.co.in'  // Set the domain if using subdomains
+      domain: '.photoscan.co.in'  // Set the domain if using subdomains
     }
   }));
   
