@@ -47,7 +47,6 @@ const login = async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       error: true,
       message: "internel server error"
@@ -55,11 +54,9 @@ const login = async (req, res) => {
   }
 }
 const status = async (req, res) => {
-  console.log("isAdmin", req.session.isAdmin);
   if (req.session.isAdmin) {
     res.status(200).json({ loggedIn: true });
   } else {
-    console.log("here",req.session);
     res.status(401).json({ loggedIn: false });
   }
 };
@@ -69,7 +66,7 @@ const addBanner = async (req, res) => {
   if (req.body) {
     try {
       const data = req.body.data;
-      console.log(data);
+      (data);
       const newBanner = new BannerDb({
         image: data.imageUrl,
         publicId: data.publicId
@@ -174,7 +171,6 @@ const getUsers = async (req, res) => {
 
 
     const users = await UserDb.find().skip(startIndex).limit(limit);
-    console.log(users);
 
     const totalUsers = await UserDb.countDocuments();
 
@@ -195,7 +191,7 @@ const getUsers = async (req, res) => {
       totalUsers: totalUsers,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({
       error: true,
       message: "Internal server error",
@@ -300,7 +296,6 @@ const getOffers = async (req, res) => {
 const deleteOffer = async (req, res) => {
   try {
     const id = req.query.id;
-    console.log('adminController', id)
 
     if (!id) {
       return res.status(400).json({

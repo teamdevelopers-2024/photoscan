@@ -5,7 +5,6 @@ import api from "../services/api";
 
 const ProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
-  console.log("children", children);
   const [isAdmin, setIsAdmin] = useState(null);
   useEffect(() => {
     checkAdminStatus();

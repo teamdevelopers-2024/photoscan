@@ -93,7 +93,6 @@ const AddProductModal = ({ closeModal }) => {
       };
 
       const result = await api.addProduct(productData);
-      console.log('Product saved:', result);
 
       if (result) {
         Toast.fire({

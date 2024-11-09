@@ -670,7 +670,7 @@ async function getAddress(req, res) {
 
 const addToCart = async (req, res) => {
   try {
-    const { userId, productId, image, textInput } = req.body; // Destructure the data from req.body
+    const { userId, productId, image, textInput,publicId } = req.body; // Destructure the data from req.body
 
     // Validate input
     if (!productId) {
@@ -690,7 +690,8 @@ const addToCart = async (req, res) => {
         items: [{
           productId: productObjectId,
           image: image, // Store the single image URL
-          textInput: textInput // Store the single text input
+          textInput: textInput, // Store the single text input
+          publicId:publicId,
         }],
       });
     } else {
@@ -787,7 +788,7 @@ async function deleteCartItem(req, res) {
   try {
 
 
-    const { itemId, userId } = req.query; // Assuming you're sending userId and itemId in the request body
+    const { itemId, userId ,publicId} = req.query; // Assuming you're sending userId and itemId in the request body
 
     // Find the cart for the user and update it
     const updatedCart = await CartDb.findOneAndUpdate(
@@ -815,9 +816,9 @@ async function getCartProducts(req, res) {
     // Step 1: Find the cart associated with the user
 
     console.log("user id : ", userId);
-    const cart = await CartDb.findOne({ userId:new mongoose.Types.ObjectId(userId) }).populate('items.productId');
+    const cart = await CartDb.findOne({ userId: new mongoose.Types.ObjectId(userId) }).populate('items.productId');
     console.log("this is cart : ", cart.items[0].productId);
-    
+
     if (!cart) {
       return res.status(404).json({ error: true, message: "Cart not found for this user." });
     }
@@ -899,11 +900,42 @@ async function setDefaultAddress(req, res) {
 }
 
 
-async function makeOrder(req,res) {
+
+async function makeOrder(req, res) {
   try {
-    console.log("request got : ",req.body)
+    console.log("request got : ", req.body)
   } catch (error) {
     console.log(error)
+  }
+}
+
+async function editAddress(req, res) {
+  try {
+    // Get userId, addressId, and formData from the request body
+    const { userId, addressId } = req.query; // Read from query
+    const formData = JSON.parse(req.query.formData);
+    // Find the address to update by userId and addressId
+    const existingAddress = await addressModel.findOne({
+      _id: addressId,
+      userId: userId,
+    });
+
+    if (!existingAddress) {
+      return res.status(404).json({ error: true, message: 'Address not found or does not belong to the user' });
+    }
+
+    // Update the address
+    const updatedAddress = await addressModel.findOneAndUpdate(
+      { _id: addressId },
+      { ...formData }, // Update with the parsed formData
+      { new: true } // Return the updated document
+    );    
+
+    // Send success response
+    res.status(200).json({ error: false, message: 'Address updated successfully', data: updatedAddress });
+  } catch (error) {
+    console.error('Error while editing address:', error);
+    res.status(500).json({ error: true, message: 'Internal server error' });
   }
 }
 
@@ -936,5 +968,6 @@ export default {
   getCartProducts,
   deleteAddress,
   makeOrder,
-  setDefaultAddress
+  setDefaultAddress,
+  editAddress,
 }
