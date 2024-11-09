@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import api from "../../services/api";
 import { useSelector } from "react-redux";
 
-export default function EditAddress({ onClose ,current}) {
-   const user = useSelector((state)=> state.user.user)
+export default function EditAddress({ onClose, current }) {
+  const user = useSelector((state) => state.user.user);
   const [address, setAddress] = useState({
     fullName: current.fullName || "",
-    phoneNumber: current.phoneNumber || '',
-    addressLine1: current.addressLine1 ||"",
-    addressLine2: current.addressLine2 || '',
-    city: current.city || '',
-    state: current.state || '',
-    postalCode: current.postalCode || '',
-    country: current.country || '',
+    phoneNumber: current.phoneNumber || "",
+    addressLine1: current.addressLine1 || "",
+    addressLine2: current.addressLine2 || "",
+    city: current.city || "",
+    state: current.state || "",
+    postalCode: current.postalCode || "",
+    country: current.country || "",
   });
 
   const [errors, setErrors] = useState({
@@ -49,23 +49,24 @@ export default function EditAddress({ onClose ,current}) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const addAddress = async () => {
+  const updateAddress = async () => {
     const formData = {
-      fullName : address.fullName,
-      phoneNumber :  address.phoneNumber,
-      addressLine1:address.addressLine1,
+      fullName: address.fullName,
+      phoneNumber: address.phoneNumber,
+      addressLine1: address.addressLine1,
       addressLine2: address.addressLine2,
-      city : address.city,
-      state : address.state,
-      postalCode : address.postalCode,
-      country : address.country,
+      city: address.city,
+      state: address.state,
+      postalCode: address.postalCode,
+      country: address.country,
       isDefault: false,
-      userId: user._id
+      userId: user._id,
+      addressId: current._id
     };
-    console.log("this is fortData : ",formData);
-    
+    console.log("this is formData : ", formData);
+
     try {
-      const response = await api.addAddress(formData);
+      const response = await api.editAddress(formData);
       if (response.success) {
         console.log("success");
       } else {
@@ -75,7 +76,6 @@ export default function EditAddress({ onClose ,current}) {
       console.error("error adding address", error);
     }
   };
-
 
   return (
     <div className="flex items-center justify-center z-50 w-full min-h-screen bg-gray-800 bg-opacity-50 fixed top-0 left-0">
@@ -135,7 +135,7 @@ export default function EditAddress({ onClose ,current}) {
 
           <div>
             <label className="block font-medium text-gray-700">
-              Address Line 2
+              Landmark
             </label>
             <input
               type="text"
@@ -204,25 +204,11 @@ export default function EditAddress({ onClose ,current}) {
             )}
           </div>
 
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              name="isDefault"
-              checked={address.isDefault}
-              onChange={handleChange}
-              className="mr-2"
-            />
-            <label className="font-medium text-gray-700">
-              Set as Default Address
-            </label>
-          </div>
-
           <button
-            onClick={() => addAddress()}
-            
+            onClick={() => updateAddress()}
             className="w-full bg-blue-500 text-white font-semibold py-3 rounded-md hover:bg-blue-600 transition-colors"
           >
-            Add Address
+            Update Address
           </button>
         </form>
       </div>
