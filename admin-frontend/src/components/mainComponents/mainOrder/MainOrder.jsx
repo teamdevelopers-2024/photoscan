@@ -30,7 +30,6 @@ function MainOrder() {
     try {
       const response = await api.updateOrderStatus(updatedOrder.orderId, updatedOrder.status);
       const updatedOrderFromDb = response.data; 
-        console.log(updatedOrderFromDb);
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
           order.orderId === updatedOrderFromDb.orderId ? updatedOrderFromDb : order

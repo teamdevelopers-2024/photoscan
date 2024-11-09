@@ -53,7 +53,6 @@ function Adminlogin() {
       
         try {
           const data = await api.checkAdmin(email, password);
-          console.log(data);
       
           if (data.error === false) {
             navigate('/admin/home');

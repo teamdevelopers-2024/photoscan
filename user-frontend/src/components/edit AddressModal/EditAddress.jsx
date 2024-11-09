@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../../services/api";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 export default function EditAddress({ onClose, current }) {
   const user = useSelector((state) => state.user.user);
@@ -50,6 +51,9 @@ export default function EditAddress({ onClose, current }) {
   };
 
   const updateAddress = async () => {
+    const userId = user._id;
+    const addressId = current._id;
+
     const formData = {
       fullName: address.fullName,
       phoneNumber: address.phoneNumber,
@@ -60,20 +64,43 @@ export default function EditAddress({ onClose, current }) {
       postalCode: address.postalCode,
       country: address.country,
       isDefault: false,
-      userId: user._id,
-      addressId: current._id
     };
-    console.log("this is formData : ", formData);
+    console.log("updat addressclicked");
 
     try {
-      const response = await api.editAddress(formData);
-      if (response.success) {
-        console.log("success");
+      const response = await api.editAddress(formData, userId, addressId);
+      // console.log('edited',response)
+
+      if (!response.error) {
+        Swal.fire({
+          icon: "success",
+          title: "Address Edited",
+          text: "Address Edited successfully.",
+          toast: true, // Enable toast mode
+          position: "top-end", // Position of the toast
+          showConfirmButton: false, // Hide the confirm button
+          timer: 3000, // Duration before the toast disappears
+          timerProgressBar: true, // Show progress bar
+        });
+
+        onClose();
       } else {
-        console.log("failed");
+        // console.error('Failed to update user data:', await response.json());
+        // setIsLoading(true);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to edit.",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+        onClose();
       }
     } catch (error) {
-      console.error("error adding address", error);
+      console.error("error editing address", error);
     }
   };
 
@@ -134,9 +161,7 @@ export default function EditAddress({ onClose, current }) {
           </div>
 
           <div>
-            <label className="block font-medium text-gray-700">
-              Landmark
-            </label>
+            <label className="block font-medium text-gray-700">Landmark</label>
             <input
               type="text"
               name="addressLine2"

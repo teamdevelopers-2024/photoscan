@@ -33,6 +33,7 @@ router.get("/getCart", userController.getCart)
 router.get("/gatCartProducts",userController.getCartProducts)
 
 router.put("/setDefaultAddress",userController.setDefaultAddress)
+router.put("/editAddress",userController.editAddress)
 
 
 router.delete('/deleteCartItem', userController.deleteCartItem)
