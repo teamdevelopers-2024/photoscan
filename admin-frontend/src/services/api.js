@@ -128,6 +128,8 @@ const updateOrderStatus = async (id, status) => {
 const status = async () => {
     return await apiRequest("get",'/status')
 }
+
+
 // Export all functions
 export default {
     checkAdmin,
