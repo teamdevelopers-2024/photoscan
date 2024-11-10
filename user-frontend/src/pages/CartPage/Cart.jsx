@@ -39,10 +39,18 @@ function Cart() {
       fetchCartItems();
     }
   }, [user, updateCart]);
-  async function deleteFromCloud(itemId) {
+  async function deleteFromCloud(itemId,publicId) {
     try {
       setIsLoading(true);
-      // const result = await cloudinary.uploader.destroy(publicId);
+      cloudinary.uploader.destroy(publicId, function (error, result) {
+        if (error) {
+          console.error('Error deleting image:', error);
+        } else {
+          console.log('Delete result:', result);
+        }
+      });
+
+      // 
       await deleteFromCart(itemId);
       // console.log("Image deleted successfully:", result);
     } catch (error) {
@@ -191,7 +199,7 @@ function Cart() {
                     <FontAwesomeIcon
                       icon={faTrashAlt}
                       className="text-red-500 cursor-pointer"
-                      onClick={() => deleteFromCart(item.itemId)}
+                      onClick={() => deleteFromCloud(item.itemId,item.publicId)}
                     />
                   </div>
                 </div>

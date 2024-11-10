@@ -271,9 +271,9 @@ async function getAddress(id) {
 }
 
 
-async function deleteCartItem(itemId, userId) {
+async function deleteCartItem(itemId, userId,publicId) {
   try {
-    const response = await apiClient.delete(`/deleteCartItem?itemId=${itemId}&userId=${userId}`)
+    const response = await apiClient.delete(`/deleteCartItem?itemId=${itemId}&userId=${userId}&publicId=${publicId}`)
     return response.data
   } catch (error) {
     console.log(error)
