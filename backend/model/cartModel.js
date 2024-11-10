@@ -15,17 +15,25 @@ const cartSchema = new mongoose.Schema(
                     ref: "Product", // Reference to the Product model
                     required: true,
                 },
-                image: {  // Changed from images to a single image
+                images: [
+                    {  
+                        url: String,
+                        publicId: String,
+                    }
+                ],
+                textInput: [
+                    {
+                        
+                    }
+                ],
+                orientation: {
                     type: String,
-                    required: false,
+                    // enum: ["landscape", "portrait"], // Define specific orientations if applicable
+                    // required: true
                 },
-                textInput: {  // Changed from textInput array to a single textInput
-                    type: String,
-                    required: false,
-                },
-                publicId:{
-                    type:String,
-                    required:true,
+                isCustomize: {
+                    type: Boolean,
+                    default: false // Default to false if not specified
                 }
             },
         ],

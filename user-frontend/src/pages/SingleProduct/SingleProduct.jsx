@@ -158,7 +158,7 @@ function SingleProduct() {
         );
 
         const data = await response.json();
-         publicId = data.public_id;
+        publicId = data.public_id;
         if (response.ok) {
           uploadedImageUrl = data.secure_url;
         } else {

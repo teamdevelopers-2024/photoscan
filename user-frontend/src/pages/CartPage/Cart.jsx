@@ -40,22 +40,30 @@ function Cart() {
     }
   }, [user, updateCart]);
   async function deleteFromCloud(itemId,publicId) {
-    try {
-      setIsLoading(true);
-      cloudinary.uploader.destroy(publicId, function (error, result) {
-        if (error) {
-          console.error('Error deleting image:', error);
-        } else {
-          console.log('Delete result:', result);
-        }
-      });
+    console.log(publicId,"delete Called")
+    // try {
+    //   setIsLoading(true);
+    //   if (publicId) {
+    //     // Wrap the cloudinary.uploader.destroy call in a promise to ensure it finishes before proceeding
+    //     await new Promise((resolve, reject) => {
+    //       cloudinary.uploader.destroy(publicId, (error, result) => {
+    //         if (error) {
+    //           console.error('Error deleting image:', error);
+    //           reject(error); // Reject the promise if there's an error
+    //         } else {
+    //           console.log('Delete result:', result);
+    //           resolve(result); // Resolve the promise if the image is deleted successfully
+    //         }
+    //       });
+    //     });
+    //   }
 
-      // 
-      await deleteFromCart(itemId);
-      // console.log("Image deleted successfully:", result);
-    } catch (error) {
-      console.log("error delete cloud", error);
-    }
+    //   // 
+      // await deleteFromCart(itemId);
+    //   // console.log("Image deleted successfully:", result);
+    // } catch (error) {
+    //   console.log("error delete cloud", error);
+    // }
   }
   const deleteFromCart = async (itemId) => {
     try {
