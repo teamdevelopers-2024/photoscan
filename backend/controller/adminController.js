@@ -604,6 +604,39 @@ const getGraphData = async (req, res) => {
         $sort: { "_id.year": -1, "_id.month": 1 } // Sort by year descending, month ascending
       }
     ]);
+    const topData = await OrderDb.aggregate([
+      {
+        $match: {
+          orderDate: {
+            $gte: new Date(`${pastYears[0]}-01-01`),
+            $lt: new Date(`${currentYear + 1}-01-01`)
+          }
+        }
+      },
+      {
+        $unwind: "$products"
+      },
+      {
+        $group: {
+          _id: "$products.productId", // Group by product ID
+          productName: { $first: "$products.productName" }, // Assuming each product has a name
+          totalSalesCount: { $count: {} }, // Count the product occurrences as the total quantity sold
+          totalSalesAmount: { $sum: "$products.price" } // Sum of prices for total sales revenue
+        }
+      },
+      {
+        $sort: { totalSalesCount: -1 } // Sort by total sales amount in descending order
+      },
+      {
+        $limit: 5 // Limit to top 5 products
+      }
+    ]);
+    const topSellingProducts = topData.map((product) => ({
+      productId: product._id,
+      productName: product.productName,
+      totalQuantity: product.totalSalesCount,
+      totalSales: product.totalSalesAmount
+    }));
 
     // Structure data for monthly and yearly sales
     const monthlyData = {};
@@ -647,6 +680,7 @@ const getGraphData = async (req, res) => {
       categoryData, // Add category-based sales data
       categoryNames,
       categoryValues,
+      topSellingProducts
     };
 
     console.log("Fetched monthly, yearly, and category sales data:", responseData);
