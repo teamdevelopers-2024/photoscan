@@ -105,7 +105,7 @@ const CheckoutPage = () => {
           console.log("Order creation response:", createOrderResponse);
 
           if (!createOrderResponse.error) {
-             navigate("/ordersuccess")
+             navigate(`/ordersuccess?orderId=${createOrderResponse.orderId}`)
           } else {
             alert("Failed to create order");
           }

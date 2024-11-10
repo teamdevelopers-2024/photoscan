@@ -118,7 +118,7 @@ export default function FeaturedProducts() {
                       {product.productName}
                     </div>
                     <div className="text-[#bd7f37] text-base font-semibold font-['Inter']">
-                      ₹{product.productPrice}
+                      ₹{product.offerPrice}
                     </div>
                   </div>
                 </div>

@@ -25,6 +25,7 @@ router.get("/featuredProducts",userController.getFeaturedProducts)
 router.get("/getCategories",userController.getCategories)
 router.get("/getAddress",userController.getAddress)
 router.get("/getOrders",userController.getOrders)
+router.get("/fetchOrder",userController.fetchOrder)
 
 router.get("/getBanners", userController.getBanners)
 router.get("/getSingleProduct", userController.getSingleProduct)
