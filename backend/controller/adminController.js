@@ -33,7 +33,12 @@ const login = async (req, res) => {
 
 
     const token = jwt.sign({ isAdmin: true }, process.env.ACCESS_TOKEN_PRIVAT_KEY, { expiresIn: "1h" });
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", token, { 
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
+     });
     res.status(200).json({
       error: false,
       message: `admin Logged in Successfull`

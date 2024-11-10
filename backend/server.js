@@ -1,9 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import "dotenv/config";
-import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import MongoStore from 'connect-mongo'; // Import MongoStore
 import AdminRouter from './routes/adminRouter.js';
 import connectDb from './database/connection.js';
 import UserRouter from './routes/userRouter.js';
@@ -23,18 +21,6 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 connectDb(); // Connect to your MongoDB
-
-app.use(session({
-    secret: 'photoscan@1223',
-    resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27018/sessions' }), // Change port here
-    cookie: {
-        secure: false, // Should be true in production if using HTTPS
-        sameSite: "strict",
-        maxAge: 1 * 60 * 60 * 1000 // 1 hour
-    }
-}));
 
 app.use(morgan('dev'));
 
