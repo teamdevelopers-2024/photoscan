@@ -26,6 +26,9 @@ const Header = () => {
   const [isProductHover, setIsProductHover] = useState(false);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [hoveredCategoryIndex, setHoveredCategoryIndex] = useState(null);
+  const [isMouseInsideDropdown, setIsMouseInsideDropdown] = useState(false); // Tracks mouse inside product box
+  const [isMouseInsideCategoryNav, setIsMouseInsideCategoryNav] = useState(false); // Tracks mouse inside category nav
   const navigate = useNavigate();
   const location = useLocation();
   const headerRef = useRef(null);
@@ -254,28 +257,48 @@ const Header = () => {
 
       {/* Responsive Product Categories Dropdown */}
       <div
-        className={`w-full text-[#666666] bg-white text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${isProductHover ? "" : "hidden"
-          }`}
-        onMouseEnter={() => setIsProductHover(true)}
-        onMouseLeave={() => setIsProductHover(false)}
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-32  py-4 px-2">
-          {categories.map((category, index) => (
-            <div
-              key={category._id}
-              className="flex flex-col items-center cursor-pointer text-center"
+      className={`w-full text-[#666666] bg-white text-xs font-[600] h-auto flex justify-center items-center fixed top-[72px] left-0 z-30 transition-transform duration-300 ${isProductHover ? "" : "hidden"}`}
+      onMouseLeave={() => {
+        // Close the category nav and product box only if the mouse leaves both
+        if (!isMouseInsideCategoryNav && !isMouseInsideDropdown) {
+          setIsProductHover(false);
+          setHoveredCategoryIndex(null);
+        }
+      }}
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-32 py-4 px-2">
+        {categories.map((category, index) => (
+          <div
+            key={category._id}
+            className="flex flex-col items-center cursor-pointer text-center relative"
+            onMouseEnter={() => {
+              setHoveredCategoryIndex(index);
+              setIsMouseInsideCategoryNav(true); // Track mouse entering category nav
+            }}
+            onMouseLeave={() => {
+              setIsMouseInsideCategoryNav(false); // Track mouse leaving category nav
+            }}
+          >
+            <span
+              onMouseDown={() => handleCatClick(category.name)}
+              className="relative font-bold text-[14px] mb-2 cursor-pointer hover:text-[#4d4d4d] transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-[2px] after:bg-[#4d4d4d] hover:after:w-full after:transition-all after:duration-300"
             >
-              {/* Category Name with animated underline effect on hover */}
-              <span
-                onMouseDown={() => handleCatClick(category.name)}
-                className="relative font-bold text-[14px] mb-2 cursor-pointer hover:text-[#4d4d4d] transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-[2px] after:bg-[#4d4d4d] hover:after:w-full after:transition-all after:duration-300"
-              >
-                {category.name}
-              </span>
+              {category.name} ▼
+            </span>
 
-              {/* Display Products Under the Category */}
-              <div className="bg-white mt-2 w-full">
-                {products[index]?.map((product, subIndex) => (
+            {hoveredCategoryIndex === index && (
+              <div
+                className="absolute top-full mt-4 p-2 bg-white border border-gray-200 rounded-md shadow-lg w-max"
+                onMouseEnter={() => {
+                  setIsProductHover(true);
+                  setIsMouseInsideDropdown(true); // Track mouse inside product dropdown
+                }}
+                onMouseLeave={() => {
+                  setIsProductHover(false);
+                  setIsMouseInsideDropdown(false); // Track mouse leaving product dropdown
+                }}
+              >
+                {products[index]?.slice(0, 5).map((product, subIndex) => (
                   <div
                     key={subIndex}
                     className="text-[12px] cursor-pointer hover:text-[#333333] hover:scale-105 transform py-1 transition-all duration-200"
@@ -284,10 +307,17 @@ const Header = () => {
                   </div>
                 ))}
               </div>
-            </div>
-          ))}
-        </div>
+            )}
+          </div>
+        ))}
       </div>
+    </div>
+
+
+
+
+
+
     </>
   );
 };

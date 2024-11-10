@@ -7,6 +7,39 @@
     display: block;
     overflow: auto;
   }
+  .top-selling-products {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .section-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .top-products-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .top-product-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .product-name {
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .units-sold {
+    color: #555;
+  }
   
   
   

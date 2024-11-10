@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Header from "../Header/Header";
 import Previews from "../Preview/Preview";
 import blackBorder from "../../assets/frames/black-frame.png";
@@ -11,6 +12,9 @@ import imgPtr from '../../assets/frames/oriantaion-portrait.jpg';
 import imgLan from '../../assets/frames/oriantaion-lanscape.jpg';
 import imgSqr from '../../assets/frames/oriantation-square.jpg';
 import chooseimage from '../../assets/choose_image.png';
+import { FaCartPlus } from "react-icons/fa";
+import api from "../../services/api";
+import Swal from "sweetalert2"; 
 
 const Customize = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -23,21 +27,16 @@ const Customize = () => {
   const [height, setHeight] = useState(0);
   const [selectedFrame, setSelectedFrame] = useState(blackBorder);
   const [uploadedImages, setUploadedImages] = useState(Array(4).fill(chooseimage));
+  const [loading,setLoading] =useState(false)
+  const user = useSelector((state) => state.user.user);
 
   const borderlist = [blackBorder, oakBorder, whiteBorder];
-  const images = [
-    "https://placeimg.com/640/480/nature",
-    "https://placeimg.com/640/480/tech",
-    "https://placeimg.com/640/480/architecture",
-    "https://placeimg.com/640/480/people",
-  ];
-
-  const frameOrientationImages = {
-    Landscape: "https://placeimg.com/150/100/nature",
-    Portrait: "https://placeimg.com/100/150/nature",
-    Square: "https://placeimg.com/150/150/nature",
-  };
-
+  // const images = [
+  //   "https://placeimg.com/640/480/nature",
+  //   "https://placeimg.com/640/480/tech",
+  //   "https://placeimg.com/640/480/architecture",
+  //   "https://placeimg.com/640/480/people",
+  // ];
   const frameColors = [
     { name: "Black", image: threedblack },
     { name: "Oak", image: threedoak },
@@ -46,17 +45,17 @@ const Customize = () => {
 
   const imgOriantation = [imgLan, imgPtr, imgSqr];
 
-  const goToPrevious = () => {
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
-    setCurrentIndex(newIndex);
-  };
+  // const goToPrevious = () => {
+  //   const isFirstSlide = currentIndex === 0;
+  //   const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
+  //   setCurrentIndex(newIndex);
+  // };
 
-  const goToNext = () => {
-    const isLastSlide = currentIndex === images.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
-  };
+  // const goToNext = () => {
+  //   const isLastSlide = currentIndex === images.length - 1;
+  //   const newIndex = isLastSlide ? 0 : currentIndex + 1;
+  //   setCurrentIndex(newIndex);
+  // };
 
   const handlePaperChange = (type) => {
     setPaperType(type);
@@ -75,9 +74,9 @@ const Customize = () => {
     let baseHeight = 150;
 
     const isMediumScreen = window.innerWidth >= 768;
-    
+
     if (isMediumScreen && frameOrientation !== "Landscape") {
-      
+
       baseWidth = 200;
       baseHeight = 200;
     }
@@ -118,7 +117,7 @@ const Customize = () => {
     setWidth(widthF);
     setHeight(heightF);
     setImageOrientation(imageOrientation)
-  }, [ imageOrientation, imageCount]);
+  }, [imageOrientation, imageCount]);
 
   const getImageGridClass = () => {
     if (frameOrientation === "Square") {
@@ -144,6 +143,120 @@ const Customize = () => {
         });
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+
+  const addToCart = async (id) => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    if (uploadedImages.filter(img => img !== chooseimage).length !== imageCount) {
+      alert(`Please upload ${imageCount} images before adding to cart.`);
+      return;
+    }
+
+    const userId = user._id;
+    const productId = id;
+    const selectedFiles = uploadedImages.filter(img => img !== chooseimage)
+    let uploadedCustomImages = []
+
+    if (selectedFiles && selectedFiles.length) {
+      try {
+        setLoading(true)
+
+        for (const file of selectedFiles) {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", "cloud_name");
+
+          try {
+            const response = await fetch(
+              "https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload",
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+              const imageDetails = {
+                publicId: data.public_id,
+                secureUrl: data.secure_url
+              };
+              uploadedCustomImages.push(imageDetails); // Store each image's details
+            } else {
+              console.error("Image upload failed for one file:", data);
+            }
+          } catch (error) {
+            console.error("Error during upload:", error);
+          }
+        }
+
+        console.log("All uploaded images:", uploadedCustomImages);
+      } catch (error) {
+        console.error("Error adding image to Cloudinary:", error);
+      }
+      finally{
+        setLoading(false)
+      }
+    }
+
+    const formData = {
+      selectedFrame:frameColor,
+      userId,
+      images: uploadedCustomImages,
+      orientation:imageOrientation
+    };
+    console.log("this is formdata : ", formData)
+
+    try {
+      const response = await api.addToCart(formData);
+
+      if (!response.error) {
+        console.log("item added to cart : ",response)
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Item added to cart successfully!",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      } else {
+        console.log("failed to add",response)
+        Swal.fire({
+          icon: "error",
+          title: "Failed!",
+          text: "Failed to add item to cart.",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "An unexpected error occurred. Please try again.",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    }
+    finally {
+      setLoading(false)
     }
   };
 
@@ -278,6 +391,28 @@ const Customize = () => {
                       </div>
                     ))}
                   </div>
+                    <div className="w-full flex gap-10 justify-between">
+                      <button
+                        onClick={() => addToCart()}
+                        className="mt-4 max-h-14 flex items-center justify-center sm:justify-start space-x-2 w-1/2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(188,157,124)]"
+                      >
+                        <div className="flex items-center gap-2 p-2  rounded-lg w-32 h-10 cursor-pointertransition-colors duration-200">
+                          <p className="text-sm font-semibold w-full">Add to cart</p>
+                          <FaCartPlus className="w-5 h-5" />
+                        </div>
+
+                      </button>
+
+                      <div className="flex gap-4 h-14">
+                        <div className="mt-4 flex justify-center sm:justify-start space-x-3 bg-zinc-300 p-2 rounded-lg">
+                          {/* <img className="w-5 h-5" src={share} alt="Share" /> */}
+                          <span className="text-zinc-500 text-xl font-['Lato']">
+                            |
+                          </span>
+                          {/* <img className="w-6 h-6" src={favourite} alt="Favourite" /> */}
+                        </div>
+                      </div>
+                    </div>
                 </div>
               </div>
             </div>

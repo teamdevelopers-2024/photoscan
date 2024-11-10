@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }) => {
     try {
       const response = await api.status()
       console.log("this is api response : ",response)
-      if (response.data.loggedIn) {
+      if (response.loggedIn) {
         setIsAdmin(true);
       } else {
         setIsAdmin(null);

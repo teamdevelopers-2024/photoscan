@@ -17,10 +17,12 @@ function Modal({ isOpen, onClose, image, text }) {
           <h2 className="text-lg font-bold">Given Text:</h2>
           <p className="text-gray-700">{text}</p>
         </div>
-        <div>
+        {image.map((item)=>(
+          <div>
           <h2 className="text-lg font-bold">Given Image:</h2>
-          <img src={image} alt="Preview" className="w-full h-auto rounded-md" />
+          <img src={item.secureUrl} alt="Preview" className="w-full h-auto rounded-md" />
         </div>
+        ))}
       </div>
     </div>
   );

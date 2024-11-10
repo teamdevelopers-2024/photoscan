@@ -15,7 +15,10 @@ import ProductDb from "../model/prodectModel.js";
 import CategoryDb from "../model/Category.js";
 import addressModel from "../model/addressModel.js";
 import CartDb from "../model/cartModel.js";
+import OrderDb from "../model/orderModal.js";
 
+import { v4 as uuidv4 } from 'uuid';
+import { log } from "console";
 
 const login = async (req, res) => {
   try {
@@ -670,12 +673,20 @@ async function getAddress(req, res) {
 
 const addToCart = async (req, res) => {
   try {
-    const { userId, productId, image, textInput,publicId } = req.body; // Destructure the data from req.body
+    const {
+      userId,
+      productId,
+      inputTexts,
+      images,
+      LogoImage,
+      selectedFrame,
+      orientation,
+    } = req.body; // Destructure the data from req.body
 
     // Validate input
-    if (!productId) {
-      return res.status(400).json({ error: true, message: 'Product ID(s) are required.' });
-    }
+    // if (!productId) {
+    //   return res.status(400).json({ error: true, message: 'Product ID(s) are required.' });
+    // }
 
     // Convert productId to ObjectId
     const productObjectId = new mongoose.Types.ObjectId(productId);
@@ -689,21 +700,27 @@ const addToCart = async (req, res) => {
         userId,
         items: [{
           productId: productObjectId,
-          image: image, // Store the single image URL
-          textInput: textInput, // Store the single text input
-          publicId:publicId,
+          images: images, // Array of image URLs with publicId
+          textInput: inputTexts, // Array of text inputs
+          LogoImage,
+          selectedFrame: selectedFrame,
+          orientation: orientation,
         }],
       });
     } else {
       // Always push a new item to the items array
       cart.items.push({
         productId: productObjectId,
-        image: image,
-        textInput: textInput,
+        images,
+        textInput: inputTexts,
+        LogoImage,
+        selectedFrame: selectedFrame,
+        orientation: orientation,
       });
     }
 
     await cart.save(); // Save the cart
+    console.log("saved item", cart)
 
     res.status(200).json({ error: false, message: 'Products added to cart successfully' });
   } catch (error) {
@@ -715,14 +732,21 @@ const addToCart = async (req, res) => {
 
 async function getCart(req, res) {
   try {
-    const userId = req.query.userid; // Get the user ID from the query
+    const userId = req.query.userid;
+
+    // Validate the userId
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: true, message: 'Invalid or missing userId' });
+    }
+    console.log("Before Cart Finding")
+    const cartItemss = await CartDb.find({})
+    console.log("After Cart Finding", cartItemss[0].items)
+    console.log("before aggregation");
 
     // Use aggregation to fetch cart items and their associated product details
     const cartData = await CartDb.aggregate([
       { $match: { userId: new mongoose.Types.ObjectId(userId) } }, // Match cart by user ID
-      {
-        $unwind: "$items" // Deconstruct the items array
-      },
+      { $unwind: "$items" }, // Deconstruct the items array
       {
         $lookup: {
           from: "products", // Name of the products collection
@@ -731,23 +755,23 @@ async function getCart(req, res) {
           as: "productDetails" // Output array field
         }
       },
+      { $unwind: { path: "$productDetails", preserveNullAndEmptyArrays: true } }, // Deconstruct the productDetails array
       {
-        $unwind: { // Deconstruct the productDetails array
-          path: "$productDetails",
-          preserveNullAndEmptyArrays: true // Include cart items even if no product found
-        }
-      },
-      {
-        $project: { // Project fields to include in the output
+        $project: {
           _id: 1,
           userId: 1,
           "items.productId": 1,
-          "items.image": 1,
+          "items.images": { $ifNull: ["$items.images", ""] },
           "items.textInput": 1,
           "items._id": 1,
-          "productDetails.productName": "$productDetails.productName",
-          "productDetails.offerPrice": "$productDetails.offerPrice",
-          "productDetails.image": { $arrayElemAt: ["$productDetails.images", 0] } // Get the first image
+          "productDetails.productName": 1,
+          "productDetails.offerPrice": 1,
+          "productDetails.image": { $arrayElemAt: ["$productDetails.images", 0] }, // Get the first image
+          "items.selectedFrame": { $ifNull: ["$items.selectedFrame", ""] },
+          "items.orientation": { $ifNull: ["$items.orientation", ""] },
+
+
+
         }
       },
       {
@@ -759,22 +783,25 @@ async function getCart(req, res) {
               itemId: "$items._id",
               productId: "$items.productId",
               givenText: "$items.textInput",
-              givenImage: "$items.image",
+              givenImage: "$items.images",
               productImage: "$productDetails.image",
               productName: "$productDetails.productName",
-              productprice: "$productDetails.offerPrice"
+              productPrice: "$productDetails.offerPrice",
+              selectedFrame: "$items.selectedFrame",
+              orientation: "$items.orientation",
             }
           }
         }
       }
     ]);
 
-
     // If no cart found, respond accordingly
     if (!cartData || cartData.length === 0) {
-      return res.status(404).json({ error: true, message: 'Cart not found' });
+
+      return res.status(404).json({ error: true, message: `Cart not found ${cartData}` });
     }
 
+    console.log("after Aggregation", cartData[0])
     // Respond with enriched cart data
     res.status(200).json({ error: false, message: 'Cart Items Fetched Successfully', cartData: cartData[0] });
   } catch (error) {
@@ -784,11 +811,12 @@ async function getCart(req, res) {
 }
 
 
+
 async function deleteCartItem(req, res) {
   try {
 
 
-    const { itemId, userId ,publicId} = req.query; // Assuming you're sending userId and itemId in the request body
+    const { itemId, userId, publicId } = req.query; // Assuming you're sending userId and itemId in the request body
 
     // Find the cart for the user and update it
     const updatedCart = await CartDb.findOneAndUpdate(
@@ -903,9 +931,49 @@ async function setDefaultAddress(req, res) {
 
 async function makeOrder(req, res) {
   try {
-    console.log("request got : ", req.body)
+    const {
+      user,
+      razorpay_payment_id,
+      amount,
+      products,
+      address
+    } = req.body.body
+
+    console.log("this is req.body : ", req.body)
+    const orderId = `ORDER-${uuidv4()}`;
+
+    const newOrder = new OrderDb({
+      orderId,
+      userId: user._id,
+      customer: {
+        name: address.fullName, // Assuming you have user data from a middleware or token
+        email: user.email,
+        phone: address.phoneNumber,
+        address: {
+          addressLine1: address.addressLine1,
+          city: address.city,
+          state: address.state,
+          zip: address.postalCode
+        }
+      },
+      orderDate: new Date(),
+      status: 'Pending', // Default status
+      products, // Array of products
+      totalAmount: amount,
+      paymentStatus: razorpay_payment_id ? 'Paid' : 'Pending', // Check payment status based on razorpay_payment_id
+    });
+    await newOrder.save()
+
+    await CartDb.deleteOne({ userId: user._id })
+
+    res.status(200).json({
+      error: false,
+      message: "order created successfully",
+      orderId: orderId
+    })
   } catch (error) {
     console.log(error)
+    res.status(500).json({ error: true, message: 'Internal server error' });
   }
 }
 
@@ -929,7 +997,7 @@ async function editAddress(req, res) {
       { _id: addressId },
       { ...formData }, // Update with the parsed formData
       { new: true } // Return the updated document
-    );    
+    );
 
     // Send success response
     res.status(200).json({ error: false, message: 'Address updated successfully', data: updatedAddress });
@@ -939,7 +1007,36 @@ async function editAddress(req, res) {
   }
 }
 
+async function getOrders(req, res) {
+  try {
 
+    const userId = req.query.userId
+
+    const orders = await OrderDb.find({ userId: userId });
+
+    res.status(200).json({ error: false, message: "Orders Fetched successfully", data: orders });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ error: true, message: 'Internal Server error' });
+  }
+}
+
+
+
+async function fetchOrder(req, res) {
+  try {
+    const { orderId } = req.query
+    const result = await OrderDb.findOne({ orderId: orderId })
+    res.status(200).json({
+      error: false,
+      message: "order fetched successfully",
+      data: result
+    })
+  } catch (error) {
+    console.error('Error fetching order:', error);
+    res.status(500).json({ error: true, message: 'Internal Server error' });
+  }
+}
 
 // Export the controller
 export default {
@@ -970,4 +1067,6 @@ export default {
   makeOrder,
   setDefaultAddress,
   editAddress,
+  getOrders,
+  fetchOrder
 }

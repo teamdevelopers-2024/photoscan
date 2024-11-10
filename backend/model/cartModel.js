@@ -13,29 +13,21 @@ const cartSchema = new mongoose.Schema(
                 productId: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Product", // Reference to the Product model
-                    required: true,
+                    // required: true,
                 },
-                images: [
-                    {  
-                        url: String,
-                        publicId: String,
-                    }
-                ],
-                textInput: [
-                    {
-                        
-                    }
-                ],
-                orientation: {
-                    type: String,
-                    // enum: ["landscape", "portrait"], // Define specific orientations if applicable
-                    // required: true
+                images: [{  // Changed from images to a single image
+                    secureUrl: String,
+                    publicId: String,
+                }],
+                orientation:{
+                    type:String,
                 },
-                isCustomize: {
-                    type: Boolean,
-                    default: false // Default to false if not specified
-                }
+                selectedFrame:{},
+                textInput: [{}],
+                LogoImage : {},
+                productPrice:{},
             },
+
         ],
     },
     {
@@ -46,4 +38,4 @@ const cartSchema = new mongoose.Schema(
 // Create the Cart model from the schema
 const CartDb = mongoose.model("Cart", cartSchema);
 
-export default CartDb;
+export default CartDb;
