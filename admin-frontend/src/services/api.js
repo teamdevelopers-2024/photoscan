@@ -6,6 +6,7 @@ import axios from 'axios';
 //     withCredentials: true,
 // });
 
+axios.defaults.withCredentials = true;
 
 const apiClient = axios.create({
     baseURL: 'https://api.photoscan.co.in/admin',
