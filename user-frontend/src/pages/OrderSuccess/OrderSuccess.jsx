@@ -29,6 +29,7 @@ export default function OrderSuccess() {
         if (!result.error) {
           setOrder(result.data);  // Update order state
           setProducts(result.data.products);  // Directly set products from order data
+          
 
         }
       } catch (error) {

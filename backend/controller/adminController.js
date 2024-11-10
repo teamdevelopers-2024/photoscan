@@ -30,16 +30,13 @@ const login = async (req, res) => {
         .json({ error: true, message: "password is incorrect" })
     }
     req.session.isAdmin = true;
-    console.log(req.session , "this is sessions")
     req.session.save((err) => {
       if (err) {
-        console.log("Session save error:", err);
         return res.status(500).json({
           error: true,
           message: "Session save failed"
         });
       }
-        console.log("session: saved successfull",req.session.isAdmin)
         res.status(200).json({
           error: false,
           message: `${req.session.isAdmin} success addmin`
@@ -303,7 +300,6 @@ const deleteOffer = async (req, res) => {
         message: "Offer ID is required"
       });
     }
-    console.log('offer deleted')
     const categoryName = await OfferDb.findOne({ _id: id });
     const deletedOffer = await OfferDb.findByIdAndDelete(id);
 
@@ -340,20 +336,17 @@ async function getCategories(req, res) {
   try {
     let obj = {}
     const active = req.query.active
-    console.log(active)
     if (active) {
       obj = {
         isActive: active
       }
     }
     const data = await CategoryDb.find(obj)
-    console.log(data)
     res.status(200).json({
       error: false,
       data: data
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       error: true,
       message: "Internal server error",
@@ -380,7 +373,6 @@ async function categoryActive(req, res) {
       message: "active status updated successfully"
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       error: true,
       message: "Internal server error",
@@ -424,7 +416,6 @@ async function blockUser(req, res) {
       message: "user blocked successfully"
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       error: true,
       message: "Internal server error",
@@ -436,14 +427,12 @@ async function blockUser(req, res) {
 async function updateFeatured(req, res) {
   try {
     const { id, detail } = req.body
-    console.log(id, detail)
     await productDB.updateOne({ _id: id }, { $set: detail })
     res.status(200).json({
       error: false,
       message: "successfull"
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       error: true,
       message: "internel Server error"
@@ -460,11 +449,6 @@ async function getCardData(req, res) {
 
     const orders = await OrderDb.find({})
     const totalSales = orders.reduce((sum, order) => sum + order.totalAmount, 0);
-
-    console.log('Total customers:', totalCustomers);
-    console.log('Total orders:', totalOrders);
-    console.log('Total sales:', totalSales);
-    console.log("data", orders);
 
 
     res.status(200).json({
@@ -503,7 +487,6 @@ async function updateProductStatus(req, res) {
       message: "product status updated successfully"
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       error: false,
       message: "internel Server error"
@@ -693,6 +676,7 @@ const getGraphData = async (req, res) => {
     return res.status(500).json({ error: 'Error fetching sales data' });
   }
 };
+
 
 export default {
   login,
