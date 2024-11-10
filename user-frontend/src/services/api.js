@@ -337,10 +337,21 @@ async function editAddress(formData, userId, addressId) {
   }
 }
 
-async function getOrders() {
+async function getOrders(userId) {
 
   try {
-    const response = await apiClient.get(`/getOrders`);
+    const response = await apiClient.get(`/getOrders?userId=${userId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error.response.data;
+  }
+}
+
+
+async function fetchOrder(orderId) {
+  try {
+    const response = await apiClient.get(`/fetchOrder?orderId=${orderId}`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -376,4 +387,5 @@ export default {
   makeOrder,
   editAddress,
   getOrders,
+  fetchOrder
 };

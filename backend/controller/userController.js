@@ -949,7 +949,8 @@ async function makeOrder(req, res) {
 
     res.status(200).json({
       error:false,
-      message:"order created successfully"
+      message:"order created successfully",
+      orderId : orderId
     })
   } catch (error) {
     console.log(error)
@@ -989,12 +990,31 @@ async function editAddress(req, res) {
 
 async function getOrders(req, res) {
   try {
-    const orders = await OrderDb.find();
-    console.log(orders);
+
+    const userId = req.query.userId
+    
+    const orders = await OrderDb.find({userId:userId});
     
     res.status(200).json({ error: false, message: "Orders Fetched successfully", data: orders });
   } catch (error) {
     console.error('Error fetching orders:', error);
+    res.status(500).json({error:true, message: 'Internal Server error' });
+  }
+}
+
+
+
+async function fetchOrder(req,res) {
+  try {
+    const {orderId} = req.query
+    const result = await OrderDb.findOne({orderId:orderId})
+    res.status(200).json({
+      error:false,
+      message:"order fetched successfully",
+      data:result
+    })
+  } catch (error) {
+    console.error('Error fetching order:', error);
     res.status(500).json({error:true, message: 'Internal Server error' });
   }
 }
@@ -1029,4 +1049,5 @@ export default {
   setDefaultAddress,
   editAddress,
   getOrders,
+  fetchOrder
 }

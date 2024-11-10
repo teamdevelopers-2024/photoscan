@@ -16,7 +16,7 @@ const cartSchema = new mongoose.Schema(
                     required: true,
                 },
                 images: [{  // Changed from images to a single image
-                    url: String,
+                    secureUrl: String,
                     publicId: String,
                 }],
                 textInput: [{}],
