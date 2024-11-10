@@ -6,7 +6,7 @@ import AddAddressForm from "../../../components/addAddress/addAddress";
 import { FiEdit, FiCheck, FiTrash2, FiHome, FiPlus } from "react-icons/fi";
 import Swal from "sweetalert2";
 import Loader from "../../../../../admin-frontend/src/components/Loader/Loader";
-import EditAddress from "../../../components/edit AddressModal/editAddress";
+import EditAddress from "../../../components/edit AddressModal/EditAddress";
 
 function ParentComponent() {
   const dispatch = useDispatch();
