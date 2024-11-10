@@ -5,6 +5,7 @@ import OfferDb from "../model/offerModel.js";
 import UserDb from "../model/userModel.js";
 import productDB from "../model/prodectModel.js"
 import { v2 as cloudinary } from 'cloudinary';
+import jwt from 'jsonwebtoken'
 import OrderDb from "../model/orderModal.js";
 
 cloudinary.config({
@@ -29,21 +30,17 @@ const login = async (req, res) => {
         .status(400)
         .json({ error: true, message: "password is incorrect" })
     }
-    req.session.isAdmin = true;
-    req.session.save((err) => {
-      if (err) {
-        return res.status(500).json({
-          error: true,
-          message: "Session save failed"
-        });
-      }
-        res.status(200).json({
-          error: false,
-          message: `${req.session.isAdmin} success addmin`
-        });
+
+
+    const token = jwt.sign({ isAdmin: true }, process.env.ACCESS_TOKEN_PRIVAT_KEY, { expiresIn: "1h" });
+    res.cookie("token", token, { httpOnly: true });
+    res.status(200).json({
+      error: false,
+      message: `admin Logged in Successfull`
     });
 
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       error: true,
       message: "internel server error"
@@ -51,10 +48,25 @@ const login = async (req, res) => {
   }
 }
 const status = async (req, res) => {
-  if (req.session.isAdmin) {
-    res.status(200).json({ loggedIn: true });
-  } else {
-    res.status(401).json({ loggedIn: false });
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1]; // Get the token from cookie or Authorization header
+
+  if (!token) {
+      return res.status(401).json({ loggedIn: false }); // No token provided
+  }
+
+  try {
+      // Verify the token
+      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_PRIVAT_KEY);
+      
+      // Check if the token payload has an `isAdmin` field (set when the token is created during login)
+      if (decoded.isAdmin) {
+          return res.status(200).json({ loggedIn: true });
+      } else {
+          return res.status(401).json({ loggedIn: false });
+      }
+  } catch (error) {
+      // If verification fails, respond with loggedIn: false
+      return res.status(401).json({ loggedIn: false });
   }
 };
 
@@ -382,19 +394,22 @@ async function categoryActive(req, res) {
 }
 async function logout(req, res) {
   try {
-    req.session.isAdmin = false
-    res.status(200).json({
-      error: false,
-      message: "admin logged out successfully"
-    })
+      // Clear the token by setting an empty cookie with an immediate expiry
+      res.clearCookie("token", { httpOnly: true, secure: process.env.NODE_ENV === "production" });
+      
+      res.status(200).json({
+          error: false,
+          message: "Admin logged out successfully"
+      });
   } catch (error) {
-    res.status(500).json({
-      error: true,
-      message: "Internal server error",
-      error,
-    });
+      res.status(500).json({
+          error: true,
+          message: "Internal server error",
+          error,
+      });
   }
 }
+
 
 
 
