@@ -24,7 +24,11 @@ function SingleProduct() {
     inputFields: [], // Array to hold dynamic input fields
     imageCount: 0,
     previewModalOpen: false,
-    sizes: []
+    sizes: [] ,
+    selectedSize:'',
+    logoFile: null,
+    logoPreview: null
+
   });
   const user = useSelector((state) => state.user.user);
   const [loading, setLoading] = useState(false);
@@ -139,18 +143,56 @@ function SingleProduct() {
     const userId = user._id;
     const productId = id;
     const { textInput, selectedFiles } = state;
-    let uploadedImageUrl = null;
-    let publicId
+    let uploadedImages = []
 
     if (selectedFiles && selectedFiles.length) {
       try {
         setLoading(true)
-        const formData = new FormData();
-        Array.from(selectedFiles).forEach((file) => {
-          formData.append("file", file);
-        });
-        formData.append("upload_preset", "cloud_name");
 
+        for (const file of selectedFiles) {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", "cloud_name");
+
+          try {
+            const response = await fetch(
+              "https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload",
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+              const imageDetails = {
+                publicId: data.public_id,
+                secureUrl: data.secure_url
+              };
+              uploadedImages.push(imageDetails); // Store each image's details
+            } else {
+              console.error("Image upload failed for one file:", data);
+            }
+          } catch (error) {
+            console.error("Error during upload:", error);
+          }
+        }
+
+        console.log("All uploaded images:", uploadedImages);
+      } catch (error) {
+        console.error("Error adding image to Cloudinary:", error);
+      }
+    }
+
+    let LogoImage 
+    if(state.logoFile){
+      const formData = new FormData();
+      console.log("this is logofile : ",state.logoFile)
+      formData.append("file", state.logoFile);
+      formData.append("upload_preset", "cloud_name");
+
+      try{
         const response = await fetch(
           "https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload",
           {
@@ -158,26 +200,33 @@ function SingleProduct() {
             body: formData,
           }
         );
+        const data =await response.json()
 
-        const data = await response.json();
-         publicId = data.public_id;
         if (response.ok) {
-          uploadedImageUrl = data.secure_url;
+           LogoImage = {
+            publicId: data.public_id,
+            secureUrl: data.secure_url
+          };
+
         } else {
-          console.error("Image upload failed:", data);
+          console.error("Image upload failed for one file:", data);
         }
-      } catch (error) {
-        console.error("Error adding image to Cloudinary:", error);
+
+      }catch(error){
+        console.log('something went wrong : ',error)
       }
+
     }
 
+    
     const formData = {
       userId,
       productId,
-      inputTexts : state.inputFields,
-      image: uploadedImageUrl ? uploadedImageUrl : null,
-      publicId:publicId
+      inputTexts: state.inputFields,
+      images: uploadedImages,
+      LogoImage
     };
+    console.log("this is formdata : ",formData)
 
     try {
       const response = await api.addToCart(formData);
@@ -218,7 +267,7 @@ function SingleProduct() {
         timerProgressBar: true,
       });
     }
-    finally{
+    finally {
       setLoading(false)
     }
   };
@@ -228,6 +277,20 @@ function SingleProduct() {
     newInputFields[index].value = event.target.value;
     setState((prevState) => ({ ...prevState, inputFields: newInputFields }));
   };
+
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0]; // Capture the selected file
+    if (file) {
+      setState((prevState) => ({
+        ...prevState,
+        logoFile: file, // Save file to state
+        logoPreview: URL.createObjectURL(file) // Generate a preview URL
+      }));
+    }
+  };
+
+  
   return (
     <>
       {loading && <Loader />}
@@ -319,17 +382,17 @@ function SingleProduct() {
               {textInputError && <p className="text-red-500">{textInputError}</p>}
               {state.sizes.length > 0 && (
                 <>
-                <div className="flex gap-3">
+                  <div className="flex gap-3">
 
-                  <label htmlFor="size-dropdown" className="mt-3">Select Display Size:</label>
-                  <select id="size-dropdown">
-                    {state.sizes.map((size, index) => (
-                      <option key={index} value={size}>
-                        {size}
-                      </option>
-                    ))}
-                  </select>
-                    </div>
+                    <label htmlFor="size-dropdown" className="mt-3">Select Display Size:</label>
+                    <select id="size-dropdown">
+                      {state.sizes.map((size, index) => (
+                        <option key={index} value={size}>
+                          {size}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </>
               )}
 
@@ -376,21 +439,25 @@ function SingleProduct() {
                 </div>
               )}
 
-              {/* {state.isLogo && (
+              {state.isLogo && (
                 <div className="mt-4">
                   <label htmlFor="logo">Logo:</label>
                   <input
                     type="file"
                     id="logo"
                     name="logo"
-                    onChange={handleFileChange}
+                    onChange={handleLogoChange}
                     required
-                    multiple // Allows selection of multiple files
                   />
-                  <small>Select exactly {state.imageCount} images</small>
                 </div>
-              )} */}
+              )}
 
+              {state.logoPreview && (
+                <div className="mt-4">
+                  <p>Logo Preview:</p>
+                  <img src={state.logoPreview} alt="Logo Preview" className="h-20 w-20 object-contain" />
+                </div>
+              )}
 
             </div>
             {state.previewModalOpen && (

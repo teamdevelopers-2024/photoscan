@@ -8,6 +8,10 @@ const orderSchema = new mongoose.Schema(
       required: true,
       unique: true
     },
+    userId:{
+      type:String ,
+      required:true
+    },
     customer: {
       name: {
         type: String,
@@ -18,8 +22,12 @@ const orderSchema = new mongoose.Schema(
         required: true,
         lowercase: true // Ensure email is in lowercase
       },
+      phone:{
+        type:String ,
+        required:true
+      },
       address: {
-        street: {
+        addressLine1: {
           type: String,
           required: true
         },
@@ -47,9 +55,8 @@ const orderSchema = new mongoose.Schema(
       enum: ["Shipped", "Pending", "Delivered", "Canceled"] ,
       default:"Pending"
     },
-    products: [
-      
-    ],
+
+    products: [],
     totalAmount: {
       type: Number,
       required: true,

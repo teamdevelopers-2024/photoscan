@@ -5,9 +5,11 @@ import Footer from "../../components/Footer/Footer";
 import { useSelector } from "react-redux";
 import api from "../../services/api";
 import AddressModal from "./AddressModal";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutPage = () => {
   const user = useSelector((state) => state.user.user)
+  const navigate = useNavigate()
   const [addresses, setAddresses] = useState([])
   const [defAddress, setDefAddress] = useState({})
   const [addressModal, setAddressModal] = useState(false)
@@ -92,15 +94,18 @@ const CheckoutPage = () => {
         try {
           // Send payment details to backend to create the order
           const createOrderResponse = await api.makeOrder({
+            user : user,
             razorpay_payment_id,
             amount: total,
             products: productData,
+            address: defAddress
           });
+
 
           console.log("Order creation response:", createOrderResponse);
 
-          if (createOrderResponse.data.success) {
-            alert("Order created successfully!");
+          if (!createOrderResponse.error) {
+             navigate("/ordersuccess")
           } else {
             alert("Failed to create order");
           }
