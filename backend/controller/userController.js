@@ -16,6 +16,7 @@ import CategoryDb from "../model/Category.js";
 import addressModel from "../model/addressModel.js";
 import CartDb from "../model/cartModel.js";
 import OrderDb from "../model/orderModal.js";
+
 import { v4 as uuidv4 } from 'uuid';
 
 const login = async (req, res) => {
@@ -986,7 +987,17 @@ async function editAddress(req, res) {
   }
 }
 
-
+async function getOrders(req, res) {
+  try {
+    const orders = await OrderDb.find();
+    console.log(orders);
+    
+    res.status(200).json({ error: false, message: "Orders Fetched successfully", data: orders });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({error:true, message: 'Internal Server error' });
+  }
+}
 
 // Export the controller
 export default {
@@ -1017,4 +1028,5 @@ export default {
   makeOrder,
   setDefaultAddress,
   editAddress,
+  getOrders,
 }

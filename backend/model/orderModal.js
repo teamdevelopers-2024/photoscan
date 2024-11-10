@@ -55,6 +55,7 @@ const orderSchema = new mongoose.Schema(
       enum: ["Shipped", "Pending", "Delivered", "Canceled"] ,
       default:"Pending"
     },
+
     products: [],
     totalAmount: {
       type: Number,
