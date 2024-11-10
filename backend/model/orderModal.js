@@ -48,24 +48,7 @@ const orderSchema = new mongoose.Schema(
       default:"Pending"
     },
     products: [
-      {
-        productId: {
-          type: String,
-          required: true
-        },
-        category:{
-            type:String
-        },
-        name: {
-          type: String,
-          required: true
-        },
-        price: {
-          type: Number,
-          required: true,
-          min: 0 // Ensure price is not negative
-        }
-      }
+      
     ],
     totalAmount: {
       type: Number,

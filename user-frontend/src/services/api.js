@@ -337,6 +337,17 @@ async function editAddress(formData, userId, addressId) {
   }
 }
 
+async function getOrders() {
+
+  try {
+    const response = await apiClient.get(`/getOrders`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error.response.data;
+  }
+}
+
 
 export default {
   userLogin,
@@ -364,4 +375,5 @@ export default {
   setDefaultAddress,
   makeOrder,
   editAddress,
+  getOrders,
 };
