@@ -51,6 +51,7 @@ const status = async (req, res) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1]; // Get the token from cookie or Authorization header
 
   if (!token) {
+    console.log(token , "token is undefined")
       return res.status(401).json({ loggedIn: false }); // No token provided
   }
 
@@ -62,9 +63,11 @@ const status = async (req, res) => {
       if (decoded.isAdmin) {
           return res.status(200).json({ loggedIn: true });
       } else {
+        console.log("inside decoded.admin")
           return res.status(401).json({ loggedIn: false });
       }
   } catch (error) {
+    console.log(error)
       // If verification fails, respond with loggedIn: false
       return res.status(401).json({ loggedIn: false });
   }
