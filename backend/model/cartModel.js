@@ -15,19 +15,14 @@ const cartSchema = new mongoose.Schema(
                     ref: "Product", // Reference to the Product model
                     required: true,
                 },
-                image: {  // Changed from images to a single image
-                    type: String,
-                    required: false,
-                },
-                textInput: {  // Changed from textInput array to a single textInput
-                    type: String,
-                    required: false,
-                },
-                publicId:{
-                    type:String,
-                    required:true,
-                }
+                images: [{  // Changed from images to a single image
+                    url: String,
+                    publicId: String,
+                }],
+                textInput: [{}],
+                LogoImage : {}
             },
+
         ],
     },
     {
@@ -38,4 +33,4 @@ const cartSchema = new mongoose.Schema(
 // Create the Cart model from the schema
 const CartDb = mongoose.model("Cart", cartSchema);
 
-export default CartDb;
+export default CartDb;

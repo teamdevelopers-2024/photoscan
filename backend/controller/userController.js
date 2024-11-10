@@ -15,7 +15,8 @@ import ProductDb from "../model/prodectModel.js";
 import CategoryDb from "../model/Category.js";
 import addressModel from "../model/addressModel.js";
 import CartDb from "../model/cartModel.js";
-
+import OrderDb from "../model/orderModal.js";
+import { v4 as uuidv4 } from 'uuid';
 
 const login = async (req, res) => {
   try {
@@ -670,7 +671,13 @@ async function getAddress(req, res) {
 
 const addToCart = async (req, res) => {
   try {
-    const { userId, productId, image, textInput,publicId } = req.body; // Destructure the data from req.body
+    const {
+      userId,
+      productId,
+      inputTexts,
+      images,
+      LogoImage
+    } = req.body; // Destructure the data from req.body
 
     // Validate input
     if (!productId) {
@@ -689,17 +696,18 @@ const addToCart = async (req, res) => {
         userId,
         items: [{
           productId: productObjectId,
-          image: image, // Store the single image URL
-          textInput: textInput, // Store the single text input
-          publicId:publicId,
+          images: images, // Array of image URLs with publicId
+          textInput: inputTexts, // Array of text inputs
+          LogoImage,
         }],
       });
     } else {
       // Always push a new item to the items array
       cart.items.push({
         productId: productObjectId,
-        image: image,
-        textInput: textInput,
+        images,
+        textInput: inputTexts,
+        LogoImage,
       });
     }
 
@@ -788,7 +796,7 @@ async function deleteCartItem(req, res) {
   try {
 
 
-    const { itemId, userId ,publicId} = req.query; // Assuming you're sending userId and itemId in the request body
+    const { itemId, userId, publicId } = req.query; // Assuming you're sending userId and itemId in the request body
 
     // Find the cart for the user and update it
     const updatedCart = await CartDb.findOneAndUpdate(
@@ -903,9 +911,48 @@ async function setDefaultAddress(req, res) {
 
 async function makeOrder(req, res) {
   try {
-    console.log("request got : ", req.body)
+    const {
+      user,
+      razorpay_payment_id,
+      amount,
+      products,
+      address
+    } = req.body.body
+
+    console.log("this is req.body : ",req.body)
+    const orderId = `ORDER-${uuidv4()}`;
+
+    const newOrder = new OrderDb({
+      orderId,
+      userId:user._id,
+      customer: {
+        name: address.fullName, // Assuming you have user data from a middleware or token
+        email: user.email,
+        phone: address.phoneNumber,
+        address: {
+          addressLine1: address.addressLine1,
+          city: address.city,
+          state: address.state,
+          zip: address.postalCode
+        }
+      },
+      orderDate: new Date(),
+      status: 'Pending', // Default status
+      products, // Array of products
+      totalAmount: amount,
+      paymentStatus: razorpay_payment_id ? 'Paid' : 'Pending', // Check payment status based on razorpay_payment_id
+    });
+    await newOrder.save()
+
+    await CartDb.deleteOne({userId:user._id})
+
+    res.status(200).json({
+      error:false,
+      message:"order created successfully"
+    })
   } catch (error) {
     console.log(error)
+    res.status(500).json({ error: true, message: 'Internal server error' });
   }
 }
 
@@ -929,7 +976,7 @@ async function editAddress(req, res) {
       { _id: addressId },
       { ...formData }, // Update with the parsed formData
       { new: true } // Return the updated document
-    );    
+    );
 
     // Send success response
     res.status(200).json({ error: false, message: 'Address updated successfully', data: updatedAddress });
