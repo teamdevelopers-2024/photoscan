@@ -24,14 +24,11 @@ const CheckoutPage = () => {
 
         if (!cartRes.error) {
           console.log("getting inside : ", cartRes.productData)
-          console.log("this is checkout data : ",cartRes.productData)
+          console.log("this is checkout data : ", cartRes.productData)
           setProductData(cartRes.productData);
         }
-        let totalAmount = 0
-        cartRes.productData.map((pro) => {
-          console.log("this is pro inside map : ", pro)
-          totalAmount += pro.productId.offerPrice
-        })
+        let totalAmount = cartRes.productData.reduce((sum, pro) => sum + (pro.productId.offerPrice || 0), 0);
+
         setTotal(totalAmount)
         // Handle address data response
         if (!addressRes.error) {
@@ -94,18 +91,19 @@ const CheckoutPage = () => {
         // Payment successful, now create the order
         try {
           // Send payment details to backend to create the order
-          // const createOrderResponse = await api.makeOrder({
-          //   razorpay_payment_id,
-          //   amount: total, 
-          // });
+          const createOrderResponse = await api.makeOrder({
+            razorpay_payment_id,
+            amount: total,
+            products: productData,
+          });
 
-          // console.log("Order creation response:", createOrderResponse);
+          console.log("Order creation response:", createOrderResponse);
 
-          // if (createOrderResponse.data.success) {
-          //   alert("Order created successfully!");
-          // } else {
-          //   alert("Failed to create order");
-          // }
+          if (createOrderResponse.data.success) {
+            alert("Order created successfully!");
+          } else {
+            alert("Failed to create order");
+          }
         } catch (error) {
           console.error("Error creating order:", error);
           alert("Failed to create order");
@@ -138,9 +136,9 @@ const CheckoutPage = () => {
   return (
     <>
       <Header />
-      <div className="h-screen grid grid-cols-3 bg-white">
+      <div className="h-screen bg-white md:flex">
         {/* Main Content Section */}
-        <div className="lg:col-span-2 col-span-3 space-y-8 px-12">
+        <div className="space-y-8 px-12 w-auto md:w-[65%]">
           <div className="mt-8 p-6 relative flex flex-col sm:flex-row sm:items-center background2 bg-white shadow-lg rounded-md transition-transform duration-300 hover:scale-105">
             <div className="flex flex-row items-center border-b sm:border-b-0 w-full sm:w-auto pb-4 sm:pb-0">
               <div className="text-yellow-500">
@@ -233,7 +231,7 @@ const CheckoutPage = () => {
                   <input
                     type="text"
                     name="address"
-                    value={`${defAddress.city ? defAddress.city+"," : ''}${defAddress.state ? defAddress.state+"," : ''}${defAddress.country ? defAddress.country+"," : ''}${defAddress.postalCode ? defAddress.postalCode : ''}`}
+                    value={`${defAddress.city ? defAddress.city + "," : ''}${defAddress.state ? defAddress.state + "," : ''}${defAddress.country ? defAddress.country + "," : ''}${defAddress.postalCode ? defAddress.postalCode : ''}`}
                     disabled={defAddress.city}
                     placeholder="1234 Main St"
                     className="block w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-1 focus:ring-[rgb(211,184,130)] focus:border-[rgb(211,184,130)] sm:text-sm transition duration-300"
@@ -303,7 +301,7 @@ const CheckoutPage = () => {
         </div>
 
         {/* Order Summary Section */}
-        <div className="col-span-1 bg-white lg:block hidden shadow-lg rounded-md p-6">
+        <div className="md:w-[35%] w-auto bg-white shadow-lg rounded-md px-10 py-6 md:p-6">
           <h1 className="py-4 border-b-2 text-xl text-gray-600 font-semibold">Order Summary</h1>
           <ul className="py-4 border-b overflow-y-scroll max-h-60 space-y-4 px-2">
             {productData.map((product, index) => {
@@ -342,7 +340,7 @@ const CheckoutPage = () => {
           <div className="flex justify-between mt-4 border-b py-2 px-4 text-gray-600 font-medium">
             <span>Subtotal</span>
             <span className="text-gray-800 font-semibold">
-            {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(total)}
+              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(total)}
             </span>
           </div>
           <div className="flex justify-between mt-2 border-b py-2 px-4 text-gray-600 font-medium">
@@ -364,7 +362,9 @@ const CheckoutPage = () => {
         </div>
 
       </div>
-      <Footer />
+      <div className="hidden md:block">
+      <Footer/>
+      </div>
       {addressModal && <AddressModal addresses={addresses} onClose={() => setAddressModal(false)} onSelect={handleAddressRadioChange} />}
     </>
   );

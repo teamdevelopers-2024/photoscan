@@ -1015,6 +1015,16 @@ async function setDefaultAddress(req, res) {
 }
 
 
+async function makeOrder(req,res) {
+  try {
+    console.log("request got : ",req.body)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+
 // Export the controller
 export default {
   login,
@@ -1041,5 +1051,6 @@ export default {
   deleteCartItem,
   getCartProducts,
   deleteAddress,
-  setDefaultAddress,
+  makeOrder,
+  setDefaultAddress
 }

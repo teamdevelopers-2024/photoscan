@@ -16,13 +16,6 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
-// const apiClient = axios.create({
-//   baseURL: 'http://192.168.31.121:4000/user',
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-//   withCredentials:true
-// });
 
 // Function to handle token refresh
 const refreshToken = async () => {
@@ -333,6 +326,15 @@ async function setDefaultAddress(addressId,userId) {
 }
 
 
+async function makeOrder(body) {
+  try {
+    const response = await apiClient.post("/makeOrder",{body})
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
 
 export default {
   userLogin,
@@ -358,4 +360,5 @@ export default {
   getCartProducts,
   deleteAddress,
   setDefaultAddress,
+  makeOrder
 };

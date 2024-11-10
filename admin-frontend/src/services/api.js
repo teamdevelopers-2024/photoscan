@@ -6,6 +6,14 @@ const apiClient = axios.create({
     withCredentials: true,
 });
 
+
+// const apiClient = axios.create({
+//     baseURL: 'https://api.photoscan.co.in/admin',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   });
+
 // Centralized helper function for making API requests
 const apiRequest = async (method, url, data = null) => {
     try {

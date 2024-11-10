@@ -29,11 +29,22 @@ const login = async (req, res) => {
         .status(400)
         .json({ error: true, message: "password is incorrect" })
     }
-    req.session.isAdmin = true
-    res.status(200).json({
-      error: false,
-      message: "admin logged in successfully"
-    })
+    req.session.isAdmin = true;
+    req.session.save((err) => {
+      if (err) {
+        console.log("Session save error:", err);
+        return res.status(500).json({
+          error: true,
+          message: "Session save failed"
+        });
+      }
+        console.log("session: saved successfull",req.session.isAdmin)
+        res.status(200).json({
+          error: false,
+          message: `${req.session.isAdmin} success addmin`
+        });
+    });
+
   } catch (error) {
     console.log(error)
     res.status(500).json({
@@ -51,6 +62,8 @@ const status = async (req, res) => {
     res.status(401).json({ loggedIn: false });
   }
 };
+
+
 const addBanner = async (req, res) => {
   if (req.body) {
     try {
@@ -455,8 +468,8 @@ async function getCardData(req, res) {
     console.log('Total customers:', totalCustomers);
     console.log('Total orders:', totalOrders);
     console.log('Total sales:', totalSales);
-    console.log("data",orders);
-    
+    console.log("data", orders);
+
 
     res.status(200).json({
       error: false,
