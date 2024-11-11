@@ -1,89 +1,96 @@
 .group_20 {
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  }
-  
-  .rectangle_3 {
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  }
-  
-  .rectangle_12 {
-    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
-  }
-  
-  .rectangle_8 {
-    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
-  }
-  
-  .rectangle_9 {
-    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
-  }
-  
-  .rectangle_10 {
-    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
-  }
-  
-  .rectangle_11 {
-    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
-  }
-  
-  .group_11-1 {
-    transform: rotate(90deg);
-  }
-  
-  .rectangle_5 {
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  }
-  
-  .rectangle_32 {
-    transform: rotate(-90deg);
-  }
-  
-  .group_49 {
-    transform: rotate(-90deg);
-  }
-  
-  .group_50 {
-    transform: rotate(-90deg);
-  }
-  
-  .rectangle_11-1 {
-    transform: rotate(90deg);
-    fill: #F6F6F6;
-    filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
-  }
-  
-  .canvas {
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  
-  .print {
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  
-  .rectangle_24 {
-    box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.25);
-  }
-  
-  .rectangle_23 {
-    box-shadow: 0px 0px 14px 2px rgba(0, 0, 0, 0.25);
-  }
-  
-  .group_44 {
-    transform: rotate(90deg);
-  }
-  
-  .rectangle_30 {
-    transform: rotate(-90deg);
-  }
-  
-  .rectangle_31 {
-    transform: rotate(-90deg);
-  }
-  
-  .frame_2 {
-    gap: -0.1px;
-  }
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+.rectangle_3 {
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.rectangle_12 {
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.rectangle_8 {
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.rectangle_9 {
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.rectangle_10 {
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.rectangle_11 {
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.group_11-1 {
+  transform: rotate(90deg);
+}
+
+.rectangle_5 {
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.rectangle_32 {
+  transform: rotate(-90deg);
+}
+
+.group_49 {
+  transform: rotate(-90deg);
+}
+
+.group_50 {
+  transform: rotate(-90deg);
+}
+
+.rectangle_11-1 {
+  transform: rotate(90deg);
+  fill: #F6F6F6;
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
+}
+
+.canvas {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.print {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.rectangle_24 {
+  box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.25);
+}
+
+.rectangle_23 {
+  box-shadow: 0px 0px 14px 2px rgba(0, 0, 0, 0.25);
+}
+
+.group_44 {
+  transform: rotate(90deg);
+}
+
+.rectangle_30 {
+  transform: rotate(-90deg);
+}
+
+.rectangle_31 {
+  transform: rotate(-90deg);
+}
+
+.frame_2 {
+  gap: -0.1px;
+}
+
+/* Remove scroll arrows for WebKit (Chrome, Safari, etc.) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

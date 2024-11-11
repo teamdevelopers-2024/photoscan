@@ -679,12 +679,13 @@ const getGraphData = async (req, res) => {
       products?.forEach(productList => {
         productList.forEach(product => {
           // Assuming the product has a category field, adjust if necessary
-          const categoryName = product.category;
+          const categoryName = product.productId.category;
+          console.log("products category" , product)
 
           if (!categoryData[categoryName]) {
             categoryData[categoryName] = 0; // Initialize category sales if not present
           }
-          categoryData[categoryName] += product.price; // Add the product price to the corresponding category
+          categoryData[categoryName] += product.productId.offerPrice; // Add the product price to the corresponding category
         });
       });
       categoryNames = Object.keys(categoryData)

@@ -240,14 +240,15 @@ async function addToCart(body) {
 
 async function getCart(id) {
   try {
-
-    const response = await apiClient.get(`/getCart?userid=${id}`)
-
-    return response.data
+    const response = await apiClient.get(`/getCart?userid=${id}`);
+    console.log('Cart Data:', response.data);  // Log response data for debugging
+    return response.data;
   } catch (error) {
-    return error.response.data
+    console.error('Error fetching cart:', error.response || error);  // Log the error details
+    return error.response ? error.response.data : { message: 'An error occurred' };
   }
 }
+
 
 async function addAddress(data) {
   try {
@@ -272,7 +273,7 @@ async function getAddress(id) {
 }
 
 
-async function deleteCartItem(itemId, userId,publicId) {
+async function deleteCartItem(itemId, userId, publicId) {
   try {
     const response = await apiClient.delete(`/deleteCartItem?itemId=${itemId}&userId=${userId}&publicId=${publicId}`)
     return response.data

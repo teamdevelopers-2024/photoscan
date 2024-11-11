@@ -13,14 +13,15 @@ const cartSchema = new mongoose.Schema(
                 productId: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Product", // Reference to the Product model
-                    required: true,
+                    // required: true,
                 },
                 images: [{  // Changed from images to a single image
                     secureUrl: String,
                     publicId: String,
                 }],
                 textInput: [{}],
-                LogoImage : {}
+                LogoImage : {},
+                productPrice:{},
             },
 
         ],

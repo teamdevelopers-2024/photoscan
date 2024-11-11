@@ -18,6 +18,7 @@ import CartDb from "../model/cartModel.js";
 import OrderDb from "../model/orderModal.js";
 
 import { v4 as uuidv4 } from 'uuid';
+import { log } from "console";
 
 const login = async (req, res) => {
   try {
@@ -696,13 +697,15 @@ const addToCart = async (req, res) => {
       productId,
       inputTexts,
       images,
-      LogoImage
+      LogoImage,
+      selectedFrame,
+      orientation,
     } = req.body; // Destructure the data from req.body
 
     // Validate input
-    if (!productId) {
-      return res.status(400).json({ error: true, message: 'Product ID(s) are required.' });
-    }
+    // if (!productId) {
+    //   return res.status(400).json({ error: true, message: 'Product ID(s) are required.' });
+    // }
 
     // Convert productId to ObjectId
     const productObjectId = new mongoose.Types.ObjectId(productId);
@@ -719,6 +722,8 @@ const addToCart = async (req, res) => {
           images: images, // Array of image URLs with publicId
           textInput: inputTexts, // Array of text inputs
           LogoImage,
+          selectedFrame: selectedFrame,
+          orientation: orientation,
         }],
       });
     } else {
@@ -728,10 +733,13 @@ const addToCart = async (req, res) => {
         images,
         textInput: inputTexts,
         LogoImage,
+        selectedFrame: selectedFrame,
+        orientation: orientation,
       });
     }
 
     await cart.save(); // Save the cart
+    console.log("saved item", cart)
 
     res.status(200).json({ error: false, message: 'Products added to cart successfully' });
   } catch (error) {
@@ -743,14 +751,21 @@ const addToCart = async (req, res) => {
 
 async function getCart(req, res) {
   try {
-    const userId = req.query.userid; // Get the user ID from the query
+    const userId = req.query.userid;
+
+    // Validate the userId
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: true, message: 'Invalid or missing userId' });
+    }
+    console.log("Before Cart Finding")
+    const cartItemss = await CartDb.find({})
+    console.log("After Cart Finding", cartItemss[0].items)
+    console.log("before aggregation");
 
     // Use aggregation to fetch cart items and their associated product details
     const cartData = await CartDb.aggregate([
       { $match: { userId: new mongoose.Types.ObjectId(userId) } }, // Match cart by user ID
-      {
-        $unwind: "$items" // Deconstruct the items array
-      },
+      { $unwind: "$items" }, // Deconstruct the items array
       {
         $lookup: {
           from: "products", // Name of the products collection
@@ -759,23 +774,21 @@ async function getCart(req, res) {
           as: "productDetails" // Output array field
         }
       },
+      { $unwind: { path: "$productDetails", preserveNullAndEmptyArrays: true } }, // Deconstruct the productDetails array
       {
-        $unwind: { // Deconstruct the productDetails array
-          path: "$productDetails",
-          preserveNullAndEmptyArrays: true // Include cart items even if no product found
-        }
-      },
-      {
-        $project: { // Project fields to include in the output
+        $project: {
           _id: 1,
           userId: 1,
           "items.productId": 1,
-          "items.image": 1,
+          "items.images": { $ifNull: ["$items.images", ""] },
           "items.textInput": 1,
           "items._id": 1,
-          "productDetails.productName": "$productDetails.productName",
-          "productDetails.offerPrice": "$productDetails.offerPrice",
-          "productDetails.image": { $arrayElemAt: ["$productDetails.images", 0] } // Get the first image
+          "productDetails.productName": 1,
+          "productDetails.offerPrice": 1,
+          "productDetails.image": { $arrayElemAt: ["$productDetails.images", 0] }, // Get the first image
+
+
+
         }
       },
       {
@@ -787,22 +800,23 @@ async function getCart(req, res) {
               itemId: "$items._id",
               productId: "$items.productId",
               givenText: "$items.textInput",
-              givenImage: "$items.image",
+              givenImage: "$items.images",
               productImage: "$productDetails.image",
               productName: "$productDetails.productName",
-              productprice: "$productDetails.offerPrice"
+              productPrice: "$productDetails.offerPrice",
             }
           }
         }
       }
     ]);
 
-
     // If no cart found, respond accordingly
     if (!cartData || cartData.length === 0) {
-      return res.status(404).json({ error: true, message: 'Cart not found' });
+
+      return res.status(404).json({ error: true, message: `Cart not found ${cartData}` });
     }
 
+    console.log("after Aggregation", cartData[0])
     // Respond with enriched cart data
     res.status(200).json({ error: false, message: 'Cart Items Fetched Successfully', cartData: cartData[0] });
   } catch (error) {
@@ -810,6 +824,7 @@ async function getCart(req, res) {
     res.status(500).json({ error: true, message: 'Internal server error' });
   }
 }
+
 
 
 async function deleteCartItem(req, res) {

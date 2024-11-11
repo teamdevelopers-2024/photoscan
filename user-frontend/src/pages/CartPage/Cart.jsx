@@ -9,6 +9,7 @@ import Modal from "./previewModal";
 import Swal from "sweetalert2";
 import Loader from "../../components/loader/Loader";
 import { useNavigate } from "react-router-dom";
+import chooseImage from '../../assets/choose_image.png'
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]); // Initialize as an empty array
@@ -25,7 +26,7 @@ function Cart() {
       setIsLoading(true);
       const response = await api.getCart(userId); // Fetch cart data
       const data = response?.cartData?.items || [];
-      console.log(data);
+      console.log("fetched dataassss",response);
 
       setCartItems(data); // Set the cart items in the state
     } catch (error) {
@@ -40,15 +41,23 @@ function Cart() {
     }
   }, [user, updateCart]);
   async function deleteFromCloud(itemId,publicId) {
+    console.log(publicId,"delete Called")
     try {
       setIsLoading(true);
-      cloudinary.uploader.destroy(publicId, function (error, result) {
-        if (error) {
-          console.error('Error deleting image:', error);
-        } else {
-          console.log('Delete result:', result);
-        }
-      });
+      if (publicId) {
+        // Wrap the cloudinary.uploader.destroy call in a promise to ensure it finishes before proceeding
+        await new Promise((resolve, reject) => {
+          cloudinary.uploader.destroy(publicId, (error, result) => {
+            if (error) {
+              console.error('Error deleting image:', error);
+              reject(error); // Reject the promise if there's an error
+            } else {
+              console.log('Delete result:', result);
+              resolve(result); // Resolve the promise if the image is deleted successfully
+            }
+          });
+        });
+      }
 
       // 
       await deleteFromCart(itemId);
@@ -95,9 +104,10 @@ function Cart() {
   };
 
   const handlePreviewClick = (item) => {
+    console.log(item,'hshjdjk')
     setPreviewData({
       image: item.givenImage,
-      text: item.givenText, // You can customize this to show any text
+      // text: item.givenText, // You can customize this to show any text
     });
     setModalOpen(true);
   };
@@ -180,14 +190,14 @@ function Cart() {
                   className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gray-50 p-4 rounded-lg shadow"
                 >
                   <img
-                    src={item.productImage} // Get image from item
+                    src={item.productImage ?? chooseImage} // Get image from item
                     alt={item.productName} // Use productName as alt text
                     className="w-20 h-20 rounded-lg"
                   />
                   <div className="flex-1 ml-4 text-center sm:text-left">
                     <h2 className="text-lg font-bold">{item.productName}</h2>
                     <p className="text-sm text-gray-600">
-                      Price: ₹{item.productprice}
+                      Price: ₹{item.productPrice ?? 0}
                     </p>
                   </div>
                   <div className="flex items-center space-x-4 mt-2 sm:mt-0">
@@ -220,7 +230,7 @@ function Cart() {
               <span className="text-xl font-bold">
                 ₹
                 {cartItems
-                  .reduce((total, item) => total + item.productprice, 0)
+                  .reduce((total, item) => total + item.productPrice , 0)
                   .toFixed(2)}
               </span>
             </div>
@@ -238,7 +248,7 @@ function Cart() {
         isOpen={modalOpen}
         onClose={handleCloseModal}
         image={previewData.image}
-        text={previewData.text}
+        // text={previewData.text}
       />
     </>
   );
