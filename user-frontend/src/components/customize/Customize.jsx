@@ -456,7 +456,7 @@ const Customize = () => {
                     {/* Button to toggle between dropdown and custom size input fields */}
                     <button
                       onClick={() => setIsCustomSize(!isCustomSize)}
-                      className="p-2 bg-blue-500 text-white rounded-md"
+                      className="p-2 bg-blue-500 text-white rounded-md text-[80%]"
                       >
                       {isCustomSize ? "Standard Size" : "Custom Size"}
                     </button>
