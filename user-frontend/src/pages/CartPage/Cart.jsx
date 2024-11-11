@@ -178,7 +178,7 @@ function Cart() {
       {isloading && <Loader />}
       <Header />
       <div className="bg-gray-100 h-[100vh] flex flex-col p-10 md:flex-row">
-        <div className="bg-white rounded-lg h-[79vh] shadow-lg p-4 flex-1 overflow-y-scroll">
+        <div className="bg-white rounded-lg  md:h-[79vh] shadow-lg p-4 flex-1 overflow-y-scroll">
           <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
           <div className="space-y-4">
             {cartItems.length === 0 ? ( // Check if there are no items
@@ -187,7 +187,7 @@ function Cart() {
               cartItems.map((item) => (
                 <div
                   key={item._id} // Use item's unique ID for key
-                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gray-50 p-4 rounded-lg shadow"
+                  className="flex flex-row items-start sm:items-center justify-between bg-gray-50 p-4 rounded-lg shadow"
                 >
                   <img
                     src={item.productImage ?? chooseImage} // Get image from item

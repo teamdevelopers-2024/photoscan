@@ -124,7 +124,7 @@ export default function FeaturedProducts() {
                 </div>
               ))
             ) : (
-              <div>Loading products...</div> // Optional loading state
+              <div></div>
             )}
           </Slider>
         </div>

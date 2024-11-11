@@ -3,12 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import Loader from "../loader/Loader";
 
-export default function ProductFilter({activeFilters , catFilter , sortOptionFilter}) {
+export default function ProductFilter({activeFilters , catFilter ,setLoading ,loading, sortOptionFilter}) {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   let cat = searchParams.get("catName");
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1)
@@ -62,16 +61,10 @@ useEffect(() => {
   }
 
 
-  useEffect(() => {
-
-      document.body.style.overflow = 'auto';
-    
-
-  }, []);
-
   return (
     <>
     
+             
     <div className="bg-gray-50">
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
         <section aria-labelledby="products-heading" className="pb-12 pt-6">
@@ -81,7 +74,6 @@ useEffect(() => {
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2">
             <div className="lg:col-span-3">
               <div className="bg-white p-6 rounded-lg md:max-h-[820px] shadow-lg mb-6">
-              {loading && <Loader product={true} />}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
                   {products.map((product) => (
                     <div

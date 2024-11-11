@@ -109,7 +109,7 @@ const Header = () => {
           <FaShoppingBag onClick={()=> navigate("/myorder")} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
           <div
             className="relative h-auto"
-            onMouseEnter={toggleCartDropdown}
+            // onMouseEnter={toggleCartDropdown}
             onClick={() => navigate("/cart")}
           >
             <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
@@ -157,7 +157,7 @@ const Header = () => {
               <FaUser onClick={() => navigate('/profile')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               <FaShoppingBag onClick={()=> navigate("/myorder")} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
 
-              <div className="relative" onClick={toggleCartDropdown}>
+              <div className="relative" onClick={()=> navigate("/cart")}>
                 <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
               </div>
             </div>
@@ -198,10 +198,10 @@ const Header = () => {
             onClick={handleUserClick}
             className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110"
           />
-          <Link to="">
+          <Link to="/myorder">
             <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
           </Link>
-          <div className="relative h-auto" onClick={toggleCartDropdown}>
+          <div className="relative h-auto" onClick={()=> navigate("/cart")}>
             <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
             {isCartDropdownOpen && <CartDropdown />}
           </div>
