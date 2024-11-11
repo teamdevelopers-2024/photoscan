@@ -2,21 +2,21 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true; 
 
-// const apiClient = axios.create({
-//   baseURL: 'https://api.photoscan.co.in/user',
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-
-// });
-
-
 const apiClient = axios.create({
-  baseURL: 'http://localhost:4000/user',
+  baseURL: 'https://api.photoscan.co.in/user',
   headers: {
     'Content-Type': 'application/json',
-  }
+  },
+
 });
+
+
+// const apiClient = axios.create({
+//   baseURL: 'http://localhost:4000/user',
+//   headers: {
+//     'Content-Type': 'application/json',
+//   }
+// });
 
 // Function to handle token refresh
 const refreshToken = async () => {

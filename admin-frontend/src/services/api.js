@@ -4,20 +4,20 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 
-const apiClient = axios.create({
-    baseURL: 'http://localhost:4000/admin',
-    headers: {
-              'Content-Type': 'application/json',
-            },
-});
-
-
 // const apiClient = axios.create({
-//     baseURL: 'https://api.photoscan.co.in/admin',
+//     baseURL: 'http://localhost:4000/admin',
 //     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   });
+//               'Content-Type': 'application/json',
+//             },
+// });
+
+
+const apiClient = axios.create({
+    baseURL: 'https://api.photoscan.co.in/admin',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
 // Centralized helper function for making API requests
 const apiRequest = async (method, url, data = null) => {
