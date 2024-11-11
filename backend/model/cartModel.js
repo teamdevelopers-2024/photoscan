@@ -19,10 +19,6 @@ const cartSchema = new mongoose.Schema(
                     secureUrl: String,
                     publicId: String,
                 }],
-                orientation:{
-                    type:String,
-                },
-                selectedFrame:{},
                 textInput: [{}],
                 LogoImage : {},
                 productPrice:{},

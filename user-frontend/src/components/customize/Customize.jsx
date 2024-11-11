@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import Header from "../Header/Header";
 import Previews from "../Preview/Preview";
@@ -13,22 +13,32 @@ import imgLan from '../../assets/frames/oriantaion-lanscape.jpg';
 import imgSqr from '../../assets/frames/oriantation-square.jpg';
 import chooseimage from '../../assets/choose_image.png';
 import { FaCartPlus } from "react-icons/fa";
+import { FaWhatsapp } from "react-icons/fa";
 import api from "../../services/api";
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
+import html2canvas from 'html2canvas'
+import SizeDropdown from "./SizeDropdown";
 
 const Customize = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [frameOrientation, setFrameOrientation] = useState("Landscape");
   const [imageOrientation, setImageOrientation] = useState(`${frameOrientation}-Landscape`);
-  const [imageCount, setImageCount] = useState(2);
+  const [imageCount, setImageCount] = useState(1);
   const [paperType, setPaperType] = useState("matte");
   const [frameColor, setFrameColor] = useState("Black");
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [selectedFrame, setSelectedFrame] = useState(blackBorder);
   const [uploadedImages, setUploadedImages] = useState(Array(4).fill(chooseimage));
-  const [loading,setLoading] =useState(false)
+  const [loading, setLoading] = useState(false)
+  const [sizeOfFrame, setSizeOfFrame] = useState(1)
+  const [isCustomSize, setIsCustomSize] = useState(false)
+  const [selectedSize, setSelectedSize] = useState()
+  const [customWidth, setCustomWidth] = useState()
+  const [customHeight, setCustomHeight] = useState()
   const user = useSelector((state) => state.user.user);
+  const divRef = useRef(null)
+  const canvasREf = useRef(null)
 
   const borderlist = [blackBorder, oakBorder, whiteBorder];
   // const images = [
@@ -44,6 +54,33 @@ const Customize = () => {
   ];
 
   const imgOriantation = [imgLan, imgPtr, imgSqr];
+  const sizes = [
+    [
+      "5x7",
+      '6x4',
+      '8x6',
+      "10x8",
+      "12x8",
+      "12x10",
+      "12x15",
+      "12x18",
+      "15x10",
+      "15x12",
+      "16x12",
+      "18x12",
+      "20x16",
+      "24x16",
+      "24x18",
+      "24x20",
+      "24x30",
+      "24x36",
+      "30x20",
+    ],
+    [
+      "12x12",
+      "16x16",
+    ],
+  ]
 
   // const goToPrevious = () => {
   //   const isFirstSlide = currentIndex === 0;
@@ -86,18 +123,18 @@ const Customize = () => {
     }
 
     if (frameOrientation === "Landscape" && imageOrientation === "Landscape-Portrait") {
-      frameWidth = baseWidth;
-      frameHeight = baseHeight * 1.5;
+      frameWidth = baseWidth * 0.85;
+      frameHeight = baseHeight * 1.2;
     } else if (frameOrientation === "Landscape" && imageOrientation === "Landscape-Landscape") {
-      frameWidth = baseWidth * 1.6;
-      frameHeight = baseHeight * .9;
+      frameWidth = baseWidth * 1.1;
+      frameHeight = baseHeight * .6;
 
     } else if (frameOrientation === "Portrait" && imageOrientation === "Portrait-Portrait") {
       frameWidth = baseWidth * 0.9;
       frameHeight = baseHeight * 1.2;
     } else if (frameOrientation === "Portrait" && imageOrientation === "Portrait-Landscape") {
       frameWidth = baseWidth * 1.2;
-      frameHeight = baseHeight * 0.8;
+      frameHeight = baseHeight * 0.7;
     } else {
       frameWidth = baseWidth;
       frameHeight = baseHeight;
@@ -109,6 +146,13 @@ const Customize = () => {
   useEffect(() => {
     setImageOrientation(`${frameOrientation}-Landscape`);
     setImageCount(1);
+    if (frameOrientation === "Square") {
+      setSizeOfFrame(1)
+    }
+    else {
+      setSizeOfFrame(0)
+    }
+
   }, [frameOrientation]);
 
   useEffect(() => {
@@ -116,19 +160,22 @@ const Customize = () => {
     const { widthF, heightF } = getFrameDimensions();
     setWidth(widthF);
     setHeight(heightF);
+    console.log(sizes.Square, 'sizes')
     setImageOrientation(imageOrientation)
+    getImageGridClass()
   }, [imageOrientation, imageCount]);
 
   const getImageGridClass = () => {
+    console.log("imageCOunt :",)
     if (frameOrientation === "Square") {
-      if (imageCount === 2) return "grid grid-cols-2 grid-rows-1";
-      if (imageCount === 3) return "grid grid-cols-2 grid-rows-2";
-      if (imageCount === 4) return "grid grid-rows-2 grid-cols-2";
+      if (imageCount === 2) return "grid-cols-2 grid-rows-1";
+      if (imageCount === 3) return "grid-cols-2 grid-rows-2";
+      if (imageCount === 4) return "grid-rows-2 grid-cols-2";
     }
     if (frameOrientation === "Landscape") {
-      return `grid grid-cols-${imageCount}`
+      return `grid-cols-${imageCount} `
     }
-    return `grid grid-rows-${imageCount}`;
+    return `grid-rows-${imageCount}`;
   };
 
   const handleImageUpload = (index, event) => {
@@ -147,116 +194,148 @@ const Customize = () => {
   };
 
 
-  const addToCart = async (id) => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
+  // const addToCart = async (id) => {
+  //   if (!user) {
+  //     navigate("/login");
+  //     return;
+  //   }
 
-    if (uploadedImages.filter(img => img !== chooseimage).length !== imageCount) {
-      alert(`Please upload ${imageCount} images before adding to cart.`);
-      return;
-    }
+  //   if (uploadedImages.filter(img => img !== chooseimage).length !== imageCount) {
+  //     alert(`Please upload ${imageCount} images before adding to cart.`);
+  //     return;
+  //   }
 
-    const userId = user._id;
-    const productId = id;
-    const selectedFiles = uploadedImages.filter(img => img !== chooseimage)
-    let uploadedCustomImages = []
+  //   const userId = user._id;
+  //   const productId = id;
+  //   const selectedFiles = uploadedImages.filter(img => img !== chooseimage)
+  //   let uploadedCustomImages = []
 
-    if (selectedFiles && selectedFiles.length) {
-      try {
-        setLoading(true)
+  //   if (selectedFiles && selectedFiles.length) {
+  //     try {
+  //       setLoading(true)
 
-        for (const file of selectedFiles) {
-          const formData = new FormData();
-          formData.append("file", file);
-          formData.append("upload_preset", "cloud_name");
+  //       for (const file of selectedFiles) {
+  //         const formData = new FormData();
+  //         formData.append("file", file);
+  //         formData.append("upload_preset", "cloud_name");
 
-          try {
-            const response = await fetch(
-              "https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload",
-              {
-                method: "POST",
-                body: formData,
-              }
-            );
+  //         try {
+  //           const response = await fetch(
+  //             "https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload",
+  //             {
+  //               method: "POST",
+  //               body: formData,
+  //             }
+  //           );
 
-            const data = await response.json();
+  //           const data = await response.json();
 
-            if (response.ok) {
-              const imageDetails = {
-                publicId: data.public_id,
-                secureUrl: data.secure_url
-              };
-              uploadedCustomImages.push(imageDetails); // Store each image's details
-            } else {
-              console.error("Image upload failed for one file:", data);
-            }
-          } catch (error) {
-            console.error("Error during upload:", error);
-          }
-        }
+  //           if (response.ok) {
+  //             const imageDetails = {
+  //               publicId: data.public_id,
+  //               secureUrl: data.secure_url
+  //             };
+  //             uploadedCustomImages.push(imageDetails); // Store each image's details
+  //           } else {
+  //             console.error("Image upload failed for one file:", data);
+  //           }
+  //         } catch (error) {
+  //           console.error("Error during upload:", error);
+  //         }
+  //       }
 
-        console.log("All uploaded images:", uploadedCustomImages);
-      } catch (error) {
-        console.error("Error adding image to Cloudinary:", error);
-      }
-      finally{
-        setLoading(false)
-      }
-    }
+  //       console.log("All uploaded images:", uploadedCustomImages);
+  //     } catch (error) {
+  //       console.error("Error adding image to Cloudinary:", error);
+  //     }
+  //     finally {
+  //       setLoading(false)
+  //     }
+  //   }
 
-    const formData = {
-      selectedFrame:frameColor,
-      userId,
-      images: uploadedCustomImages,
-      orientation:imageOrientation
-    };
-    console.log("this is formdata : ", formData)
+  //   const formData = {
+  //     selectedFrame: frameColor,
+  //     userId,
+  //     images: uploadedCustomImages,
+  //     orientation: imageOrientation
+  //   };
+  //   console.log("this is formdata : ", formData)
 
-    try {
-      const response = await api.addToCart(formData);
+  //   try {
+  //     const response = await api.addToCart(formData);
 
-      if (!response.error) {
-        console.log("item added to cart : ",response)
-        Swal.fire({
-          icon: "success",
-          title: "Success!",
-          text: "Item added to cart successfully!",
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-        });
-      } else {
-        console.log("failed to add",response)
-        Swal.fire({
-          icon: "error",
-          title: "Failed!",
-          text: "Failed to add item to cart.",
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-        });
-      }
-    } catch (error) {
-      console.error("Error adding item to cart:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text: "An unexpected error occurred. Please try again.",
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
+  //     if (!response.error) {
+  //       console.log("item added to cart : ", response)
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "Success!",
+  //         text: "Item added to cart successfully!",
+  //         toast: true,
+  //         position: "top-end",
+  //         showConfirmButton: false,
+  //         timer: 3000,
+  //         timerProgressBar: true,
+  //       });
+  //     } else {
+  //       console.log("failed to add", response)
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Failed!",
+  //         text: "Failed to add item to cart.",
+  //         toast: true,
+  //         position: "top-end",
+  //         showConfirmButton: false,
+  //         timer: 3000,
+  //         timerProgressBar: true,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding item to cart:", error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error!",
+  //       text: "An unexpected error occurred. Please try again.",
+  //       toast: true,
+  //       position: "top-end",
+  //       showConfirmButton: false,
+  //       timer: 3000,
+  //       timerProgressBar: true,
+  //     });
+  //   }
+  //   finally {
+  //     setLoading(false)
+  //   }
+  // };
+
+
+  const makeOrderOnWhatsapp = async () => {
+    if (divRef.current) {
+      const canvas = await html2canvas(divRef.current);
+      const imageUrl = canvas.toDataURL("image/png");
+
+      // Create a temporary link to download the image
+      const downloadLink = document.createElement("a");
+      downloadLink.href = imageUrl;
+      downloadLink.download = "customized-frame.png";
+      downloadLink.click();
+
+      // Show SweetAlert with a message and buttons for WhatsApp redirection
+      const swalResult = await Swal.fire({
+        title: 'Your frame is ready!',
+        text: 'The image has been downloaded to your device. Please send it to us for reference on WhatsApp.',
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Go to WhatsApp',
+        cancelButtonText: 'Cancel',
+        timer: 5000, // automatically closes in 5 seconds
+        timerProgressBar: true
       });
-    }
-    finally {
-      setLoading(false)
+
+      console.log(swalResult, "this is swalresult")
+      // If the user clicks the 'Go to WhatsApp' button, open WhatsApp with the message
+      if (swalResult.isConfirmed || swalResult.isDismissed) {
+        window.open(`https://wa.me/+919037317210?text=I%20want%20to%20buy%20this%20customized%20frame.%0AFrame%20Color%3A%20${frameColor}.%0APaper%20Type%3A%20${paperType}%0AHere%20is%20the%20image%20for%20reference.`, "_blank");
+      }
     }
   };
 
@@ -266,12 +345,12 @@ const Customize = () => {
         <Header />
       </header>
       <div className="justify-evenly md:flex md:bg-gray-100">
-        <div className="flex flex-col items-center justify-evenly">
+        <div ref={divRef} className="flex flex-col items-center justify-evenly">
           <div
             style={{ borderImage: `url(${selectedFrame}) 10 round` }}
-            className="border-8 bg-white flex items-center justify-around drop-shadow-2xl shadow-gray-600 h-auto w-auto"
+            className="border-8 border- bg-white flex items-center justify-around drop-shadow-2xl shadow-gray-600 h-auto w-auto"
           >
-            <div className={`${getImageGridClass()} pl-2 pb-2`}>
+            <div className={`grid ${getImageGridClass()}  pl-2 pb-2`}>
               {Array.from({ length: imageCount }, (_, index) => (
                 <div
                   key={index}
@@ -373,6 +452,63 @@ const Customize = () => {
                     ))}
                   </div>
                 </div>
+                <div className="flex gap-3 items-center">
+                  <label htmlFor="size-dropdown" className="mt-3">Select Size:</label>
+
+                  {/* Conditionally render either the dropdown or custom size input fields */}
+                  {isCustomSize ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-24">
+                        <input
+                          type="text"
+                          value={customWidth}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            // Allow only numbers by using a regular expression
+                            if (/^\d*$/.test(value) && (value === "" || parseInt(value) <= 99)) {
+                              setCustomWidth(value);
+                            }
+                          }}
+                          placeholder="Width (cm)"
+                          className="border w-full rounded-md placeholder:text-[80%]" // Set width to 16
+                        />
+                      </div>
+                      <span>x</span>
+                      <div className="w-24">
+                        <input
+                          type="text"
+                          value={customHeight}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            // Allow only numbers by using a regular expression
+                            if (/^\d*$/.test(value) && (value === "" || parseInt(value) <= 99)) {
+                              setCustomHeight(value);
+                            }
+                          }}
+                          placeholder="Height (cm)"
+                          className="border rounded-md w-full placeholder:text-[74%]"
+                        />
+
+                      </div>
+                    </div>
+                  ) : (
+                    <SizeDropdown
+                      selectedSize={selectedSize}
+                      setSelectedSize={setSelectedSize}
+                      sizeOfFrame={sizeOfFrame}
+                      sizes={sizes}
+                    />
+                  )}
+
+                  {/* Button to toggle between dropdown and custom size input fields */}
+                  <button
+                    onClick={() => setIsCustomSize(!isCustomSize)}
+                    className="p-2 bg-blue-500 text-white rounded-md"
+                  >
+                    {isCustomSize ? "Standard Size" : "Custom Size"}
+                  </button>
+                </div>
+
                 <div>
                   <h2 className="text-xl font-bold mb-2">Frame Color</h2>
                   <div className="flex space-x-4">
@@ -391,28 +527,19 @@ const Customize = () => {
                       </div>
                     ))}
                   </div>
-                    <div className="w-full flex gap-10 justify-between">
-                      <button
-                        onClick={() => addToCart()}
-                        className="mt-4 max-h-14 flex items-center justify-center sm:justify-start space-x-2 w-1/2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[rgb(211,184,130)] hover:bg-[rgb(188,157,124)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgb(188,157,124)]"
-                      >
-                        <div className="flex items-center gap-2 p-2  rounded-lg w-32 h-10 cursor-pointertransition-colors duration-200">
-                          <p className="text-sm font-semibold w-full">Add to cart</p>
-                          <FaCartPlus className="w-5 h-5" />
-                        </div>
 
-                      </button>
-
-                      <div className="flex gap-4 h-14">
-                        <div className="mt-4 flex justify-center sm:justify-start space-x-3 bg-zinc-300 p-2 rounded-lg">
-                          {/* <img className="w-5 h-5" src={share} alt="Share" /> */}
-                          <span className="text-zinc-500 text-xl font-['Lato']">
-                            |
-                          </span>
-                          {/* <img className="w-6 h-6" src={favourite} alt="Favourite" /> */}
-                        </div>
+                  <div className="w-full flex justify-between">
+                    <button
+                      onClick={() => makeOrderOnWhatsapp()}
+                      // onClick={()=>convertDivToCanvas()}
+                      className="mt-4 max-h-14 flex items-center justify-center sm:justify-start py-2 px-6 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600 transition-transform duration-300 ease-out transform hover:scale-105 hover:shadow-[0px_0px_15px_rgba(50,205,50,0.5)]"
+                    >
+                      <div className="flex items-center gap-2 p-2 rounded-lg cursor-pointer">
+                        <FaWhatsapp className="w-5 h-5 animate-pulse" />
+                        <p className="text-sm font-semibold">Make Order on WhatsApp</p>
                       </div>
-                    </div>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

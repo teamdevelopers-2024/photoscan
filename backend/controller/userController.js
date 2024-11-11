@@ -767,8 +767,6 @@ async function getCart(req, res) {
           "productDetails.productName": 1,
           "productDetails.offerPrice": 1,
           "productDetails.image": { $arrayElemAt: ["$productDetails.images", 0] }, // Get the first image
-          "items.selectedFrame": { $ifNull: ["$items.selectedFrame", ""] },
-          "items.orientation": { $ifNull: ["$items.orientation", ""] },
 
 
 
@@ -787,8 +785,6 @@ async function getCart(req, res) {
               productImage: "$productDetails.image",
               productName: "$productDetails.productName",
               productPrice: "$productDetails.offerPrice",
-              selectedFrame: "$items.selectedFrame",
-              orientation: "$items.orientation",
             }
           }
         }

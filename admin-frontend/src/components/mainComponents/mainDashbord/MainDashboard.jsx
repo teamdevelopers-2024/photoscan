@@ -44,6 +44,7 @@ function MainDashbord() {
   const fetchSalesData = async () => {
     try {
       const response = await api.getGraphData();
+      console.log('fetched sales data',response.data)
       setSalesData(response.data);
       setTopSellingProducts(response.data.topSellingProducts);
       console.log(response.data.topSellingProducts);
