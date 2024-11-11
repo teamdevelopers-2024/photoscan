@@ -124,6 +124,7 @@ function SingleProduct() {
       navigate("/login");
       return;
     }
+    
 
     const validateInputFields = () => {
       return state.inputFields.every(field => field.value.trim() !== "");
@@ -145,10 +146,10 @@ function SingleProduct() {
     const productId = id;
     const { textInput, selectedFiles } = state;
     let uploadedImages = []
+    setLoading(true)
 
     if (selectedFiles && selectedFiles.length) {
       try {
-        setLoading(true)
 
         for (const file of selectedFiles) {
           const formData = new FormData();
@@ -212,8 +213,10 @@ function SingleProduct() {
         } else {
           console.error("Image upload failed for one file:", data);
         }
+        setLoading(false)
 
       } catch (error) {
+        setLoading(false)
         console.log('something went wrong : ', error)
       }
 
@@ -304,7 +307,7 @@ function SingleProduct() {
       <Header />
       <div className="min-h-screen">
         <main className="w-full justify-center p-4">
-          <div className="flex justify-evenly relative w-full p-4">
+          <div className="md:flex block justify-evenly relative w-full p-4">
             <div>
               {/* Product and Thumbnail Images */}
               <img
@@ -314,7 +317,7 @@ function SingleProduct() {
                 }
                 alt="Product"
               />
-              <div className="flex justify-center mt-10 space-x-2 sm:space-x-4">
+              <div className="flex justify-center mt-10  space-x-2 sm:space-x-4">
                 {state.product &&
                   state.product.images.map((pic, idx) => (
                     <img

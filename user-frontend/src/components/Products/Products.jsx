@@ -17,6 +17,7 @@ import ProductFilter from './ProductFilter';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import api from '../../services/api';
+import Loader from '../loader/Loader';
 
 const sortOptions = [
   { name: 'Newest', href: '#', current: false },
@@ -37,6 +38,7 @@ export default function Products() {
   const [catFilter , setCateFilter ] = useState(undefined)
   const [sortOptionFilter , setSortOptionFilter ] = useState(undefined)
   const [subCategories, setSubCategories] = useState([]);
+  const [loading , setLoading ] = useState(false)
 
   useEffect(() => {
     // Initialize active filters with checked values on mount
@@ -95,6 +97,7 @@ export default function Products() {
   return (
     <>
       <Header />
+      {loading && <Loader />}
       <div className="bg-white w-full">
         <div>
           {/* Mobile filter dialog */}
@@ -248,7 +251,7 @@ export default function Products() {
 
                 {/* Product grid */}
                 <div className="lg:col-span-3">
-                  <ProductFilter activeFilters={activeFilters} catFilter={catFilter} sortOptionFilter={sortOptionFilter} />
+                  <ProductFilter activeFilters={activeFilters} loading={loading} setLoading={setLoading} catFilter={catFilter} sortOptionFilter={sortOptionFilter} />
                 </div>
               </div>
             </section>
