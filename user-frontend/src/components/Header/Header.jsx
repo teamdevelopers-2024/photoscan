@@ -76,7 +76,7 @@ const Header = () => {
     <>
       <header
         ref={headerRef}
-        className="flex justify-between items-center fixed shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white bg-opacity-5 z-50"
+        className="flex justify-between items-center fixed shadow-2xl w-full h-[72px] p-2 md:p-4 bg-white z-50"
       >
         <Link to="/">
           <div className="w-[8rem] md:w-[12rem]">
@@ -106,9 +106,7 @@ const Header = () => {
             onClick={handleUserClick}
             className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110"
           />
-          <Link to="/wishlist">
-            <FaHeart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-          </Link>
+          <FaShoppingBag onClick={()=> navigate("/myorder")} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
           <div
             className="relative h-auto"
             onMouseEnter={toggleCartDropdown}
@@ -157,8 +155,7 @@ const Header = () => {
             </ul>
             <div className="flex justify-center items-center gap-4 p-4 text-[1rem] mt-auto">
               <FaUser onClick={() => navigate('/profile')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-              <FaHeart onClick={() => navigate('/wishlist')} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
-              <FaShoppingBag className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
+              <FaShoppingBag onClick={()=> navigate("/myorder")} className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
 
               <div className="relative" onClick={toggleCartDropdown}>
                 <FaShoppingCart className="hover:text-[#4d4d4d] transition-transform duration-300 cursor-pointer transform scale-100 hover:scale-110" />
@@ -301,6 +298,7 @@ const Header = () => {
                 {products[index]?.slice(0, 5).map((product, subIndex) => (
                   <div
                     key={subIndex}
+                    onMouseDown={()=> navigate(`/singleProduct?id=${product._id}`)}
                     className="text-[12px] cursor-pointer hover:text-[#333333] hover:scale-105 transform py-1 transition-all duration-200"
                   >
                     {product.productName}

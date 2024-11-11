@@ -86,6 +86,7 @@ export const sendOPTVerificationEmail = async (email) => {
         };
     } catch (error) {
         console.log(error);
+        console.log("getting here catch")
         return {
             error: true,
             status: "CANCELED",

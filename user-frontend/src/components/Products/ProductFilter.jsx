@@ -61,6 +61,14 @@ useEffect(() => {
      navigate(`/singleProduct?id=${id}`)
   }
 
+
+  useEffect(() => {
+
+      document.body.style.overflow = 'auto';
+    
+
+  }, []);
+
   return (
     <>
     
@@ -70,7 +78,6 @@ useEffect(() => {
           <h2 id="products-heading" className="sr-only">
             Products
           </h2>
-
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2">
             <div className="lg:col-span-3">
               <div className="bg-white p-6 rounded-lg md:max-h-[820px] shadow-lg mb-6">
@@ -101,26 +108,7 @@ useEffect(() => {
                         </p>
 
                         {/* Rating Section */}
-                        <div className="flex items-center mt-2">
-                          <span className="text-yellow-500 flex">
-                            {Array.from({ length: 5 }, (_, index) => (
-                              <svg
-                              key={index}
-                              className={`h-5 w-5 ${index < product.rating ? "text-yellow-400" : "text-gray-300"}`}
-                                fill={index < product.rating ? "currentColor" : "none"}
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                                stroke="currentColor"
-                                >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M10 15l-3.59 2.09a1 1 0 01-1.45-1.05L7.58 12 4.24 9.91a1 1 0 011.05-1.45L10 8l2.71-2.54a1 1 0 011.45 1.05L12.42 12l3.34 2.09a1 1 0 01-1.05 1.45L10 15z"
-                                  clipRule="evenodd"
-                                  />
-                              </svg>
-                            ))}
-                          </span>
-                        </div>
+
 
                         <p className="text-lg font-medium text-gray-800 mt-2">
                           {product.actualPrice

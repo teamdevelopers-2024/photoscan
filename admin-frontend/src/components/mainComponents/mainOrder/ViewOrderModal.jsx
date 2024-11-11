@@ -2,6 +2,7 @@ import React from 'react';
 
 const ViewOrderModal = ({ isOpen, onClose, orderDetails }) => {
   if (!isOpen || !orderDetails) return null;
+  console.log("this is order Detaisl ",orderDetails)
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -40,7 +41,7 @@ const ViewOrderModal = ({ isOpen, onClose, orderDetails }) => {
             {orderDetails.products.map((product, index) => (
               <li key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
                 <img 
-                  src={product.imageUrl} 
+                  src={product.productId.images[0]} 
                   alt={product.name} 
                   className="w-20 h-20 rounded-lg object-cover"
                 />

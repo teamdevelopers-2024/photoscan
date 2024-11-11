@@ -189,14 +189,14 @@ function ParentComponent() {
             {/* Name Section */}
             <div className="flex items-center space-x-4 border-b pb-4">
               <h3 className="text-lg font-semibold text-gray-700">Name</h3>
-              <div className="flex-1 flex items-center space-x-4">
+              <div className="flex-1 md:flex items-center md:space-x-4">
                 <input
                   type="text"
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
                   disabled={!editMode.firstName}
-                  className={`border rounded-md p-2 flex-1 ${
+                  className={`border mb-3 md:mb-0 rounded-md p-2 flex-1 ${
                     editMode.firstName
                       ? "bg-white"
                       : "bg-gray-100 text-gray-500"
@@ -215,7 +215,7 @@ function ParentComponent() {
                   placeholder="Last Name"
                 />
                 <button
-                  className="text-blue-600"
+                  className="text-blue-600 hidden md:flex"
                   onClick={() => {
                     handleEditClick("firstName");
                     handleEditClick("lastName");
@@ -228,6 +228,19 @@ function ParentComponent() {
                   )}
                 </button>
               </div>
+              <button
+                  className="text-blue-600 md:hidden"
+                  onClick={() => {
+                    handleEditClick("firstName");
+                    handleEditClick("lastName");
+                  }}
+                >
+                  {editMode.firstName || editMode.lastName ? (
+                    <FiCheck />
+                  ) : (
+                    <FiEdit />
+                  )}
+                </button>
             </div>
 
             {/* Email Section */}

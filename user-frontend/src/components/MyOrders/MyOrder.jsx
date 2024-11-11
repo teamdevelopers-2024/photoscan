@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import logo from "../../assets/images/logo.png";
 import api from "../../services/api";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // Modal component
 const OrderDetailsModal = ({ order, isOpen, onClose }) => {
+ 
   if (!isOpen || !order) return null;
 
   return (
@@ -136,6 +138,7 @@ const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate()
   const user = useSelector((state)=> state.user.user)
   const userId = user._id
 
@@ -167,8 +170,8 @@ const MyOrders = () => {
       {/* Header */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <img src={logo} alt="Logo" className="h-8" />
-          <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
+          <img src={logo} onClick={()=> navigate("/")} alt="Logo" className="h-8" />
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">My Orders</h1>
         </div>
       </header>
 

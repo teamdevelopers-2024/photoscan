@@ -1,19 +1,23 @@
 import axios from 'axios';
 
 // Create an Axios instance with default configuration
-// const apiClient = axios.create({
-//     baseURL: 'http://localhost:4000/admin',
-//     withCredentials: true,
-// });
-
 axios.defaults.withCredentials = true;
 
+
 const apiClient = axios.create({
-    baseURL: 'https://api.photoscan.co.in/admin',
+    baseURL: 'http://localhost:4000/admin',
     headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+              'Content-Type': 'application/json',
+            },
+});
+
+
+// const apiClient = axios.create({
+//     baseURL: 'https://api.photoscan.co.in/admin',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   });
 
 // Centralized helper function for making API requests
 const apiRequest = async (method, url, data = null) => {
@@ -78,8 +82,9 @@ const getOffers = async () => {
     return await apiRequest('get', '/getOffers');
 };
 
-const getOrder = async () => {
-    return await apiRequest('get', '/getorder');
+
+const getOrder = async ({page}) => {
+    return await apiRequest('get', `/getorder?page=${page}`);
 };
 
 const addOffer = async (newOffer) => {
