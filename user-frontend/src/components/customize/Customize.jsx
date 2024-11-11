@@ -36,6 +36,7 @@ const Customize = () => {
   const [selectedSize, setSelectedSize] = useState()
   const [customWidth, setCustomWidth] = useState()
   const [customHeight, setCustomHeight] = useState()
+  const [error,setError] = useState()
   const user = useSelector((state) => state.user.user);
   const divRef = useRef(null)
   const canvasREf = useRef(null)
@@ -194,360 +195,313 @@ const Customize = () => {
   };
 
 
-  // const addToCart = async (id) => {
-  //   if (!user) {
-  //     navigate("/login");
-  //     return;
-  //   }
-
-  //   if (uploadedImages.filter(img => img !== chooseimage).length !== imageCount) {
-  //     alert(`Please upload ${imageCount} images before adding to cart.`);
-  //     return;
-  //   }
-
-  //   const userId = user._id;
-  //   const productId = id;
-  //   const selectedFiles = uploadedImages.filter(img => img !== chooseimage)
-  //   let uploadedCustomImages = []
-
-  //   if (selectedFiles && selectedFiles.length) {
-  //     try {
-  //       setLoading(true)
-
-  //       for (const file of selectedFiles) {
-  //         const formData = new FormData();
-  //         formData.append("file", file);
-  //         formData.append("upload_preset", "cloud_name");
-
-  //         try {
-  //           const response = await fetch(
-  //             "https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload",
-  //             {
-  //               method: "POST",
-  //               body: formData,
-  //             }
-  //           );
-
-  //           const data = await response.json();
-
-  //           if (response.ok) {
-  //             const imageDetails = {
-  //               publicId: data.public_id,
-  //               secureUrl: data.secure_url
-  //             };
-  //             uploadedCustomImages.push(imageDetails); // Store each image's details
-  //           } else {
-  //             console.error("Image upload failed for one file:", data);
-  //           }
-  //         } catch (error) {
-  //           console.error("Error during upload:", error);
-  //         }
-  //       }
-
-  //       console.log("All uploaded images:", uploadedCustomImages);
-  //     } catch (error) {
-  //       console.error("Error adding image to Cloudinary:", error);
-  //     }
-  //     finally {
-  //       setLoading(false)
-  //     }
-  //   }
-
-  //   const formData = {
-  //     selectedFrame: frameColor,
-  //     userId,
-  //     images: uploadedCustomImages,
-  //     orientation: imageOrientation
-  //   };
-  //   console.log("this is formdata : ", formData)
-
-  //   try {
-  //     const response = await api.addToCart(formData);
-
-  //     if (!response.error) {
-  //       console.log("item added to cart : ", response)
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Success!",
-  //         text: "Item added to cart successfully!",
-  //         toast: true,
-  //         position: "top-end",
-  //         showConfirmButton: false,
-  //         timer: 3000,
-  //         timerProgressBar: true,
-  //       });
-  //     } else {
-  //       console.log("failed to add", response)
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Failed!",
-  //         text: "Failed to add item to cart.",
-  //         toast: true,
-  //         position: "top-end",
-  //         showConfirmButton: false,
-  //         timer: 3000,
-  //         timerProgressBar: true,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error adding item to cart:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error!",
-  //       text: "An unexpected error occurred. Please try again.",
-  //       toast: true,
-  //       position: "top-end",
-  //       showConfirmButton: false,
-  //       timer: 3000,
-  //       timerProgressBar: true,
-  //     });
-  //   }
-  //   finally {
-  //     setLoading(false)
-  //   }
-  // };
-
-
   const makeOrderOnWhatsapp = async () => {
-    if (divRef.current) {
-      const canvas = await html2canvas(divRef.current);
-      const imageUrl = canvas.toDataURL("image/png");
-
-      // Create a temporary link to download the image
-      const downloadLink = document.createElement("a");
-      downloadLink.href = imageUrl;
-      downloadLink.download = "customized-frame.png";
-      downloadLink.click();
-
-      // Show SweetAlert with a message and buttons for WhatsApp redirection
-      const swalResult = await Swal.fire({
-        title: 'Your frame is ready!',
-        text: 'The image has been downloaded to your device. Please send it to us for reference on WhatsApp.',
-        icon: 'success',
-        showCancelButton: true,
-        confirmButtonText: 'Go to WhatsApp',
-        cancelButtonText: 'Cancel',
-        timer: 5000, // automatically closes in 5 seconds
-        timerProgressBar: true
+    if (uploadedImages.filter(img => img !== chooseimage).length !== imageCount) {
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: `Please upload ${imageCount} images before making order`,
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
       });
+            // alert(`Please upload ${imageCount} images before adding to cart.`);
+          return;
+        }
+      // Validate the fields
+      if (!frameColor || !paperType || !selectedSize || isCustomSize && !customHeight || isCustomSize && !customWidth) {
+        // setError("Both height and width must be provided.");
+        // alert("Please make sure to select Frame Color, Paper Type, and Size before making the order.");
 
-      console.log(swalResult, "this is swalresult")
-      // If the user clicks the 'Go to WhatsApp' button, open WhatsApp with the message
-      if (swalResult.isConfirmed || swalResult.isDismissed) {
-        window.open(`https://wa.me/+919037317210?text=I%20want%20to%20buy%20this%20customized%20frame.%0AFrame%20Color%3A%20${frameColor}.%0APaper%20Type%3A%20${paperType}%0AHere%20is%20the%20image%20for%20reference.`, "_blank");
+        Swal.fire({
+          icon: "error",
+          title: "Error!",
+          text: "Both height and width must be provided.",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+
+        return;
       }
-    }
-  };
 
-  return (
-    <>
-      <header>
-        <Header />
-      </header>
-      <div className="justify-evenly md:flex md:bg-gray-100">
-        <div ref={divRef} className="flex flex-col items-center justify-evenly">
-          <div
-            style={{ borderImage: `url(${selectedFrame}) 10 round` }}
-            className="border-8 border- bg-white flex items-center justify-around drop-shadow-2xl shadow-gray-600 h-auto w-auto"
-          >
-            <div className={`grid ${getImageGridClass()}  pl-2 pb-2`}>
-              {Array.from({ length: imageCount }, (_, index) => (
-                <div
-                  key={index}
-                  className="border cursor-pointer border-gray-300 flex items-center justify-center mb-0 m-2 ml-0"
-                  style={{
-                    width: width,
-                    height: height,
-                    backgroundImage: `url(${uploadedImages[index]})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                >
-                  {/* Hidden input for image upload */}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    id={`file-input-${index}`} // Unique id for each input
-                    onChange={(event) => handleImageUpload(index, event)}
-                    className="hidden"
-                  />
-                  <label htmlFor={`file-input-${index}`} className="w-full h-full flex items-center justify-center">
-                    {/* Optional: Add a preview of the image */}
-                    {uploadedImages[index] === chooseimage ? (
-                      <span className="text-gray-500 cursor-pointer">Click to upload</span>
-                    ) : null}
-                  </label>
-                </div>
-              ))}
+      if (divRef.current) {
+        const canvas = await html2canvas(divRef.current);
+        const imageUrl = canvas.toDataURL("image/png");
 
+        // Create a temporary link to download the image
+        const downloadLink = document.createElement("a");
+        downloadLink.href = imageUrl;
+        downloadLink.download = "customized-frame.png";
+        downloadLink.click();
+
+        // Show SweetAlert with a message and buttons for WhatsApp redirection
+        const swalResult = await Swal.fire({
+          title: 'Your frame is ready!',
+          text: 'The image has been downloaded to your device. Please send it to us for reference on WhatsApp.',
+          icon: 'success',
+          showCancelButton: true,
+          confirmButtonText: 'Go to WhatsApp',
+          cancelButtonText: 'Cancel',
+          timer: 5000, // automatically closes in 5 seconds
+          timerProgressBar: true
+        });
+
+        console.log(swalResult, "this is swalresult")
+        // If the user clicks the 'Go to WhatsApp' button, open WhatsApp with the message
+        if (swalResult.isConfirmed || swalResult.isDismissed) {
+          const orderDetails = `Frame Color: ${frameColor},%0APaper Type: ${paperType},%0ASize: ${selectedSize}`;
+
+          window.open(`https://wa.me/+919037317210?text=I%20want%20to%20buy%20this%20customized%20frame.%0A${orderDetails}%0AHere%20is%20the%20image%20for%20reference.`, "_blank");
+          // window.open(`https://wa.me/+919037317210?text=I%20want%20to%20buy%20this%20customized%20frame.%0AFrame%20Color%3A%20${frameColor}.%0APaper%20Type%3A%20${paperType}%0ASize%20%3A%20${selectedSize}%0AHere%20is%20the%20image%20for%20reference.`, "_blank");
+        }
+      }
+    };
+
+    return (
+      <>
+        <header>
+          <Header />
+        </header>
+        <div className="justify-evenly md:flex md:bg-gray-100">
+          <div ref={divRef} className="flex flex-col items-center justify-evenly">
+            <div
+              style={{ borderImage: `url(${selectedFrame}) 10 round` }}
+              className="border-8 border- bg-white flex items-center justify-around drop-shadow-2xl shadow-gray-600 h-auto w-auto"
+            >
+              <div className={`grid ${getImageGridClass()}  pl-2 pb-2`}>
+                {Array.from({ length: imageCount }, (_, index) => (
+                  <div
+                    key={index}
+                    className="border cursor-pointer border-gray-300 flex items-center justify-center mb-0 m-2 ml-0"
+                    style={{
+                      width: width,
+                      height: height,
+                      backgroundImage: `url(${uploadedImages[index]})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat",
+                    }}
+                  >
+                    {/* Hidden input for image upload */}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id={`file-input-${index}`} // Unique id for each input
+                      onChange={(event) => handleImageUpload(index, event)}
+                      className="hidden"
+                    />
+                    <label htmlFor={`file-input-${index}`} className="w-full h-full flex items-center justify-center">
+                      {/* Optional: Add a preview of the image */}
+                      {uploadedImages[index] === chooseimage ? (
+                        <span className="text-gray-500 cursor-pointer">Click to upload</span>
+                      ) : null}
+                    </label>
+                  </div>
+                ))}
+
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex flex-col items-center justify-center relative">
-          <div className="flex mt-10">
-            <div className="w-auto bg-white shadow-lg rounded-lg p-6 flex flex-col items-center justify-center z-10">
-              <div className="mt-8 space-y-8 w-full px-6 z-10 relative">
-                <div>
-                  <h2 className="text-xl font-bold mb-2">Frame Orientation</h2>
-                  <div className="flex space-x-4">
-                    {["Landscape", "Portrait", "Square"].map((orientation, index) => (
-                      <div
-                        key={orientation}
-                        onClick={() => setFrameOrientation(orientation)}
-                        className={`p-4 border rounded-lg cursor-pointer ${frameOrientation === orientation ? "border-blue-500 bg-blue-100" : "border-gray-300"
-                          }`}
-                      >
-                        <img src={imgOriantation[index]} alt={orientation} className="w-20 h-20 object-contain" />
-                        <div className="text-center mt-2">{orientation}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                {frameOrientation !== "Square" &&
+          <div className="flex flex-col items-center justify-center relative">
+            <div className="flex mt-10">
+              <div className="w-auto bg-white shadow-lg rounded-lg p-6 flex flex-col items-center justify-center z-10">
+                <div className="mt-8 space-y-8 w-full px-6 z-10 relative">
                   <div>
-                    <h2 className="text-xl font-bold mb-2">Image Orientation</h2>
+                    <h2 className="text-xl font-bold mb-2">Frame Orientation</h2>
                     <div className="flex space-x-4">
-                      {[`${frameOrientation}-Landscape`, `${frameOrientation}-Portrait`].map((orientation) => (
+                      {["Landscape", "Portrait", "Square"].map((orientation, index) => (
                         <div
                           key={orientation}
-                          onClick={() => setImageOrientation(orientation)}
-                          className={`p-4 border rounded-lg cursor-pointer ${imageOrientation === orientation ? "border-blue-500 bg-blue-100" : "border-gray-300"
+                          onClick={() => setFrameOrientation(orientation)}
+                          className={`p-4 border rounded-lg cursor-pointer ${frameOrientation === orientation ? "border-blue-500 bg-blue-100" : "border-gray-300"
                             }`}
                         >
-                          <div className="text-center">{orientation}</div>
+                          <img src={imgOriantation[index]} alt={orientation} className="w-20 h-20 object-contain" />
+                          <div className="text-center mt-2">{orientation}</div>
                         </div>
                       ))}
                     </div>
                   </div>
-                }
-                <div>
-                  <h2 className="text-xl font-bold mb-2">Image Count</h2>
-                  <div className="flex space-x-4">
-                    {Array.from({ length: 4 }, (_, count) => (
-                      <div
-                        key={count}
-                        onClick={() => setImageCount(count + 1)}
-                        className={`p-4 border rounded-lg cursor-pointer ${imageCount === count + 1 ? "border-blue-500 bg-blue-100" : "border-gray-300"
-                          }`}
-                      >
-                        <div className="text-center">{count + 1}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold mb-2">Paper Type</h2>
-                  <div className="flex space-x-4">
-                    {["matte", "glossy"].map((type) => (
-                      <div
-                        key={type}
-                        onClick={() => handlePaperChange(type)}
-                        className={`p-4 border rounded-lg cursor-pointer ${paperType === type ? "border-blue-500 bg-blue-100" : "border-gray-300"
-                          }`}
-                      >
-                        <div className="text-center">{type}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex gap-3 items-center">
-                  <label htmlFor="size-dropdown" className="mt-3">Select Size:</label>
-
-                  {/* Conditionally render either the dropdown or custom size input fields */}
-                  {isCustomSize ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-24">
-                        <input
-                          type="text"
-                          value={customWidth}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            // Allow only numbers by using a regular expression
-                            if (/^\d*$/.test(value) && (value === "" || parseInt(value) <= 99)) {
-                              setCustomWidth(value);
-                            }
-                          }}
-                          placeholder="Width (cm)"
-                          className="border w-full rounded-md placeholder:text-[80%]" // Set width to 16
-                        />
-                      </div>
-                      <span>x</span>
-                      <div className="w-24">
-                        <input
-                          type="text"
-                          value={customHeight}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            // Allow only numbers by using a regular expression
-                            if (/^\d*$/.test(value) && (value === "" || parseInt(value) <= 99)) {
-                              setCustomHeight(value);
-                            }
-                          }}
-                          placeholder="Height (cm)"
-                          className="border rounded-md w-full placeholder:text-[74%]"
-                        />
-
+                  {frameOrientation !== "Square" &&
+                    <div>
+                      <h2 className="text-xl font-bold mb-2">Image Orientation</h2>
+                      <div className="flex space-x-4">
+                        {[`${frameOrientation}-Landscape`, `${frameOrientation}-Portrait`].map((orientation) => (
+                          <div
+                            key={orientation}
+                            onClick={() => setImageOrientation(orientation)}
+                            className={`p-4 border rounded-lg cursor-pointer ${imageOrientation === orientation ? "border-blue-500 bg-blue-100" : "border-gray-300"
+                              }`}
+                          >
+                            <div className="text-center">{orientation}</div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ) : (
-                    <SizeDropdown
+                  }
+                  <div>
+                    <h2 className="text-xl font-bold mb-2">Image Count</h2>
+                    <div className="flex space-x-4">
+                      {Array.from({ length: 4 }, (_, count) => (
+                        <div
+                          key={count}
+                          onClick={() => setImageCount(count + 1)}
+                          className={`p-4 border rounded-lg cursor-pointer ${imageCount === count + 1 ? "border-blue-500 bg-blue-100" : "border-gray-300"
+                            }`}
+                        >
+                          <div className="text-center">{count + 1}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold mb-2">Paper Type</h2>
+                    <div className="flex space-x-4">
+                      {["matte", "glossy"].map((type) => (
+                        <div
+                          key={type}
+                          onClick={() => handlePaperChange(type)}
+                          className={`p-4 border rounded-lg cursor-pointer ${paperType === type ? "border-blue-500 bg-blue-100" : "border-gray-300"
+                            }`}
+                        >
+                          <div className="text-center">{type}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-3 items-center">
+                    <label htmlFor="size-dropdown" className="mt-3">Select Size:</label>
+
+                    {/* Conditionally render either the dropdown or custom size input fields */}
+                    {isCustomSize ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-24">
+                          <input
+                            type="text"
+                            value={customWidth}
+                            inputMode="numeric"
+                            pattern="[0-9]"
+                            onKeyDown={(e) => {
+                              // Prevent all non-numeric keys except for Backspace, Delete, Arrow keys, and Tab
+                              if (
+                                !/[0-9]/.test(e.key) && // Allow digits 0-9
+                                e.key !== "Backspace" &&
+                                e.key !== "Delete" &&
+                                e.key !== "ArrowLeft" &&
+                                e.key !== "ArrowRight" &&
+                                e.key !== "Tab"
+                              ) {
+                                e.preventDefault();
+                              }
+                            }}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              // Allow only numbers by using a regular expression
+                              if (/^\d*$/.test(value) && (value === "" || parseInt(value) <= 99)) {
+                                setCustomWidth(value);
+                              }
+                            }}
+                            placeholder="Width (cm)"
+                            className="border w-full rounded-md placeholder:text-[80%]" // Set width to 16
+                          />
+                        </div>
+                        <span>x</span>
+                        <div className="w-28">
+                          <input
+                            type="text"
+                            value={customHeight}
+                            inputMode="numeric"
+                            pattern="[0-9]"
+                            onKeyDown={(e) => {
+                              // Prevent all non-numeric keys except for Backspace, Delete, Arrow keys, and Tab
+                              if (
+                                !/[0-9]/.test(e.key) && // Allow digits 0-9
+                                e.key !== "Backspace" &&
+                                e.key !== "Delete" &&
+                                e.key !== "ArrowLeft" &&
+                                e.key !== "ArrowRight" &&
+                                e.key !== "Tab"
+                              ) {
+                                e.preventDefault();
+                              }
+                            }}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              // Allow only numbers by using a regular expression
+                              if (/^\d*$/.test(value) && (value === "" || parseInt(value) <= 99)) {
+                                setCustomHeight(value);
+                              }
+                            }}
+                            placeholder="Height (cm)"
+                            className="border rounded-md w-full placeholder:text-[80%]"
+                            />
+
+                        </div>
+                      </div>
+                    ) : (
+                      <SizeDropdown
                       selectedSize={selectedSize}
                       setSelectedSize={setSelectedSize}
                       sizeOfFrame={sizeOfFrame}
                       sizes={sizes}
-                    />
-                  )}
+                      />
+                    )}
 
-                  {/* Button to toggle between dropdown and custom size input fields */}
-                  <button
-                    onClick={() => setIsCustomSize(!isCustomSize)}
-                    className="p-2 bg-blue-500 text-white rounded-md"
-                  >
-                    {isCustomSize ? "Standard Size" : "Custom Size"}
-                  </button>
-                </div>
-
-                <div>
-                  <h2 className="text-xl font-bold mb-2">Frame Color</h2>
-                  <div className="flex space-x-4">
-                    {frameColors.map((frame, index) => (
-                      <div
-                        key={frame.name}
-                        onClick={() => {
-                          handleFrameChange(frame.name)
-                          setSelectedFrame(borderlist[index])
-                        }}
-                        className={`p-4 border rounded-lg cursor-pointer ${frameColor === frame.name ? "border-blue-500 bg-blue-100" : "border-gray-300"
-                          }`}
-                      >
-                        <img src={frame.image} alt={frame.name} className="w-20 h-20 object-contain" />
-                        <div className="text-center mt-2">{frame.name}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="w-full flex justify-between">
+                    {/* Button to toggle between dropdown and custom size input fields */}
                     <button
-                      onClick={() => makeOrderOnWhatsapp()}
-                      // onClick={()=>convertDivToCanvas()}
-                      className="mt-4 max-h-14 flex items-center justify-center sm:justify-start py-2 px-6 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600 transition-transform duration-300 ease-out transform hover:scale-105 hover:shadow-[0px_0px_15px_rgba(50,205,50,0.5)]"
-                    >
-                      <div className="flex items-center gap-2 p-2 rounded-lg cursor-pointer">
-                        <FaWhatsapp className="w-5 h-5 animate-pulse" />
-                        <p className="text-sm font-semibold">Make Order on WhatsApp</p>
-                      </div>
+                      onClick={() => setIsCustomSize(!isCustomSize)}
+                      className="p-2 bg-blue-500 text-white rounded-md"
+                      >
+                      {isCustomSize ? "Standard Size" : "Custom Size"}
                     </button>
+                  </div>
+                      
+
+                  <div>
+                    <h2 className="text-xl font-bold mb-2">Frame Color</h2>
+                    <div className="flex space-x-4">
+                      {frameColors.map((frame, index) => (
+                        <div
+                          key={frame.name}
+                          onClick={() => {
+                            handleFrameChange(frame.name)
+                            setSelectedFrame(borderlist[index])
+                          }}
+                          className={`p-4 border rounded-lg cursor-pointer ${frameColor === frame.name ? "border-blue-500 bg-blue-100" : "border-gray-300"
+                            }`}
+                        >
+                          <img src={frame.image} alt={frame.name} className="w-20 h-20 object-contain" />
+                          <div className="text-center mt-2">{frame.name}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="w-full flex justify-between">
+                      <button
+                        onClick={() => makeOrderOnWhatsapp()}
+                        // onClick={()=>convertDivToCanvas()}
+                        className="mt-4 max-h-14 flex items-center justify-center sm:justify-start py-2 px-6 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600 transition-transform duration-300 ease-out transform hover:scale-105 hover:shadow-[0px_0px_15px_rgba(50,205,50,0.5)]"
+                      >
+                        <div className="flex items-center gap-2 p-2 rounded-lg cursor-pointer">
+                          <FaWhatsapp className="w-5 h-5 animate-pulse" />
+                          <p className="text-sm font-semibold">Make Order on WhatsApp</p>
+                        </div>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
-  );
-};
+      </>
+    );
+  };
 
-export default Customize;
+  export default Customize;
