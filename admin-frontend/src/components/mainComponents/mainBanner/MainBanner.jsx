@@ -6,10 +6,10 @@ import Swal from "sweetalert2";
 
 function MainBanner() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [fileName, setFileName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [banners, setBanners] = useState([]); // Store banners from DB
+  const [banners, setBanners] = useState([]);
 
-  // Fetch banners from the backend on component mount
   useEffect(() => {
     const fetchBanners = async () => {
       try {
@@ -23,7 +23,11 @@ function MainBanner() {
   }, []);
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setFileName(file.name);
+    }
   };
 
   const Toast = Swal.mixin({
@@ -41,11 +45,20 @@ function MainBanner() {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
+    
     if (!selectedFile) {
       return Toast.fire({
         icon: "error",
         title: "Image not selected",
       });
+    }
+    
+    if(banners.length == 3 ){
+      Toast.fire({
+        icon: "error",
+        title: "You can Add Only 3 Banners , if You want add Please delete One added",
+      });
+      return
     }
 
     setLoading(true);
@@ -62,7 +75,7 @@ function MainBanner() {
       );
 
       const imageUrl = cloudinaryResponse.data.secure_url;
-      const publicId = cloudinaryResponse.data.public_id; // Store public_id for deletion
+      const publicId = cloudinaryResponse.data.public_id;
 
       const bannerData = {
         imageUrl,
@@ -79,6 +92,8 @@ function MainBanner() {
           icon: "success",
           title: "Banner uploaded successfully",
         });
+        setFileName(""); // Reset filename
+        setSelectedFile(null);
       } else {
         Toast.fire({
           icon: "error",
@@ -94,12 +109,10 @@ function MainBanner() {
 
   const handleDelete = async (publicId) => {
     try {
-      await api.deleteBanner(publicId); // Make sure this deletes from the DB as well
-
+      await api.deleteBanner(publicId);
       setBanners((prevBanners) =>
         prevBanners.filter((banner) => banner.publicId !== publicId)
       );
-
       Toast.fire({
         icon: "success",
         title: "Banner deleted successfully",
@@ -131,9 +144,14 @@ function MainBanner() {
                   className="custom-file-input hidden"
                   id="image"
                   name="image"
-                  accept="image/*" // This limits selection to image files only
+                  accept="image/*"
                   onChange={handleFileChange}
                 />
+                {fileName && (
+                  <span className="text-gray-600 text-sm mt-1">
+                    Selected file: {fileName}
+                  </span>
+                )}
               </div>
 
               <button
@@ -162,7 +180,7 @@ function MainBanner() {
                       <img
                         src={banner.image}
                         alt={`Banner ${index + 1}`}
-                        className=""
+                        className="w-full h-full object-cover"
                       />
                     </div>
 

@@ -24,8 +24,8 @@ function SingleProduct() {
     inputFields: [], // Array to hold dynamic input fields
     imageCount: 0,
     previewModalOpen: false,
-    sizes: [] ,
-    selectedSize:'',
+    sizes: [],
+    selectedSize: '',
     logoFile: null,
     logoPreview: null
 
@@ -100,13 +100,14 @@ function SingleProduct() {
         const inputFields = Array.from({ length: textfeild }).map(
           (_, index) => ({ id: index + 1, value: "" })
         );
-        console.log("sizes : ", sizes)
+        console.log('this is res data : ',result.data)
         setState((prevState) => ({
           ...prevState,
           product: result.data,
+          currentImage:result.data.images[0],
           inputFields,
           imageCount,
-          sizes,
+          sizes:sizes,
           isLogo: includelogo,
         }));
       } else {
@@ -185,14 +186,14 @@ function SingleProduct() {
       }
     }
 
-    let LogoImage 
-    if(state.logoFile){
+    let LogoImage
+    if (state.logoFile) {
       const formData = new FormData();
-      console.log("this is logofile : ",state.logoFile)
+      console.log("this is logofile : ", state.logoFile)
       formData.append("file", state.logoFile);
       formData.append("upload_preset", "cloud_name");
 
-      try{
+      try {
         const response = await fetch(
           "https://api.cloudinary.com/v1_1/dpjzt7zwf/image/upload",
           {
@@ -200,10 +201,10 @@ function SingleProduct() {
             body: formData,
           }
         );
-        const data =await response.json()
+        const data = await response.json()
 
         if (response.ok) {
-           LogoImage = {
+          LogoImage = {
             publicId: data.public_id,
             secureUrl: data.secure_url
           };
@@ -212,13 +213,13 @@ function SingleProduct() {
           console.error("Image upload failed for one file:", data);
         }
 
-      }catch(error){
-        console.log('something went wrong : ',error)
+      } catch (error) {
+        console.log('something went wrong : ', error)
       }
 
     }
 
-    
+
     const formData = {
       userId,
       productId,
@@ -226,7 +227,7 @@ function SingleProduct() {
       images: uploadedImages,
       LogoImage
     };
-    console.log("this is formdata : ",formData)
+    console.log("this is formdata : ", formData)
 
     try {
       const response = await api.addToCart(formData);
@@ -279,6 +280,12 @@ function SingleProduct() {
   };
 
 
+  const handleSizeChange = (e) => {
+  setState(prevState => ({ ...prevState, selectedSize: e.target.value }));
+};
+
+
+
   const handleLogoChange = (e) => {
     const file = e.target.files[0]; // Capture the selected file
     if (file) {
@@ -290,7 +297,7 @@ function SingleProduct() {
     }
   };
 
-  
+
   return (
     <>
       {loading && <Loader />}
@@ -303,9 +310,7 @@ function SingleProduct() {
               <img
                 className="mx-auto w-3/4 sm:w-96 sm:h-96 rounded-lg"
                 src={
-                  state.product
-                    ? state.product.images[0]
-                    : state.currentImage
+                  state.currentImage 
                 }
                 alt="Product"
               />
@@ -385,7 +390,7 @@ function SingleProduct() {
                   <div className="flex gap-3">
 
                     <label htmlFor="size-dropdown" className="mt-3">Select Display Size:</label>
-                    <select id="size-dropdown">
+                    <select id="size-dropdown" onChange={handleSizeChange} value={state.selectedSize}>
                       {state.sizes.map((size, index) => (
                         <option key={index} value={size}>
                           {size}

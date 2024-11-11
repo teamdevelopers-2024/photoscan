@@ -14,8 +14,8 @@ function MainProduct() {
   const [loading, setLoading] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]); // Track selected products for featuring
   const [editingProduct, setEditingProduct] = useState(null);
-  const [isUnlisted , setIsUnlisted ] = useState(true)
-  const [isUpdating , setIsUpdating] = useState(false)
+  const [isUnlisted, setIsUnlisted] = useState(true)
+  const [isUpdating, setIsUpdating] = useState(false)
   const handleAddProduct = () => {
     setAddProductModalOpen(true);
   };
@@ -30,8 +30,8 @@ function MainProduct() {
       setLoading(true);
       const response = await api.getProducts(isUnlisted);
       let items = []
-      response.map((item)=>{
-        if(item.isFeatured){
+      response.map((item) => {
+        if (item.isFeatured) {
           items.push(item._id)
         }
       })
@@ -46,7 +46,7 @@ function MainProduct() {
 
   useEffect(() => {
     fetchProducts(isUnlisted);
-  }, [isUnlisted , isUpdating]);
+  }, [isUnlisted, isUpdating]);
 
   const handleEdit = (product) => {
     setEditingProduct(product);
@@ -61,19 +61,19 @@ function MainProduct() {
     }
   };
 
-  const handleDelete = async(id) => {
-    
-    if(selectedProducts.includes(id)) {
+  const handleDelete = async (id) => {
+
+    if (selectedProducts.includes(id)) {
       Swal.fire({
-        icon:"error",
-        title:"error!",
-        text:"The Product is Featured ! , remove From Featured Products and Continue"
+        icon: "error",
+        title: "error!",
+        text: "The Product is Featured ! , remove From Featured Products and Continue"
       })
       return
     }
     const result = await Swal.fire({
       title: 'Are you sure?',
-      text: `Do you want to ${!isUnlisted ? "restore": "delete"} this product?`,
+      text: `Do you want to ${!isUnlisted ? "restore" : "delete"} this product?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -81,20 +81,20 @@ function MainProduct() {
       confirmButtonText: 'Yes, delete it!'
     })
 
-    if(!result.isConfirmed) return 
-    
+    if (!result.isConfirmed) return
+
     const response = await api.updateProductStatus(id)
-    if(!response.error){
+    if (!response.error) {
       Swal.fire({
-        icon:"success",
-        text:`the product ${!isUnlisted ? "showed":"hidded"} successfully`,
-        title:'success!'
+        icon: "success",
+        text: `the product ${!isUnlisted ? "showed" : "hidded"} successfully`,
+        title: 'success!'
       })
-    }else{
+    } else {
       Swal.fire({
-        icon:"error",
-        title:"error!",
-        text:"error during update status"
+        icon: "error",
+        title: "error!",
+        text: "error during update status"
       })
     }
     setIsUpdating(!isUpdating)
@@ -110,21 +110,21 @@ function MainProduct() {
 
   const handleSelectProduct = async (product) => {
     let updatedSelectedProducts;
-  
+
     if (selectedProducts.includes(product._id)) {
       updatedSelectedProducts = selectedProducts.filter((id) => id !== product._id);
     } else if (selectedProducts.length < 4) {
       updatedSelectedProducts = [...selectedProducts, product._id];
     } else {
       Swal.fire({
-        icon:"info",
-        title:"error!",
-        iconColor:"yellow",
-        text:"Your can only select 4 featured Products"
+        icon: "info",
+        title: "error!",
+        iconColor: "yellow",
+        text: "Your can only select 4 featured Products"
       })
       return;
     }
-  
+
     setSelectedProducts(updatedSelectedProducts);
     try {
       await api.updateFeatured(product._id, { isFeatured: !product.isFeatured });
@@ -134,11 +134,11 @@ function MainProduct() {
     }
     setIsUpdating(!isUpdating)
   };
-  
+
   return (
     <>
       {loading && <Loader />}
-      <div className="user-main block">
+      <div className="user-main h-[550px] block">
         <div className="main-header mb-4 flex justify-between">
           <button
             onClick={handleAddProduct}
@@ -146,14 +146,14 @@ function MainProduct() {
           >
             Add Product
           </button>
-            <button
-              onClick={() => setIsUnlisted(!isUnlisted)}
-              className="bg-red-400 text-white py-2 px-4 rounded hover:bg-red-700"
-            >
-              {isUnlisted?'Unlisted':'listed'}
-            </button>
+          <button
+            onClick={() => setIsUnlisted(!isUnlisted)}
+            className="bg-red-400 text-white py-2 px-4 rounded hover:bg-red-700"
+          >
+            {isUnlisted ? 'Unlisted' : 'listed'}
+          </button>
         </div>
-        <div className="main-table w-full">
+        <div className="main-table overflow-y-scroll max-h-[450px] w-full">
           <table className="w-full border-collapse">
             <thead>
               <tr>
@@ -161,7 +161,7 @@ function MainProduct() {
                 <th className="border p-2">Product</th>
                 <th className="border p-2">Price</th>
                 {isUnlisted &&
-                <th className="border p-2">Select For Featured</th>  
+                  <th className="border p-2">Select For Featured</th>
                 }
                 <th className="border p-2">Actions</th>
               </tr>
@@ -176,18 +176,20 @@ function MainProduct() {
                       <p className="h-[20px]">{product.productName}</p>
                     </div>
                   </td>
-                  <td className="border p-2">{product.offerPrice}</td>
-                  {isUnlisted &&
-                  <td className="border p-2 text-center">
-                    <input
-                      type="checkbox"
-                      checked={product.isFeatured}
-                      onChange={() => handleSelectProduct(product)}
-                      />
+                  <td className="border p-2">
+                    {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(product.offerPrice)}
                   </td>
-                    }
+                  {isUnlisted &&
+                    <td className="border p-2 text-center">
+                      <input
+                        type="checkbox"
+                        checked={product.isFeatured}
+                        onChange={() => handleSelectProduct(product)}
+                      />
+                    </td>
+                  }
                   <td className="border p-2 text-center">
-                  <button
+                    <button
                       className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 mr-2"
                       onClick={() => handleEdit(product)}
                     >
@@ -200,10 +202,10 @@ function MainProduct() {
                       Details
                     </button>
                     <button
-                      className={`${!isUnlisted ? 'bg-green-500':"bg-red-500"} text-white py-1 px-2 rounded hover:bg-red-600`}
+                      className={`${!isUnlisted ? 'bg-green-500' : "bg-red-500"} text-white py-1 px-2 rounded hover:bg-red-600`}
                       onClick={() => handleDelete(product._id)}
                     >
-                      {!isUnlisted ? "restore" :"delete"}
+                      {!isUnlisted ? "restore" : "delete"}
                     </button>
                   </td>
                 </tr>

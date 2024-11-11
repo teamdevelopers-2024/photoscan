@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
@@ -8,6 +8,14 @@ const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp, errorMessage }) => {
   const [timer, setTimer] = useState(60);
   const [otpError, setOtpError] = useState("");
   const [isUserTyping, setIsUserTyping] = useState(false);
+
+  const firstInputRef = useRef(null); // Reference for the first input
+
+  useEffect(() => {
+    if (isOpen) {
+      firstInputRef.current?.focus(); // Focus the first input when the modal opens
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     let interval = null;
@@ -118,6 +126,7 @@ const OtpModal = ({ isOpen, onClose, onSubmit, onResendOtp, errorMessage }) => {
                 value={value}
                 onChange={(e) => handleOtpChange(e, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
+                ref={index === 0 ? firstInputRef : null} // Set the ref to the first input
                 className="w-12 h-12 text-center border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl"
                 maxLength="1"
               />

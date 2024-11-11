@@ -143,10 +143,7 @@
     transition: 2s;
   }
 
-  .dash-main {
-    padding: 2rem;
-    background-color: #f0f4f8;
-  }
+
 
   
   .card-title {
@@ -184,7 +181,6 @@
     font-family: Arial, sans-serif;
     color: #333;
     padding: 2rem;
-    background: #f8f9fa;
     /* Light background for contrast */
     display: flex;
     flex-direction: column;

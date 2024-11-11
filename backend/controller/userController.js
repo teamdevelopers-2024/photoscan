@@ -512,26 +512,45 @@ const changePass = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    const { catName } = req.query; // Extract catName from query parameters
+    const { catName, sortOptionFilter } = req.query;
+    const currentYear = new Date().getFullYear();
+    const pastYears = Array.from({ length: 5 }, (_, i) => currentYear - (4 - i));
 
     let filter = {
       status: true,
-      catstatus: true
+      catstatus: true,
     };
 
-
-    if (catName && catName != 'All' && catName != 'null' && catName != 'undefined') {
+    if (catName && catName !== 'All' && catName !== 'null' && catName !== 'undefined') {
       filter.category = catName;
     }
 
 
-    const products = await ProductDb.find(filter); // Apply filter to find products
+    // Sorting for other options
+    let sortOption = {};
+    switch (sortOptionFilter) {
+      case 'Newest':
+        sortOption = { createdAt: -1 };
+        break;
+      case 'Price: Low to High':
+        sortOption = { offerPrice: 1 };
+        break;
+      case 'Price: High to Low':
+        sortOption = { offerPrice: -1 };
+        break;
+      default:
+        break;
+    }
+
+    const products = await ProductDb.find(filter).sort(sortOption);
+
     res.status(200).json({ error: false, message: 'Products fetched successfully', products });
   } catch (error) {
     console.error("Error in finding products:", error);
     res.status(500).json({ error: true, message: 'An error occurred while fetching products.' });
   }
 };
+
 
 
 
@@ -920,12 +939,12 @@ async function makeOrder(req, res) {
       address
     } = req.body.body
 
-    console.log("this is req.body : ",req.body)
+    console.log("this is req.body : ", req.body)
     const orderId = `ORDER-${uuidv4()}`;
 
     const newOrder = new OrderDb({
       orderId,
-      userId:user._id,
+      userId: user._id,
       customer: {
         name: address.fullName, // Assuming you have user data from a middleware or token
         email: user.email,
@@ -945,12 +964,12 @@ async function makeOrder(req, res) {
     });
     await newOrder.save()
 
-    await CartDb.deleteOne({userId:user._id})
+    await CartDb.deleteOne({ userId: user._id })
 
     res.status(200).json({
-      error:false,
-      message:"order created successfully",
-      orderId : orderId
+      error: false,
+      message: "order created successfully",
+      orderId: orderId
     })
   } catch (error) {
     console.log(error)
@@ -992,30 +1011,30 @@ async function getOrders(req, res) {
   try {
 
     const userId = req.query.userId
-    
-    const orders = await OrderDb.find({userId:userId});
-    
+
+    const orders = await OrderDb.find({ userId: userId });
+
     res.status(200).json({ error: false, message: "Orders Fetched successfully", data: orders });
   } catch (error) {
     console.error('Error fetching orders:', error);
-    res.status(500).json({error:true, message: 'Internal Server error' });
+    res.status(500).json({ error: true, message: 'Internal Server error' });
   }
 }
 
 
 
-async function fetchOrder(req,res) {
+async function fetchOrder(req, res) {
   try {
-    const {orderId} = req.query
-    const result = await OrderDb.findOne({orderId:orderId})
+    const { orderId } = req.query
+    const result = await OrderDb.findOne({ orderId: orderId })
     res.status(200).json({
-      error:false,
-      message:"order fetched successfully",
-      data:result
+      error: false,
+      message: "order fetched successfully",
+      data: result
     })
   } catch (error) {
     console.error('Error fetching order:', error);
-    res.status(500).json({error:true, message: 'Internal Server error' });
+    res.status(500).json({ error: true, message: 'Internal Server error' });
   }
 }
 

@@ -539,20 +539,35 @@ async function updateProduct(req, res) {
     })
   }
 }
+// Controller function for getting orders with pagination
 async function getOrder(req, res) {
   try {
-    const Order = await OrderDb.find();
+    
+    const page = parseInt(req.query.page) || 1; // Default page is 1
+    const limit = 7; // Set the number of orders per page
+    const skip = (page - 1) * limit; // Calculate the number of orders to skip
+    console.log(req.query , " this is page")
+    // Find orders and paginate using skip and limit
+    const orders = await OrderDb.find().skip(skip).limit(limit);
+
+    // Get total number of orders to calculate total pages
+    const totalOrders = await OrderDb.countDocuments();
+
+    // Send response with orders and pagination info
     res.status(200).json({
       error: false,
-      data: Order
-    })
+      data: orders,
+      totalOrders: totalOrders,
+      totalPages: Math.ceil(totalOrders / limit),
+    });
   } catch (error) {
     res.status(500).json({
-      error: false,
-      message: "internel Server error"
-    })
+      error: true,
+      message: "Internal Server Error",
+    });
   }
 }
+
 async function updateOrderStatus(req, res) {
   try {
     const { id, status } = req.body

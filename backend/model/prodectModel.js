@@ -22,9 +22,7 @@ const productSchema = new mongoose.Schema({
         type:Number
     }
     ,
-    sizes:{
-        type:Array
-    },
+    sizes:[],
     status:{
         type:Boolean
     },

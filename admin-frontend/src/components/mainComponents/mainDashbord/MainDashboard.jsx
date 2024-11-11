@@ -47,13 +47,13 @@ function MainDashbord() {
       setSalesData(response.data);
       setTopSellingProducts(response.data.topSellingProducts);
       console.log(response.data.topSellingProducts);
-      
+
     } catch (error) {
       console.error("Error fetching sales data:", error);
     }
   };
 
-  
+
 
 
   useEffect(() => {
@@ -143,19 +143,19 @@ function MainDashbord() {
     labels:
       lineChartRange === "Monthly"
         ? [
-            "Jan",
-            "Feb",
-            "Mar",
-            "April",
-            "May",
-            "Jun",
-            "July",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ]
+          "Jan",
+          "Feb",
+          "Mar",
+          "April",
+          "May",
+          "Jun",
+          "July",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ]
         : yearlyLabels,
     datasets: [
       {
@@ -216,7 +216,10 @@ function MainDashbord() {
         </div>
         <div className="info-card gradient-teal">
           <span className="card-title">Total Sales ($)</span>
-          <span className="card-value">{totalSales}</span>
+          <span className="card-value">
+            {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(totalSales)}
+          </span>
+
         </div>
       </div>
 
@@ -245,9 +248,8 @@ function MainDashbord() {
           </div>
           <div className="chart-wrapper">
             <button
-              className={`arrow-button left ${
-                lineChartRange === "Yearly" && "opacity-0"
-              }`}
+              className={`arrow-button left ${lineChartRange === "Yearly" && "opacity-0"
+                }`}
               onClick={() => changeYear("left")}
             >
               &lt;
@@ -260,9 +262,8 @@ function MainDashbord() {
               />
             </div>
             <button
-              className={`arrow-button right ${
-                lineChartRange === "Yearly" && "opacity-0"
-              }`}
+              className={`arrow-button right ${lineChartRange === "Yearly" && "opacity-0"
+                }`}
               onClick={() => changeYear("right")}
             >
               &gt;

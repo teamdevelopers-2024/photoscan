@@ -29,7 +29,9 @@ const ProfileSidebar = ({ setActiveSection, activeSection }) => {
   };
 
   return (
-    <aside className="w-64 h-auto p-6 shadow-lg bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100  flex flex-col transition-all duration-300">
+    <>
+    <div className='w-64 h-auto'></div>
+    <aside className="w-64 h-auto fixed p-6 rounded-e-lg shadow-lg bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100  flex flex-col transition-all duration-300">
       <div className="relative top-5">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-semibold">Profile Menu</h2>
@@ -42,11 +44,11 @@ const ProfileSidebar = ({ setActiveSection, activeSection }) => {
                 onClick={() => setActiveSection(id)}
                 className={`flex items-center p-3 rounded-lg transition-all duration-200 shadow-sm ${
                   activeSection === id
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+                  : 'hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
                 aria-current={activeSection === id ? 'page' : undefined}
-              >
+                >
                 <Icon className="mr-3" size={20} /> 
                 <span className="font-medium">{label}</span>
               </a>
@@ -59,7 +61,7 @@ const ProfileSidebar = ({ setActiveSection, activeSection }) => {
           onClick={handleLogout}
           className="flex items-center p-3 mt-6 text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-500 transition-colors duration-200 rounded-lg shadow-sm hover:bg-gray-100 dark:hover:bg-gray-800"
           aria-label="Logout"
-        >
+          >
           <FaSignOutAlt className="mr-2" /> Logout
         </button>
         {errorMessage && (
@@ -69,6 +71,7 @@ const ProfileSidebar = ({ setActiveSection, activeSection }) => {
         )}
       </div>
     </aside>
+        </>
   );
 };
 
